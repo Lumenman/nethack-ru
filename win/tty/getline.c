@@ -80,7 +80,8 @@ hooked_tty_getlin(
         (void) fflush(stdout);
         Strcat(strcat(strcpy(gt.toplines, query), " "), obufp);
         term_curs_set(1);
-        c = pgetchar();
+        /* RU: unsigned, or CP1251 0xFF (Cyrillic ya) would equal EOF */
+        c = (uchar) pgetchar();
         term_curs_set(0);
         if (c == '\033' || c == EOF) {
             if (c == EOF)
