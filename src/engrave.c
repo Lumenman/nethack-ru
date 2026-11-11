@@ -843,7 +843,7 @@ doengrave_sfx_item(struct _doengrave_ctx *de)
         switch (de->otmp->otyp) {
         case MAGIC_MARKER:
             if (de->otmp->spe <= 0)
-                Your("твой маркер высох.");
+                Your("маркер высох.");
             else
                 de->type = MARK;
             break;
@@ -1404,7 +1404,7 @@ engrave(void)
         update_inventory();
         if (stylus->spe == 0) {
             /* can't engrave any further; truncate the string */
-            Your("твой маркер высыхает.");
+            Your("маркер высыхает.");
             truncate = TRUE;
         }
     }

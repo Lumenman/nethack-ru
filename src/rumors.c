@@ -710,7 +710,7 @@ doconsult(struct monst *oracl)
         pline("%s не расположен к консультаци€м.", Monnam(oracl));
         return ECMD_OK;
     } else if (!umoney) {
-        You("у теб€ нет золота.");
+        pline("” вас нет золота.");
         return ECMD_OK;
     }
 
@@ -722,7 +722,7 @@ doconsult(struct monst *oracl)
         return ECMD_OK;
     case 'y':
         if (umoney < (long) minor_cost) {
-            You("у теб€ даже нет столько золота!");
+            pline("” вас даже нет столько золота!");
             return ECMD_OK;
         }
         u_pay = minor_cost;
