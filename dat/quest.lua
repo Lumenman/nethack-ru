@@ -2862,227 +2862,226 @@ questtext = {
    },
    Wiz = {
       assignquest = {
-         synopsis = "[Travel to %i; overcome %n; return with %o.]",
+         synopsis = "[Отправляйся в Башню Тьмы, одолей Тёмного и возвращайся с Оком Эфиопики.]",
          output = "text",
-         text = [["Yes, %p, you truly are ready for this dire task.  Listen,
-carefully, for what I tell you now will be of vital importance.
+         text = [["Да, %p, ты действительно готов%e к этому тяжкому заданию.
+Слушай внимательно, ибо то, что я скажу, крайне важно.
 
-"Since you left us to hone your skills in the world, we unexpectedly came
-under attack by the forces of %n.  As you know, we thought
-%n had perished at the end of the last age, but, alas, this was
-not the case.
+"С тех пор как ты покинул%e нас, чтобы оттачивать мастерство в мире,
+на нас неожиданно напали силы Тёмного.  Как ты знаешь, мы думали,
+что Тёмный сгинул в конце прошлой эпохи, но, увы, это было не так.
 
-"%nC sent an army of abominations against us.  Among them was a
-minion, mindless and ensorcelled, and thus, in the confusion, it was
-able to penetrate our defenses.  Alas, this creature has stolen
-%o and I fear has delivered %oh to %n.
+"Тёмный наслал на нас войско мерзостей.  Среди них был прислужник —
+безмозглый и зачарованный, — и потому в суматохе он сумел пробраться
+сквозь нашу защиту.  Увы, эта тварь похитила Око Эфиопики, и я
+боюсь, что отдала его Тёмному.
 
-"Over the years, I had woven most of my power into this amulet, and thus,
-without it, I have but a shadow of my former power, and I fear that I
-shall soon perish.
+"За долгие годы я вплела в этот амулет большую часть своей силы,
+и без него от моего былого могущества осталась лишь тень.  Боюсь,
+вскоре я погибну.
 
-"You must travel to %i, and within its dungeons,
-find and overcome %n, and return %o to me.
+"Тебе нужно отправиться в Башню Тьмы, в её подземельях найти
+и одолеть Тёмного и вернуть мне Око Эфиопики.
 
-"Go now, with %d, and complete this quest before it is too late."]],
+"Ступай же, и да пребудет с тобой %d.  Исполни это задание,
+пока не стало слишком поздно."]],
       },
       badalign = {
-         synopsis = "[Go; come back when you are worthy of %d.]",
+         synopsis = "[Ступай и возвращайся, когда очистишься.]",
          output = "text",
-         text = [["You amaze me, %p!  How many times did I tell you that the way of a mage
-is an exacting one.  One must use the world with care, lest one leave it
-in ruins and simplify the task of %n.
+         text = [["Ты меня поражаешь, %p!  Сколько раз я говорила тебе, что путь мага
+требует строгости.  С миром нужно обращаться бережно, иначе можно
+оставить от него руины и облегчить задачу Тёмному.
 
-"You must go back and show your worthiness.  Do not return until you are
-truly ready for this quest.  May %d guide you in this task."]],
+"Тебе нужно вернуться и доказать, чего ты стоишь.  Не возвращайся,
+пока не будешь по-настоящему готов%e к этому заданию.  Да направит
+тебя %d."]],
       },
       badlevel = {
-         synopsis = "[Go; return when you are %Ra.]",
+         synopsis = "[Ступай и возвращайся, когда станешь «%R».]",
          output = "text",
-         text = [["Alas, %p, you have not yet shown your proficiency as a worthy
-spellcaster.  As %ra, you would surely be overcome in the challenge
-ahead.  Go, now, expand your horizons, and return when you have attained
-renown as %Ra."]],
+         text = [["Увы, %p, ты ещё не доказал%e своего искусства в заклинаниях.  Тому,
+кто всего лишь «%r», в грядущем испытании наверняка не выстоять.
+Ступай же, расширь свой кругозор и возвращайся, когда прославишься
+в звании «%R»."]],
       },
       discourage = {
-         "\"Your puny powers are no match for me, fool!\"",
-         "\"When you are defeated, your torment will last for a thousand years.\"",
-         "\"After your downfall, %p, I shall devour %l for dessert!\"",
-         "\"Are you ready yet to beg for mercy?  I could be lenient...\"",
-         "\"Your soul shall join the enslaved multitude I command!\"",
-         "\"Your lack of will is evident, and you shall die as a result.\"",
-         "\"Your faith in %d is for naught!  Come, submit to me now!\"",
-         "\"A mere %r is nothing compared to my skill!\"",
-         "\"So, you are the best hope of %l?  How droll.\"",
-         "\"Feel my power, %c!  My victory is imminent!\"",
+         "\"Твоим жалким силам со мной не тягаться, глупец!\"",
+         "\"Когда ты будешь повержен%e, твои муки продлятся тысячу лет.\"",
+         "\"После твоего падения, %p, я съем Неферет Зелёную на десерт!\"",
+         "\"Ну что, готов%e молить о пощаде?  Я мог бы и смилостивиться...\"",
+         "\"Твоя душа пополнит порабощённое множество, которым я повелеваю!\"",
+         "\"Слабость твоей воли очевидна, и из-за неё ты умрёшь.\"",
+         "\"Вера в милость %d1 тебе не поможет!  Покорись мне!\"",
+         "\"Тот, кто всего лишь «%r», — ничто по сравнению с моим искусством!\"",
+         "\"Так ты — главная надежда Неферет Зелёной?  Как забавно.\"",
+         "\"Почувствуй мою силу, %c!  Моя победа близка!\"",
       },
       encourage = {
-         "\"Beware, for %n is immune to most magical attacks.\"",
-         "\"To enter %i you must pass many traps.\"",
-         "\"%nC may be vulnerable to physical attacks.\"",
-         "\"%d will come to your aid when you call.\"",
-         "\"You must utterly destroy %n.  He will pursue you otherwise.\"",
-         "\"%oC is a mighty artifact.  With it you can destroy %n.\"",
-         "\"Go forth with the blessings of %d.\"",
-         "\"I will have my %gP watch for your return.\"",
-         "\"Feel free to take any items in that chest that might aid you.\"",
-         "\"You will know when %o is near.  Proceed with care!\"",
+         "\"Берегись: Тёмный неуязвим для большинства магических атак.\"",
+         "\"На пути в Башню Тьмы тебя ждёт множество ловушек.\"",
+         "\"Возможно, Тёмный уязвим для физических атак.\"",
+         "\"Позови — и %d придёт тебе на помощь.\"",
+         "\"Тебе нужно уничтожить Тёмного без остатка.  Иначе он будет преследовать тебя.\"",
+         "\"Око Эфиопики — могущественный артефакт.  С ним ты сможешь уничтожить Тёмного.\"",
+         "\"Ступай с благословением %d1.\"",
+         "\"Я велю своим подмастерьям высматривать твоё возвращение.\"",
+         "\"Можешь взять из того сундука всё, что тебе пригодится.\"",
+         "\"Ты почувствуешь, когда Око Эфиопики будет рядом.  Будь осторожнее!\"",
       },
       firsttime = {
-         synopsis = "[You have arrived at %ls tower but something is very wrong.]",
+         synopsis = "[Ты добрал%y до башни Неферет Зелёной, но что-то очень не так.]",
          output = "text",
-         text = [[You are suddenly in familiar surroundings.  You notice what appears to
-be a large, squat stone structure nearby.  Wait!  That looks like the
-tower of your former teacher, %l.
+         text = [[Внезапно ты оказываешься в знакомых местах.  Неподалёку виднеется
+нечто похожее на большое приземистое каменное строение.  Постой!
+Да ведь это башня твоей бывшей наставницы, Неферет Зелёной.
 
-However, things are not the same as when you were last here.  Mists and
-areas of unexplained darkness surround the tower.  There is movement in
-the shadows.
+Однако всё здесь не так, как в прошлый раз.  Башню окружают туманы
+и пятна необъяснимой тьмы.  В тенях что-то движется.
 
-Your teacher would never allow such unaesthetic forms to surround the
-tower...  unless something were dreadfully wrong!]],
+Твоя наставница ни за что не допустила бы таких неэстетичных форм
+вокруг башни...  разве что случилось нечто ужасное!]],
       },
       goal_alt = {
-         text = "You have returned to %ns lair.",
+         text = "Ты вернул%y в логово Тёмного.",
       },
       goal_first = {
-         text = "You feel your mentor's presence; perhaps %o is nearby.",
+         text = "Ты чувствуешь присутствие наставницы; возможно, Око Эфиопики где-то рядом.",
       },
       goal_next = {
-         text = "The aura of %o tingles at the edge of your perception.",
+         text = "Аура Ока Эфиопики покалывает на краю восприятия.",
       },
       gotit = {
-         synopsis = "[You feel %os power and know you should return %oh to %l.]",
+         synopsis = "[Ты чувствуешь силу Ока Эфиопики и знаешь, что его нужно вернуть Неферет Зелёной.]",
          output = "text",
-         text = [[As you touch %o, its comforting power infuses you
-with new energy.  You feel as if you can detect others' thoughts flowing
-through it.  Although you yearn to wear %o and
-attack the Wizard of Yendor, you know you must return it to its rightful
-owner, %l.]],
+         text = [[Когда ты касаешься Ока Эфиопики, его успокаивающая сила наполняет
+тебя новой энергией.  Тебе кажется, будто сквозь него текут чужие
+мысли.  Хоть тебе и не терпится надеть Око Эфиопики и напасть
+на Волшебника Йендора, ты знаешь, что его нужно вернуть законной
+владелице — Неферет Зелёной.]],
       },
       guardtalk_after = {
-         "\"I have some eye of newt to trade, do you have a spare blind-worm's sting?\"",
-         "\"The magic portal now seems like it will remain stable for quite some time.\"",
-         "\"Have you noticed how much stronger %l is since %o was recovered?\"",
-         "\"Thank %d!  We weren't positive you would defeat %n.\"",
-         "\"I, too, will venture into the world, because %n was but one of many evils to be vanquished.\"",
+         "\"У меня есть глаз тритона на обмен — не найдётся ли у тебя лишнего жала медяницы?\"",
+         "\"Похоже, волшебный портал теперь ещё долго будет устойчив.\"",
+         "\"Заметил%e, насколько сильнее стала Неферет Зелёная с тех пор, как вернули Око Эфиопики?\"",
+         "\"Хвала милости %d1!  Мы не были уверены, что ты одолеешь Тёмного.\"",
+         "\"Я тоже отправлюсь в мир, ведь Тёмный был лишь одним из множества зол, которые нужно победить.\"",
       },
       guardtalk_before = {
-         "\"Would you happen to have some eye of newt in that overstuffed pack, %s?\"",
-         "\"Ah, the spell to create the magic portal worked.  Outstanding!\"",
-         "\"Hurry!  %lC may not survive that casting of the portal spell!\"",
-         "\"The spells of %n were just too powerful for us to withstand.\"",
-         "\"I, too, will venture into the world, because %n is but one of many evils to be vanquished.\"",
+         "\"У тебя в этом набитом мешке, случаем, не найдётся глаза тритона, %s?\"",
+         "\"А, заклинание волшебного портала сработало.  Превосходно!\"",
+         "\"Поспеши!  Неферет Зелёная может не пережить сотворения заклинания портала!\"",
+         "\"Чары Тёмного оказались слишком сильны, нам было не выстоять.\"",
+         "\"Я тоже отправлюсь в мир, ведь Тёмный — лишь одно из множества зол, которые нужно победить.\"",
       },
       hasamulet = {
-         synopsis = "[Take the Amulet to %ds altar on the Astral Plane.]",
+         synopsis = "[Отнеси Амулет к алтарю %d1 на Астральном Плане.]",
          output = "text",
-         text = [["Congratulations, %p.  I always knew that if anyone could succeed
-in defeating the Wizard of Yendor and his minions, it would be you.
+         text = [["Поздравляю, %p.  Я всегда знала: если кто и сумеет одолеть
+Волшебника Йендора и его прислужников, так это ты.
 
-"Go now, and take the Amulet to the Astral Plane.  Once there, present
-the Amulet on the altar of %d.  Along the way you shall pass through
-the four Elemental Planes.  These planes are like nothing you have ever
-experienced before, so be prepared!
+"Ступай же и отнеси Амулет на Астральный План.  Там возложи Амулет
+на алтарь %d1.  По пути тебе предстоит пройти через четыре Стихийных
+Плана.  Они не похожи ни на что из того, что тебе доводилось
+видеть, так что будь готов%e!
 
-"For this you were born, %s!  I am very proud of you."]],
+"Ради этого ты и родил%y, %s!  Я очень тобой горжусь."]],
       },
       killed_nemesis = {
-         synopsis = "[%nC curses you as %nh dies.]",
+         synopsis = "[Умирая, Тёмный проклинает тебя.]",
          output = "text",
-         text = [[%nC, whose body begins to shrivel up, croaks out:
+         text = [[Тёмный, чьё тело начинает съёживаться, хрипит:
 
-    "I shall haunt your progress until the end of time.  A thousand
-    curses on you and %l."
+    "Я буду преследовать тебя до скончания времён.  Тысяча
+    проклятий тебе и Неферет Зелёной."
 
-Then, the body bursts into a cloud of choking dust, and blows away.]],
+Затем тело рассыпается облаком удушливой пыли, и её уносит ветром.]],
       },
       leader_first = {
-         synopsis = "[You have come a long way, but are you ready for the task I require?]",
+         synopsis = "[Ты многого добил%y, но готов%e ли ты к заданию, что я хочу тебе поручить?]",
          output = "text",
-         text = [["Come closer, %p, for my voice falters in my old age.
-Yes, I see that you have come a long way since you went out into the
-world, leaving the safe confines of this tower.  However, I must first
-determine if you have all of the skills required to take on the task
-I require of you."]],
+         text = [["Подойди ближе, %p, — на старости лет мой голос слабеет.
+Да, вижу, ты многого добил%y с тех пор, как покинул%e надёжные
+стены этой башни и отправил%y в мир.  Однако сперва я должна
+понять, хватит ли у тебя умений, чтобы взяться за задание,
+которое я хочу тебе поручить."]],
       },
       leader_last = {
-         synopsis = "[\"Get out of here!\"]",
+         synopsis = "[\"Убирайся отсюда!\"]",
          output = "text",
-         text = [["You fool, %p!  Why did I waste all of those years teaching you
-the esoteric arts?  Get out of here!  I shall find another."]],
+         text = [["Глупец, %p!  Зачем я потратила столько лет, обучая тебя
+тайным искусствам?  Убирайся отсюда!  Я найду другого."]],
       },
       leader_next = {
-         text = "\"Well, %p, you have returned.  Perhaps you are now ready...\"",
+         text = "\"Что ж, %p, ты вернул%y.  Быть может, теперь ты готов%e...\"",
       },
       leader_other = {
-         text = [["This is getting tedious, %p, but perseverance is a sign of a true mage.
-I certainly hope that you are truly ready this time!"]],
+         text = [["Это становится утомительным, %p, но упорство — признак истинного мага.
+Очень надеюсь, что на этот раз ты действительно готов%e!"]],
       },
       locate_first = {
-         text = "Wisps of fog swirl nearby.  You feel that %ns lair is close.",
+         text = "Рядом клубятся клочья тумана.  Ты чувствуешь, что логово Тёмного близко.",
       },
       locate_next = {
-         text = "You believe that you may once again invade %i.",
+         text = "Тебе кажется, что ты снова можешь проникнуть в Башню Тьмы.",
       },
       nemesis_first = {
-         synopsis = "[\"Your destruction should make for good sport.\"]",
+         synopsis = "[\"Уничтожить тебя будет забавно.\"]",
          output = "text",
-         text = [["Ah, I recognize you, %p.  So, %l has sent you to steal
-%o from me, hmmm?  Well, %lh is a fool to send such
-a mental weakling against me.
+         text = [["А, я тебя узнаю, %p.  Значит, Неферет Зелёная послала тебя украсть
+у меня Око Эфиопики, хм?  Что ж, глупо с её стороны посылать против
+меня такого слабака.
 
-"Your destruction, however, should make for good sport.  In the end, you
-shall beg me to kill you!"]],
+"Впрочем, уничтожить тебя будет забавно.  В конце концов ты сам%e
+будешь умолять меня убить тебя!"]],
       },
       nemesis_next = {
-         synopsis = "[\"Your soul shall soon be mine to command.\"]",
+         synopsis = "[\"Скоро твоя душа будет в моей власти.\"]",
          output = "text",
-         text = [["How nice of you to return, %p!  I enjoyed our last meeting.  Are you
-still hungry for more pain?
+         text = [["Как мило, что ты вернул%y, %p!  Мне понравилась наша прошлая
+встреча.  Всё ещё жаждешь боли?
 
-"Come!  Your soul, like %o, shall soon be mine to command."]],
+"Иди же!  Твоя душа, как и Око Эфиопики, скоро будет в моей власти."]],
       },
       nemesis_other = {
-         text = [["I'm sure that your perseverance shall be the subject of innumerable
-ballads, but you shall not be around to hear them, I fear!"]],
+         text = [["Не сомневаюсь, твоему упорству посвятят бессчётные баллады,
+но тебя, боюсь, уже не будет в живых, чтобы их услышать!"]],
       },
       nemesis_wantsit = {
-         text = [["Thief!  %oC belongs to me, now.  I shall feed
-your living flesh to my minions."]],
+         text = [["Вор!  Теперь Око Эфиопики принадлежит мне.  Я скормлю
+твою живую плоть своим прислужникам."]],
       },
       nexttime = {
-         text = "Once again, you are back at %H.",
+         text = "Ты снова у Одинокой Башни.",
       },
       offeredit = {
-         synopsis = "[Take %o with you in your quest for the Amulet.]",
+         synopsis = "[Возьми Око Эфиопики с собой на поиски Амулета.]",
          output = "text",
-         text = [[%lC notices %o in your possession,
-beams at you and says:
+         text = [[Неферет Зелёная замечает у тебя Око Эфиопики, сияет улыбкой
+и говорит:
 
-    "I knew you could defeat %n and retrieve
-    %o.  We shall never forget this
-    brave service.
+    "Я знала, что ты сможешь одолеть Тёмного и вернуть Око
+    Эфиопики.  Мы никогда не забудем этой отважной службы.
 
-    "Take %oh with you in your quest for the Amulet of Yendor.
-    I can sense that it has attuned %oiself to you already.
+    "Возьми Око с собой на поиски Амулета Йендора.  Я чувствую,
+    что оно уже настроилось на тебя.
 
-    "May %d guide you in your quest, and keep you from harm."]],
+    "Да направит тебя %d в твоих поисках и да хранит от бед."]],
       },
       offeredit2 = {
-         synopsis = "[Keep %o, return through the portal to %Z; find the other Amulet.]",
+         synopsis = "[Оставь Око Эфиопики у себя, возвращайся через портал в %Z и найди другой Амулет.]",
          output = "text",
-         text = [["You are the keeper of %o now.  It is time to
-recover the /other/ Amulet.  %Z await your return through
-the magic portal which brought you here."]],
+         text = [["Теперь ты хранитель Ока Эфиопики.  Пора добыть /другой/
+Амулет.  %Z ждут твоего возвращения через волшебный
+портал, что привёл тебя сюда."]],
       },
       othertime = {
-         text = [[You are back at %H.
-You have an odd feeling this may be the last time you ever come here.]],
+         text = [[Ты снова у Одинокой Башни.
+У тебя странное чувство, что ты здесь в последний раз.]],
       },
       posthanks = {
-         text = [["Come near, my %S, and share your adventures with me.
-So, have you succeeded in your quest for the Amulet of Yendor?"]],
+         text = [["Подойди ближе, дитя моё, и поведай мне о своих приключениях.
+Ну что, удались ли твои поиски Амулета Йендора?"]],
       },
    },
 }
