@@ -58,7 +58,7 @@ staticfn int readobjnam_postparse1(struct _readobjnam_data *);
 staticfn int readobjnam_postparse2(struct _readobjnam_data *);
 staticfn int readobjnam_postparse3(struct _readobjnam_data *);
 staticfn boolean ru_inflect_match(const char *, const char *);
-staticfn void ru_wish_normalize(char *, const char *, size_t);
+staticfn boolean ru_wish_normalize(char *, const char *, size_t);
 staticfn int ru_name_to_mon(const char *, int *);
 
 struct Jitem {
@@ -4064,6 +4064,29 @@ ru_is_objname(const char *str)
 }
 
 #include "objnames_en.h"
+#include "objgen_ru.h"
+
+/* RU: name of an object of class 'oc' given after a class word, either in
+   the nominative ("жезл огонь") or the genitive ("жезл огня"); returns the
+   canonical (nominative) name or Null if there is no such object */
+staticfn const char *
+ru_class_name(char oc, const char *rest)
+{
+    int i;
+
+    for (i = 0; i < NUM_OBJECTS; i++)
+        if (objects[i].oc_class == oc && OBJ_NAME(objects[i])
+            && !strcmpi(rest, OBJ_NAME(objects[i])))
+            return OBJ_NAME(objects[i]);
+    for (i = 0; i < SIZE(ru_gen_names); i++)
+        if (ru_gen_names[i].oclass == oc && !strcmpi(rest, ru_gen_names[i].gen))
+            return ru_gen_names[i].nom;
+    for (i = 0; i < NUM_OBJECTS; i++)
+        if (objects[i].oc_class == oc && OBJ_NAME(objects[i])
+            && ru_inflect_match(rest, OBJ_NAME(objects[i])))
+            return OBJ_NAME(objects[i]);
+    return (const char *) 0;
+}
 
 /* RU: accept English object names in wishes ("long sword", "2 daggers",
    "wand of fire", "potions of water") by replacing the English name with
@@ -4128,9 +4151,39 @@ ru_wish_english(char *bp, size_t bpsz)
 /* Translate a Russian wish phrase into the English tokens that
    readobjnam()'s parser already understands.  Object names are copied
    through unchanged; they're matched separately against objects[]. */
-staticfn void
+staticfn boolean
 ru_wish_normalize(char *dst, const char *src, size_t dstsz)
 {
+    /* class words; the English replacement is what the parser expects */
+    static const struct {
+        const char *ru, *en;
+        char oc;
+    } ru_cls[] = {
+        { "волшебная палочка ", "wand of ", WAND_CLASS },
+        { "волшебные палочки ", "wands of ", WAND_CLASS },
+        { "волшебных палочек ", "wands of ", WAND_CLASS },
+        { "палочка ", "wand of ", WAND_CLASS },
+        { "жезлов ", "wands of ", WAND_CLASS },
+        { "жезлы ", "wands of ", WAND_CLASS },
+        { "жезла ", "wands of ", WAND_CLASS },
+        { "жезл ", "wand of ", WAND_CLASS },
+        { "зелий ", "potions of ", POTION_CLASS },
+        { "зелья ", "potions of ", POTION_CLASS },
+        { "зелье ", "potion of ", POTION_CLASS },
+        { "свитков ", "scrolls of ", SCROLL_CLASS },
+        { "свитки ", "scrolls of ", SCROLL_CLASS },
+        { "свитка ", "scrolls of ", SCROLL_CLASS },
+        { "свиток ", "scroll of ", SCROLL_CLASS },
+        { "колец ", "rings of ", RING_CLASS },
+        { "кольца ", "rings of ", RING_CLASS },
+        { "кольцо ", "ring of ", RING_CLASS },
+        { "книг заклинаний ", "spellbooks of ", SPBOOK_CLASS },
+        { "книги заклинаний ", "spellbooks of ", SPBOOK_CLASS },
+        { "книгу заклинаний ", "spellbook of ", SPBOOK_CLASS },
+        { "книга заклинаний ", "spellbook of ", SPBOOK_CLASS },
+        { 0, 0, 0 }
+    };
+    char clsbuf[BUFSZ];
     static NEARDATA const char *const ru_exact[][2] = {
         { "святая вода", "holy water" },
         { "священная вода", "holy water" },
@@ -4387,12 +4440,13 @@ ru_wish_normalize(char *dst, const char *src, size_t dstsz)
     char *o = dst, *end;
     const char *p = src;
     int i;
+    boolean bad = FALSE;
 
     if (!dstsz)
-        return;
+        return FALSE;
     if (!src) {
         *dst = '\0';
-        return;
+        return FALSE;
     }
     end = dst + dstsz - 1;
     /* copy leading count / charge sign / spaces verbatim */
@@ -4425,6 +4479,26 @@ ru_wish_normalize(char *dst, const char *src, size_t dstsz)
         if (!matched)
             break;
     }
+    /* class word + name: "жезл огня" -> "wand of огонь"; an unknown name
+       fails rather than becoming a random object of that class, except
+       for user-assigned names ("свиток по имени ...", "... called ...") */
+    for (i = 0; ru_cls[i].ru; i++) {
+        size_t l = strlen(ru_cls[i].ru);
+
+        if (!strnicmp(p, ru_cls[i].ru, l)) {
+            const char *nom = ru_class_name(ru_cls[i].oc, p + l);
+
+            if (nom) {
+                Snprintf(clsbuf, sizeof clsbuf, "%s%s", ru_cls[i].en, nom);
+                p = clsbuf;
+            } else if (!strstri(p, " named ") && !strstri(p, " called ")
+                       && !strstri(p, "по имени") && !strstri(p, "под названием")
+                       && !strstri(p, "с надписью")) {
+                bad = TRUE;
+            }
+            break;
+        }
+    }
     /* whole-phrase synonyms for whatever remains */
     for (i = 0; ru_exact[i][0]; i++)
         if (!strcmpi(p, ru_exact[i][0])) {
@@ -4434,6 +4508,7 @@ ru_wish_normalize(char *dst, const char *src, size_t dstsz)
     while (*p && o < end)
         *o++ = *p++;
     *o = '\0';
+    return bad;
 }
 
 staticfn void
@@ -5612,8 +5687,9 @@ readobjnam(char *bp, struct obj *no_wish)
                 break;
             }
         if (hasru) {
-            ru_wish_normalize(d.fruitbuf, bp, sizeof d.fruitbuf);
-            ru_wish_normalize(d.globbuf, bp, sizeof d.globbuf);
+            (void) ru_wish_normalize(d.fruitbuf, bp, sizeof d.fruitbuf);
+            if (ru_wish_normalize(d.globbuf, bp, sizeof d.globbuf))
+                return (struct obj *) 0; /* class word + unknown name */
             d.bp = d.globbuf;
             if (!strcmpi(d.bp, "nothing") || !strcmpi(d.bp, "nil")
                 || !strcmpi(d.bp, "none"))
