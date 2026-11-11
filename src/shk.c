@@ -1695,8 +1695,9 @@ menu_pick_pay_items(
        the bill, no matter whether there are also any intact items;
        note: ibill[] has been sorted to hold used-up items first */
     if (ibill[0].usedup <= PartlyUsedUp) {
-        Sprintf(buf, "Израсходованные предметы:",
-                (ibillct > 1 && ibill[1].usedup <= PartlyUsedUp) ? "s" : "");
+        Strcpy(buf, (ibillct > 1 && ibill[1].usedup <= PartlyUsedUp)
+                         ? "Израсходованные предметы:"
+                         : "Израсходованный предмет:");
         add_menu_heading(win, buf);
     }
     for (i = 0; i < ibillct; ++i) {
@@ -1704,7 +1705,8 @@ menu_pick_pay_items(
            one was shown before the first menu entry */
         if (i > 0 && ibill[i - 1].usedup <= PartlyUsedUp
             && ibill[i].usedup >= PartlyIntact) {
-            Sprintf(buf, "Неоплаченные предметы:", (i < ibillct - 1) ? "s" : "");
+            Strcpy(buf, (i < ibillct - 1) ? "Неоплаченные предметы:"
+                                           : "Неоплаченный предмет:");
             add_menu_heading(win, buf);
         }
         otmp = ibill[i].obj;

@@ -3063,7 +3063,7 @@ use_whip(struct obj *obj)
         if (dam <= 0)
             dam = 1;
         You("ударяешь себя по %s хлыстом.", body_part_case(FOOT, BP_PREP));
-        Sprintf(buf, "убил себя с помощью %s хлыста", uhim(), uhis());
+        Sprintf(buf, "убил%s себя собственным хлыстом", flags.female ? "а" : "");
         losehp(Maybe_Half_Phys(dam), buf, NO_KILLER_PREFIX);
         return ECMD_TIME;
 
@@ -4126,7 +4126,7 @@ do_break_wand(struct obj *obj)
             }
             damage = zapyourself(obj, FALSE);
             if (damage) {
-                Sprintf(buf, "убил себя, сломав жезл", uhim());
+                Sprintf(buf, "убил%s себя, сломав жезл", flags.female ? "а" : "");
                 losehp(Maybe_Half_Phys(damage), buf, NO_KILLER_PREFIX);
             }
             if (disp.botl)
