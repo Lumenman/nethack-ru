@@ -5709,7 +5709,7 @@ check_unpaid_usage(struct obj *otmp, boolean altusage)
         arg1 = rn2(2) ? buf : "";
         arg2 = ESHK(shkp)->debit > 0L ? " дополнительно" : "";
     } else if (otmp->otyp == POT_OIL) {
-        fmt = "%s%sЁто будет стоить вам %ld %s (≈ндорианский топливный налог).";
+        fmt = "%s%sЁто будет стоить вам %ld %s (…ендорианский топливный налог).";
     } else if (altusage && (otmp->otyp == BAG_OF_TRICKS
                             || otmp->otyp == HORN_OF_PLENTY)) {
         fmt = "%s%sќпустошение этого будет стоить вам %ld %s.";
