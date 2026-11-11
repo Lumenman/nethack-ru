@@ -508,7 +508,7 @@ moverock_core(coordxy sx, coordxy sy)
                         obj_extract_self(otmp);
                         place_object(otmp, rx, ry);
                         newsym(sx, sy);
-                        pline("%s! %s %s мина.",
+                        pline("%s!  %s задевает %s.",
                               /* "kablam" is a variation of "ka-boom" or
                                  "kablooey", rather cartoonish descriptions
                                  of the sound of an explosion, but give it
@@ -517,9 +517,9 @@ moverock_core(coordxy sx, coordxy sy)
                               /* use an alternate exclamation when feeling
                                  the floor/ground/whatever shake (or maybe
                                  a weak shockwave if levitating or flying) */
-                                                : "Gadzooks",
-                              Tobjnam(otmp, "trigger"),
-                              ttmp->madeby_u ? "your" : "a");
+                                                : "Ох ты ж!",
+                              Tobjnam(otmp, (char *) 0),
+                              ttmp->madeby_u ? "вашу мину" : "мину");
                         blow_up_landmine(ttmp);
                         /* if the boulder remains, it should fill the pit */
                         fill_pit(u.ux, u.uy);
@@ -536,7 +536,7 @@ moverock_core(coordxy sx, coordxy sy)
                        if this is one among multiple boulders */
                     if (!Blind)
                         gv.viz_array[ry][rx] |= IN_SIGHT;
-                    if (!flooreffects(otmp, rx, ry, "fall")) {
+                    if (!flooreffects(otmp, rx, ry, "падает")) {
                         place_object(otmp, rx, ry);
                     }
                     if (mtmp && !Blind)
@@ -549,14 +549,11 @@ moverock_core(coordxy sx, coordxy sy)
                         pline("Бульк! Вы больше не чувствуете %s.",
                               the(xname(otmp)));
                     else
-                        pline("%s%s and %s a %s in the %s!",
-                              Tobjnam(otmp, (ttmp->ttyp == TRAPDOOR)
-                                                ? "trigger"
-                                                : "fall"),
-                              (ttmp->ttyp == TRAPDOOR) ? "" : " into",
-                              otense(otmp, "plug"),
-                              (ttmp->ttyp == TRAPDOOR) ? "trap door" : "hole",
-                              surface(rx, ry));
+                        pline("%s %s и затыкает %s!",
+                              Tobjnam(otmp, (char *) 0),
+                              (ttmp->ttyp == TRAPDOOR) ? "срабатывает"
+                                                       : "проваливается",
+                              (ttmp->ttyp == TRAPDOOR) ? "люк" : "дыру");
                     deltrap(ttmp);
                     useupf(otmp, 1L);
                     bury_objs(rx, ry);
@@ -608,7 +605,7 @@ moverock_core(coordxy sx, coordxy sy)
                             break;
                     }
                     pline("%s от вас!",
-                          Tobjnam(otmp, "suddenly roll"));
+                          Tobjnam(otmp, "внезапно откатывается"));
                     feeltrap(ttmp);
                     launch_obj(BOULDER, sx, sy, tox, toy, ROLL | LAUNCH_KNOWN);
                     return sobj_at(BOULDER, sx, sy) ? -1 : 0;
@@ -786,7 +783,7 @@ still_chewing(coordxy x, coordxy y)
     } else if (lev->typ == SDOOR) {
         if (lev->doormask & D_TRAPPED) {
             lev->doormask = D_NODOOR;
-            b_trapped("secret door", NO_PART);
+            b_trapped("потайная дверь", NO_PART);
         } else {
             digtxt = "прогрызаете потайную дверь.";
             lev->doormask = D_BROKEN;
@@ -800,7 +797,7 @@ still_chewing(coordxy x, coordxy y)
         }
         if (lev->doormask & D_TRAPPED) {
             lev->doormask = D_NODOOR;
-            b_trapped("door", NO_PART);
+            b_trapped("дверь", NO_PART);
         } else {
             digtxt = "прогрызаете дверь.";
             lev->doormask = D_BROKEN;

@@ -932,7 +932,7 @@ do_symset(boolean rogueflag)
 
     if (res && gs.symset_list) {
         int thissize,
-            biggest = (int) (sizeof "Default Symbols" - sizeof ""),
+            biggest = (int) (sizeof "Стандартные символы" - sizeof ""),
             big_desc = 0;
 
         for (sl = gs.symset_list; sl; sl = sl->next) {
@@ -957,8 +957,8 @@ do_symset(boolean rogueflag)
                 big_desc = thissize;
         }
         if (!setcount) {
-            There("are no appropriate %s symbol sets available.",
-                  rogueflag ? "rogue level" : "primary");
+            pline("Нет подходящих наборов символов (%s).",
+                  rogueflag ? "уровень Rogue" : "основные");
             return TRUE;
         }
 
@@ -970,7 +970,7 @@ do_symset(boolean rogueflag)
         if (!symset_name)
             defindx = any.a_int;
         add_menu(tmpwin, &nul_glyphinfo, &any, 0, 0, ATR_NONE,
-                 clr, "Default Symbols",
+                 clr, "Стандартные символы",
                  (any.a_int == defindx) ? MENU_ITEMFLAGS_SELECTED
                                         : MENU_ITEMFLAGS_NONE);
 
@@ -1000,8 +1000,8 @@ do_symset(boolean rogueflag)
                                                 : MENU_ITEMFLAGS_NONE);
             }
         }
-        Sprintf(buf, "Select %ssymbol set:",
-                rogueflag ? "rogue level " : "");
+        Sprintf(buf, "Выберите набор символов%s:",
+                rogueflag ? " для уровня Rogue" : "");
         end_menu(tmpwin, buf);
         n = select_menu(tmpwin, PICK_ONE, &symset_pick);
         if (n > 0) {

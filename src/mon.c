@@ -3318,7 +3318,7 @@ monstone(struct monst *mdef)
 #endif
                 /* invocation tools resist even with 0% resistance */
                 || obj_resists(obj, 0, 0)) {
-                if (flooreffects(obj, x, y, "fall"))
+                if (flooreffects(obj, x, y, "падает"))
                     continue;
                 place_object(obj, x, y);
             } else {
@@ -3606,7 +3606,7 @@ xkilled(
                     artifact_exists(otmp, safe_oname(otmp), FALSE,
                                     ONAME_NO_FLAGS);
                 delobj(otmp);
-            } else if (!flooreffects(otmp, x, y, nomsg ? "" : "fall")) {
+            } else if (!flooreffects(otmp, x, y, nomsg ? "" : "падает")) {
                 place_object(otmp, x, y);
                 stackobj(otmp);
             }
@@ -4743,8 +4743,8 @@ hideunder(struct monst *mtmp)
         undetected = (is_pool(x, y) && !Is_waterlevel(&u.uz)
                       && (!Underwater || !couldsee(x, y)));
         if (seeit) {
-            seenobj = "the water";
-            locomo = "dive";
+            seenobj = "водой";
+            locomo = "скрывается";
         }
     } else if (hides_under(mtmp->data)
                /* hider-underers only hide under objects */
@@ -4786,7 +4786,7 @@ hideunder(struct monst *mtmp)
            will be Null */
         if (undetected && seenmon && seenobj) {
             if (!locomo)
-                locomo = locomotion(mtmp->data, "hide");
+                locomo = locomotion(mtmp->data, "прячется");
             set_msg_xy(mtmp->mx, mtmp->my); /* pline() will reset this */
             You_see("%s %s под %s.", seenmon, locomo, seenobj);
             iflags.last_msg = PLNMSG_HIDE_UNDER;

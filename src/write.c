@@ -88,7 +88,7 @@ dowrite(struct obj *pen)
         You("нужны руки, чтобы писать!");
         return ECMD_OK;
     } else if (Glib) {
-        pline("%s из вашей %s.", Tobjnam(pen, "slip"),
+        pline("%s выскальзывает из ваших %s.", Tobjnam(pen, (char *) 0),
               fingers_or_gloves(FALSE, BP_GEN));
         dropx(pen);
         return ECMD_TIME;

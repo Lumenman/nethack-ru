@@ -531,7 +531,7 @@ dig(void)
         }
         if (IS_DOOR(lev->typ) && (lev->doormask & D_TRAPPED)) {
             lev->doormask = D_NODOOR;
-            b_trapped("door", NO_PART);
+            b_trapped("дверь", NO_PART);
             recalc_block_point(dpx, dpy);
             newsym(dpx, dpy);
         }
@@ -2247,12 +2247,12 @@ escape_tomb(void)
             || (unsolid(gy.youmonst.data)
                 && gy.youmonst.data != &mons[PM_WATER_ELEMENTAL])
             || (tunnels(gy.youmonst.data) && !needspick(gy.youmonst.data))) {
-            You("%s up through the %s.",
+            You("%s вверх сквозь %s.",
                 (tunnels(gy.youmonst.data) && !needspick(gy.youmonst.data))
-                   ? "try to tunnel"
+                   ? "пытаетесь прорыть ход"
                    : (amorphous(gy.youmonst.data))
-                      ? "ooze"
-                      : "phase",
+                      ? "просачиваетесь"
+                      : "проходите",
                 surface(u.ux, u.uy));
 
             good = (tunnels(gy.youmonst.data) && !needspick(gy.youmonst.data))

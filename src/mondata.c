@@ -1381,6 +1381,26 @@ locomotion(const struct permonst *ptr, const char *def)
 {
     int locoindx = (*def != highc(*def)) ? 0 : 1;
 
+    /* RU: callers pass a Russian 3rd-person present verb ("шагает");
+       swap in the Russian verb for the special locomotion types and keep
+       any other form (infinitive etc.) as given.  English defs still go
+       through the English tables for u_locomotion(), which translates. */
+    if (*def & 0x80) {
+        static const char *const ru3[][2] = {
+            { "парит", "Парит" },           { "летит", "Летит" },
+            { "скользит", "Скользит" },     { "сочится", "Сочится" },
+            { "извивается", "Извивается" }, { "ползёт", "Ползёт" },
+        };
+        size_t n = strlen(def);
+        int k = is_floater(ptr) ? 0 : is_flyer(ptr) ? 1 : slithy(ptr) ? 2
+                : amorphous(ptr) ? 3 : !ptr->mmove ? 4 : nolimbs(ptr) ? 5
+                : -1;
+
+        if (k >= 0 && (def[n - 1] == 'т'
+                       || (n > 3 && !strcmp(def + n - 3, "тся"))))
+            return ru3[k][locoindx];
+        return def;
+    }
     return (is_floater(ptr) ? levitate[locoindx]
             : (is_flyer(ptr) && ptr->msize <= MZ_SMALL) ? flys[locoindx]
               : (is_flyer(ptr) && ptr->msize > MZ_SMALL) ? flyl[locoindx]

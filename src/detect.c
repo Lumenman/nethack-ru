@@ -1199,10 +1199,10 @@ static const struct crystalballlevels {
     const char *what;
     d_level *where;
 } level_detects[] = {
-    { "Delphi", &oracle_level },
-    { "Medusa's lair", &medusa_level },
-    { "a castle", &stronghold_level },
-    { "the Wizard of Yendor's tower", &wiz1_level },
+    { "Äåëüôû", &oracle_level },
+    { "ëîãîâî Ìåäóçû", &medusa_level },
+    { "çàìîê", &stronghold_level },
+    { "áàøíş Âîëøåáíèêà Éåíäîğà", &wiz1_level },
 };
 
 void
@@ -1226,27 +1226,27 @@ use_crystal_ball(struct obj **optr)
             pline("%s ñëèøêîì ñëîæíî äëÿ ïîíèìàíèÿ!", Tobjnam(obj, "are"));
             break;
         case 2:
-            pline("%s âàñ!", Tobjnam(obj, "confuse"));
+            pline("%s ñáèâàåò âàñ ñ òîëêó!", Tobjnam(obj, (char *) 0));
             make_confused((HConfusion & TIMEOUT) + impair, FALSE);
             break;
         case 3:
             if (!resists_blnd(&gy.youmonst)) {
-                pline("%s âàøå çğåíèå!", Tobjnam(obj, "damage"));
+                pline("%s ïîâğåæäàåò âàøå çğåíèå!", Tobjnam(obj, (char *) 0));
                 make_blinded(BlindedTimeout + impair, FALSE);
                 if (!Blind)
                     Your1(vision_clears);
             } else {
-                pline("%s âàøå çğåíèå.", Tobjnam(obj, "assault"));
+                pline("%s áü¸ò ïî âàøåìó çğåíèş.", Tobjnam(obj, (char *) 0));
                 You("íå çàòğîíóòû!");
             }
             break;
         case 4:
-            pline("%s âàø ğàçóì!", Tobjnam(obj, "zap"));
+            pline("%s ïîğàæàåò âàø ğàçóì!", Tobjnam(obj, (char *) 0));
             (void) make_hallucinated((HHallucination & TIMEOUT) + impair,
                                      FALSE, 0L);
             break;
         case 5:
-            pline("%s!", Tobjnam(obj, "explode"));
+            pline("%s âçğûâàåòñÿ!", Tobjnam(obj, (char *) 0));
             useup(obj);
             *optr = obj = 0; /* it's gone */
             /* physical damage cause by the shards and force */
@@ -1322,7 +1322,7 @@ use_crystal_ball(struct obj **optr)
 
         if (obj->spe < 0) { /* destroy ball if used after being cancelled */
  implode:   /* no damage to hero but 'multi' has a small negative value */
-            pline("%s!", Tobjnam(obj, "implode"));
+            pline("%s ñõëîïûâàåòñÿ!", Tobjnam(obj, (char *) 0));
             useup(obj);
             *optr = obj = (struct obj *) 0; /* it's gone */
             return;
@@ -1753,7 +1753,7 @@ openone(coordxy zx, coordxy zy, genericptr_t num)
             cvt_sdoor_to_door(&levl[zx][zy]); /* .typ = DOOR */
         if (levl[zx][zy].doormask & D_TRAPPED) {
             if (distu(zx, zy) < 3)
-                b_trapped("door", NO_PART);
+                b_trapped("äâåğü", NO_PART);
             else
                 Norep("Âû %s âçğûâ!",
                       cansee(zx, zy) ? "âèäèòå" : (!Deaf ? "ñëûøèòå"

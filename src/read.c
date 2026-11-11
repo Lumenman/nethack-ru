@@ -679,8 +679,8 @@ p_glow2(struct obj *otmp, const char *color)
 staticfn void
 p_glow3(struct obj *otmp, const char *color)
 {
-    pline("%s слабо%s%s на мгновение.",
-          Yobjnam2(otmp, Blind ? "vibrate" : "glow"),
+    pline("%s на мгновение слабо %s%s%s.",
+          Yobjnam2(otmp, (char *) 0), Blind ? "вибрирует" : "светитс€",
           Blind ? "" : " ", Blind ? "" : hcolor(color));
 }
 
@@ -1351,7 +1351,7 @@ seffect_destroy_armor(struct obj **sobjp)
     if (scursed) {
         if (otmp && otmp->cursed) {
             /* armor and scroll both cursed */
-            pline("%s.", Yobjnam2(otmp, "vibrate"));
+            pline("%s вибрирует.", Yobjnam2(otmp, (char *) 0));
             if (otmp->spe >= -6) {
                 otmp->spe += -1;
                 adj_abon(otmp, -1);
@@ -1588,8 +1588,8 @@ seffect_remove_curse(struct obj **sobjp)
                 /* like rndcurse(sit.c), effect on regular inventory
                    doesn't show things glowing but saddle does */
                 if (!Blind) {
-                    pline("%s %s.", Yobjnam2(obj, "glow"),
-                              hcolor("amber"));
+                    pline("%s светитс€ %s.", Yobjnam2(obj, (char *) 0),
+                              hcolor(NH_AMBER));
                     obj->bknown = Hallucination ? 0 : 1;
                 } else {
                     obj->bknown = 0; /* skip set_bknown() */
@@ -2331,7 +2331,7 @@ drop_boulder_on_player(
         dmg = 0;
     wake_nearto(u.ux, u.uy, 4 * 4);
     /* Must be before the losehp(), for bones files */
-    if (!flooreffects(otmp2, u.ux, u.uy, "fall")) {
+    if (!flooreffects(otmp2, u.ux, u.uy, "падает")) {
         place_object(otmp2, u.ux, u.uy);
         stackobj(otmp2);
         newsym(u.ux, u.uy);
@@ -2405,7 +2405,7 @@ drop_boulder_on_monster(coordxy x, coordxy y, boolean confused, boolean byu)
         return 1;
     }
     /* Drop the rock/boulder to the floor */
-    if (!flooreffects(otmp2, x, y, "fall")) {
+    if (!flooreffects(otmp2, x, y, "падает")) {
         place_object(otmp2, x, y);
         stackobj(otmp2);
         newsym(x, y); /* map the rock */

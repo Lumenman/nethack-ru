@@ -2434,7 +2434,7 @@ fig_transform(anything *arg, long timeout)
         if (mtmp->mundetected) {
             if (hides_under(mtmp->data) && mshelter) {
                 Sprintf(and_vanish, " и %s под %s",
-                        locomotion(mtmp->data, "crawl"), doname(mshelter));
+                        locomotion(mtmp->data, "заползает"), doname(mshelter));
             } else if (mtmp->data->mlet == S_MIMIC
                        || mtmp->data->mlet == S_EEL) {
                 suppress_see = TRUE;
@@ -2446,10 +2446,10 @@ fig_transform(anything *arg, long timeout)
         case OBJ_INVENT:
             if (Blind || suppress_see)
                 You_feel("%s %s из вашей сумки!", something,
-                         locomotion(mtmp->data, "drop"));
+                         locomotion(mtmp->data, "выпадает"));
             else
                 You_see("%s %s из вашей сумки%s!", monnambuf,
-                        locomotion(mtmp->data, "drop"), and_vanish);
+                        locomotion(mtmp->data, "выпадает"), and_vanish);
             break;
 
         case OBJ_FLOOR:
@@ -2478,7 +2478,7 @@ fig_transform(anything *arg, long timeout)
                 else
                     Strcpy(carriedby, "тонкого воздуха");
                 You_see("%s %s из %s%s!", monnambuf,
-                        locomotion(mtmp->data, "drop"), carriedby,
+                        locomotion(mtmp->data, "выпадает"), carriedby,
                         and_vanish);
             }
             break;

@@ -1232,9 +1232,9 @@ break_armor(void)
                 char hornbuf[BUFSZ];
 
                 /* Future possibilities: This could damage/destroy helmet */
-                Sprintf(hornbuf, "horn%s", plur(num_horns(uptr)));
-                Your("%s %s through %s.", hornbuf, vtense(hornbuf, "pierce"),
-                     yname(otmp));
+                Strcpy(hornbuf, (num_horns(uptr) > 1) ? "Ваши рога пронзают"
+                                                      : "Ваш рог пронзает");
+                pline("%s %s.", hornbuf, yname(otmp));
             } else {
                 if (donning(otmp))
                     cancel_don();
@@ -1294,7 +1294,7 @@ break_armor(void)
 
         if (!strncmp(eyewear, "pair of ", l = 8)) /* lenses */
             eyewear += l;
-        Your("%s %s!", eyewear, vtense(eyewear, "fall"));
+        pline("%s %s!", upstart((char *) eyewear), is_plural(otmp) ? "спадают" : "спадает");
         (void) Blindf_off((struct obj *) 0); /* Null: skip usual off mesg */
         dropp(otmp);
     }
@@ -1378,7 +1378,7 @@ rehumanize(void)
                be wearing an amulet of life-saving */
             return; /* don't rehumanize after all */
         } else if (uamul && uamul->otyp == AMULET_OF_UNCHANGING) {
-            Your("%s %s!", simpleonames(uamul), otense(uamul, "fail"));
+            pline("%s не срабатывает!", upstart(simpleonames(uamul)));
             observe_object(uamul);
             makeknown(AMULET_OF_UNCHANGING);
         }

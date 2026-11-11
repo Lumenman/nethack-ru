@@ -91,21 +91,18 @@ morgue_mon_sound(struct monst *mtmp)
     if ((is_undead(mtmp->data) || is_vampshifter(mtmp))
         && mon_in_room(mtmp, MORGUE)) {
         int hallu = Hallucination ? 1 : 0;
-        const char *hair = body_part(HAIR); /* hair/fur/scales */
 
         switch (rn2(2) + hallu) {
         case 0:
             You("внезапно понимаете, что неестественно тихо.");
             break;
         case 1:
-            pline_The("%s on the back of your %s %s up.", hair,
-                      body_part_case(NECK, BP_GEN),
-                      vtense(hair, "stand"));
+            pline("У вас по %s бегут мурашки.",
+                      body_part_case(NECK, BP_DAT));
             break;
         case 2:
-            pline_The("%s on your %s %s to stand up.", hair,
-                      body_part_case(HEAD, BP_GEN),
-                      vtense(hair, "seem"));
+            pline("Кажется, у вас на %s всё встаёт дыбом.",
+                      body_part_case(HEAD, BP_PREP));
             break;
         }
         return TRUE;

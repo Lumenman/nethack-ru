@@ -673,7 +673,7 @@ mcast_insects(struct monst *mtmp)
 
     /* not canspotmon() which includes unseen things sensed via warning */
     seecaster = canseemon(mtmp) || tp_sensemon(mtmp) || Detect_monsters;
-    what = (let == S_SNAKE) ? "snakes" : "insects";
+    what = (let == S_SNAKE) ? "змей" : "насекомых";
     if (Hallucination)
         what = makeplural(bogusmon(whatbuf, (char *) 0));
 
@@ -684,19 +684,18 @@ mcast_insects(struct monst *mtmp)
                or unconscious hero ("You dream that you hear...") */
             You_hear("кого-то, призывающего %s.", what);
         } else {
-            char *arg;
+            boolean one = (newseen == oldseen + 1);
+            const char *arg = Hallucination ? what
+                              : (let == S_SNAKE) ? (one ? "змея" : "змеи")
+                                : (one ? "насекомое" : "насекомые");
 
-            if (what != whatbuf)
-                what = strcpy(whatbuf, what);
             /* unseen caster summoned seen critter(s) */
-            arg = (newseen == oldseen + 1) ? an(makesingular(what))
-                                           : whatbuf;
             if (!Deaf) {
                 Soundeffect(se_someone_summoning, 100);
-                You_hear("кого-то, призывающего что-то, и %s %s.", arg,
-                         vtense(arg, "appear"));
+                You_hear("чей-то призыв, и появля%s %s.",
+                         one ? "ется" : "ются", arg);
             } else {
-                pline("%s %s.", upstart(arg), vtense(arg, "appear"));
+                pline("Появля%s %s.", one ? "ется" : "ются", arg);
             }
         }
 

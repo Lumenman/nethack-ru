@@ -1718,7 +1718,7 @@ maybe_adjust_light(struct obj *obj, int old_range)
             *buf = '\0';
             if (iflags.last_msg == PLNMSG_OBJ_GLOWS)
                 /* we just saw "The <obj> glows <color>." from dipping */
-                Strcpy(buf, (obj->quan == 1L) ? "It" : "They");
+                Strcpy(buf, (obj->quan == 1L) ? "ќн" : "ќни");
             else if (carried(obj) || cansee(ox, oy))
                 Strcpy(buf, Yname2(obj));
             if (*buf) {
@@ -1727,9 +1727,10 @@ maybe_adjust_light(struct obj *obj, int old_range)
                    when changing intensity, using "less brightly" is
                    straightforward for dimming, but we need "brighter"
                    rather than "more brightly" for brightening; ugh */
-                pline("%s %s %s%s.", buf, otense(obj, "shine"),
-                      (abs(delta) > 1) ? "much " : "",
-                      (delta > 0) ? "brighter" : "less brightly");
+                pline("%s %s %s%s.", buf,
+                      (obj->quan == 1L) ? "светитс€" : "свет€тс€",
+                      (abs(delta) > 1) ? "намного " : "",
+                      (delta > 0) ? "€рче" : "тусклее");
             }
         }
     }
@@ -2874,15 +2875,15 @@ hornoplenty(
                 if (obj->otyp == POT_OIL)
                     fixup_oil(obj, (struct obj *) NULL);
             }
-            what = (obj->quan > 1L) ? "Some potions" : "A potion";
+            what = (obj->quan > 1L) ? "»з рога выливаютс€ зель€" : "»з рога выливаетс€ зелье";
         } else {
             obj = mkobj(FOOD_CLASS, FALSE);
             if (obj->otyp == FOOD_RATION && !rn2(7))
                 obj->otyp = LUMP_OF_ROYAL_JELLY;
-            what = "Some food";
+            what = "»з рога высыпаетс€ еда";
         }
         ++objcount;
-        pline("%s %s out.", what, vtense(what, "spill"));
+        pline("%s.", what);
         obj->blessed = horn->blessed;
         obj->cursed = horn->cursed;
         obj->owt = weight(obj);
@@ -2896,13 +2897,13 @@ hornoplenty(
         if (!tipping) {
             obj = hold_another_object(obj,
                                       u.uswallow
-                                        ? "ќй! %s из ваших рук!"
+                                        ? "ќй!  %s выскальзывает из ваших рук!"
                                         : (Is_airlevel(&u.uz)
                                            || Is_waterlevel(&u.uz)
                                            || levl[u.ux][u.uy].typ < IRONBARS
                                            || levl[u.ux][u.uy].typ >= ICE)
-                                          ? "ќй! %s прочь от вас!"
-                                          : "ќй! %s на пол!",
+                                          ? "ќй!  %s уплывает от вас!"
+                                          : "ќй!  %s падает на пол!",
                                       The(aobjnam(obj, "slip")), (char *) 0);
             nhUse(obj);
         } else if (targetbox) {
@@ -2924,7 +2925,7 @@ hornoplenty(
                     doaltarobj(obj); /* does its own drop message */
                 else
                     pline("%s %s на %s.", Doname2(obj),
-                          otense(obj, "drop"), surface(u.ux, u.uy));
+                          is_plural(obj) ? "падают" : "падает", surface(u.ux, u.uy));
                 dropy(obj);
             }
         }

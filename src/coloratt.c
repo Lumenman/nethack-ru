@@ -494,7 +494,7 @@ query_color(const char *prompt, int dflt_color)
                  (colornames[i].color == dflt_color) ? MENU_ITEMFLAGS_SELECTED
                                                      : MENU_ITEMFLAGS_NONE);
     }
-    end_menu(tmpwin, (prompt && *prompt) ? prompt : "Pick a color");
+    end_menu(tmpwin, (prompt && *prompt) ? prompt : "Выберите цвет");
     pick_cnt = select_menu(tmpwin, PICK_ONE, &picks);
     destroy_nhwindow(tmpwin);
 

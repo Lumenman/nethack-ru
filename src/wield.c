@@ -774,11 +774,11 @@ can_twoweapon(void)
                              ? gu.urole.name.f : gu.urole.name.m));
     } else if (!uwep || !uswapwep) {
         const char *hand_s =
-            (!uwep && !uswapwep) ? body_part_case(HAND, BP_NOM | BP_PLURAL)
-                                 : body_part_case(HAND, BP_NOM);
+            (!uwep && !uswapwep) ? body_part_case(HAND, BP_PREP | BP_PLURAL)
+                                 : body_part_case(HAND, BP_PREP);
         /* "your hands are empty" or "your {left|right} hand is empty" */
-        Your("%s%s %s пусто.", uwep ? "левой " : uswapwep ? "правой " : "",
-             hand_s, vtense(hand_s, "are"));
+        pline("В %s%s пусто.", uwep ? "левой " : uswapwep ? "правой " : "",
+              hand_s);
     } else if (!TWOWEAPOK(uwep) || !TWOWEAPOK(uswapwep)) {
         otmp = !TWOWEAPOK(uwep) ? uwep : uswapwep;
         pline("%s %s подходящее %s оружие%s.", Yname2(otmp),

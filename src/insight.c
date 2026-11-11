@@ -189,7 +189,7 @@ enlght_combatinc(
     invrt = strcmp(inctyp, "to hit") ? TRUE : FALSE;
 
     Sprintf(outbuf, "%s %s к %s", modif, bonus,
-            invrt ? "попаданию" : (inctyp[0] == 'd') ? "урону" : "защите");
+            !invrt ? "попаданию" : (inctyp[0] == 'd') ? "урону" : "защите");
     if (final || wizard)
         Sprintf(eos(outbuf), " (%s%d)", (incamt > 0) ? "+" : "", incamt);
 
@@ -395,7 +395,7 @@ enlightenment(
     *tmpbuf = highc(*tmpbuf); /* same adjustment as bottom line */
     /* as in background_enlightenment, when poly'd we need to use the saved
        gender in u.mfemale rather than the current you-as-monster gender */
-    Snprintf(buf, sizeof(buf), "%s the %s's attributes:", tmpbuf,
+    Snprintf(buf, sizeof(buf), "%s (%s): характеристики", tmpbuf,
              ((Upolyd ? u.mfemale : flags.female) && gu.urole.name.f)
                 ? gu.urole.name.f
                 : gu.urole.name.m);

@@ -2807,7 +2807,7 @@ mbag_item_gone(boolean held, struct obj *item, boolean silent)
 
     if (!silent) {
         if (item->dknown)
-            pline("%s %s исчез!", Doname2(item), otense(item, "have"));
+            pline("%s %s!", Doname2(item), is_plural(item) ? "исчезли" : "исчезает");
         else
             You("%s %s исчезают!", Blind ? "замечаете" : "видите", doname(item));
     }
@@ -3666,7 +3666,7 @@ dotip(void)
     }
     /* anything not covered yet */
     if (cobj->oclass == POTION_CLASS) /* can't pour potions... */
-        pline("%s %s Надёжно запечатан.", xname(cobj), otense(cobj, "are"));
+        pline("%s надёжно запечатан%s.", upstart(xname(cobj)), is_plural(cobj) ? "ы" : "о");
     else if (uarmh && cobj == uarmh)
         return tiphat() ? ECMD_TIME : ECMD_OK;
     else if (cobj->otyp == STATUE)

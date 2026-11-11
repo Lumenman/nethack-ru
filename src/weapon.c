@@ -771,7 +771,7 @@ possibly_unwield(struct monst *mon, boolean polyspot)
         }
         obj_extract_self(obj);
         /* might be dropping object into water or lava */
-        if (!flooreffects(obj, mon->mx, mon->my, "drop")) {
+        if (!flooreffects(obj, mon->mx, mon->my, "падает")) {
             if (polyspot)
                 bypass_obj(obj);
             place_object(obj, mon->mx, mon->my);

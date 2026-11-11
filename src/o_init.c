@@ -598,10 +598,10 @@ sortloot_descr(int otyp, char *outbuf)
 /* also used in options.c (optfn_sortdiscoveries) */
 static const char disco_order_let[] = "osca";
 static const char *const disco_orders_descr[] = {
-    "by order of discovery within each class",
-    "sortloot order (by class with some sub-class groupings)",
-    "alphabetical within each class",
-    "alphabetical across all classes",
+    "по порядку открытия внутри каждого класса",
+    "в порядке sortloot (по классам с группировкой подклассов)",
+    "по алфавиту внутри каждого класса",
+    "по алфавиту по всем классам",
     (char *) 0
 };
 
@@ -862,7 +862,7 @@ dodiscovered(void) /* free after Robert Viduya */
                classes, we normally don't need a header; but it we showed
                any unique items or any artifacts then we do need one */
             if ((uniq_ct || arti_ct) && alphabetized && !alphabyclass)
-                putstr(tmpwin, iflags.menu_headings.attr, "Discovered items");
+                putstr(tmpwin, iflags.menu_headings.attr, "Открытые предметы");
             disco_output_sorted(tmpwin, sorted_lines, sorted_ct, lootsort);
         }
         display_nhwindow(tmpwin, TRUE);
@@ -891,10 +891,10 @@ int
 doclassdisco(void)
 {
     static NEARDATA const char
-        prompt[] = "View discoveries for which sort of objects?",
-        havent_discovered_any[] = "haven't discovered any %s yet.",
-        unique_items[] = "unique items or relics",
-        artifact_items[] = "artifacts";
+        prompt[] = "Показать открытия для какого вида предметов?",
+        havent_discovered_any[] = "пока не открыли ни одного предмета (%s).",
+        unique_items[] = "уникальные предметы и реликвии",
+        artifact_items[] = "артефакты";
     winid tmpwin = WIN_ERR;
     menu_item *pick_list = 0;
     anything any;
@@ -1081,10 +1081,10 @@ doclassdisco(void)
         /* this should never happen but has been observed via the fuzzer */
         if (oclass == MAXOCLASSES)
             impossible("doclassdisco: invalid object class '%s'", visctrl(c));
-        Sprintf(buf, "Discovered %s in %s", let_to_name(oclass, FALSE, FALSE),
-                (flags.discosort == 'o') ? "order of discovery"
-                : (flags.discosort == 's') ? "'sortloot' order"
-                  : "alphabetical order");
+        Sprintf(buf, "Открытые предметы (%s) %s", let_to_name(oclass, FALSE, FALSE),
+                (flags.discosort == 'o') ? "в порядке открытия"
+                : (flags.discosort == 's') ? "в порядке sortloot"
+                  : "по алфавиту");
         putstr(tmpwin, 0, buf); /* skip iflags.menu_headings */
         sorted_ct = 0;
         for (i = svb.bases[(int) oclass]; i <= svb.bases[oclass + 1] - 1;

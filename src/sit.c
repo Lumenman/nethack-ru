@@ -170,7 +170,7 @@ throne_sit_effect(void)
                         FALLTHROUGH;
                         /*FALLTHRU*/
                     case 1: /* one eye (Cyclops, floating eye) */
-                        Your("%s %s...", eye, vtense(eye, "tingle"));
+                        pline("” вас покалывает %s...", eye);
                         break;
                     case 0: /* no eyes */
                         You("испытываете очень странное ощущение в %s.",
@@ -608,7 +608,7 @@ rndcurse(void)
 
             if (otmp->oartifact && spec_ability(otmp, SPFX_INTEL)
                 && rn2(10) < 8) {
-                pline("%s!", Tobjnam(otmp, "resist"));
+                pline("%s сопротивл€етс€!", Tobjnam(otmp, (char *) 0));
                 continue;
             }
 
@@ -628,7 +628,7 @@ rndcurse(void)
         else
             curse(otmp);
         if (!Blind) {
-            pline("%s %s.", Yobjnam2(otmp, "glow"),
+            pline("%s светитс€ %s.", Yobjnam2(otmp, (char *) 0),
                   hcolor(otmp->cursed ? NH_BLACK : (const char *) "коричневым"));
             otmp->bknown = Hallucination ? 0 : 1; /* bypass set_bknown() */
         } else {

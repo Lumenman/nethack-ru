@@ -122,59 +122,59 @@ engulfer_explosion_msg(uchar adtyp, char olet)
     if (digests(u.ustuck->data)) {
         switch (adtyp) {
         case AD_FIRE:
-            adj = "heartburn";
+            adj = "мучает изжога";
             break;
         case AD_COLD:
-            adj = "chilly";
+            adj = "знобит";
             break;
         case AD_DISN:
             if (olet == WAND_CLASS)
-                adj = "irradiated by pure energy";
+                adj = "облучает чистой энергией";
             else
-                adj = "perforated";
+                adj = "продырявливает";
             break;
         case AD_ELEC:
-            adj = "shocked";
+            adj = "бьёт током";
             break;
         case AD_DRST:
-            adj = "poisoned";
+            adj = "тошнит от яда";
             break;
         case AD_ACID:
-            adj = "an upset stomach";
+            adj = "мучает расстройство желудка";
             break;
         default:
-            adj = "fried";
+            adj = "поджаривает";
             break;
         }
-        pline("%s gets %s!", Monnam(u.ustuck), adj);
+        pline("Кажется, %s %s!", mon_gen(u.ustuck, BP_ACC), adj);
     } else {
         switch (adtyp) {
         case AD_FIRE:
-            adj = "toasted";
+            adj = "подрумянивается";
             break;
         case AD_COLD:
-            adj = "chilly";
+            adj = "подмерзает";
             break;
         case AD_DISN:
             if (olet == WAND_CLASS)
-                adj = "overwhelmed by pure energy";
+                adj = "захлёбывается чистой энергией";
             else
-                adj = "perforated";
+                adj = "покрывается дырочками";
             break;
         case AD_ELEC:
-            adj = "shocked";
+            adj = "получает удар током";
             break;
         case AD_DRST:
-            adj = "intoxicated";
+            adj = "одурманивается";
             break;
         case AD_ACID:
-            adj = "burned";
+            adj = "обжигается";
             break;
         default:
-            adj = "fried";
+            adj = "поджаривается";
             break;
         }
-        pline("%s gets slightly %s!", Monnam(u.ustuck), adj);
+        pline("%s слегка %s!", Monnam(u.ustuck), adj);
     }
 }
 
@@ -209,6 +209,7 @@ explode(
     boolean visible, any_shield;
     int uhurt = 0; /* 0=unhurt, 1=items damaged, 2=you and items damaged */
     const char *str = (const char *) 0;
+    const char *adkill = (const char *) 0; /* RU: killer-case form of str */
     struct monst *mtmp, *mdef = 0;
     uchar adtyp;
     int explmask[3][3]; /* 0=normal explosion, 1=do shieldeff, 2=do nothing */
@@ -299,9 +300,7 @@ explode(
         /* when explode() is called recursively, svk.killer.name might change
            so retain a copy of the current value for this explosion */
         str = strcpy(killr_buf, svk.killer.name);
-        do_hallu = (Hallucination
-                    && (strstri(str, "'s explosion")
-                        || strstri(str, "s' explosion")));
+        do_hallu = (Hallucination && strstri(str, "взрыв"));
     }
     if (type == PHYS_EXPL_TYPE) {
         /* currently only gas spores */
@@ -311,36 +310,45 @@ explode(
          * still assign adtyp appropriately, but not replace str. */
         const char *adstr = NULL;
 
+        /* RU: adstr is accusative ("вы попали в ..."); adkill is the
+           genitive for "погиб от ..." or prepositional for fire's
+           "сгорел в ..." */
         switch (abs(type) % 10) {
         case 0:
-            adstr = "magical blast";
+            adstr = "магический взрыв", adkill = "магического взрыва";
             adtyp = AD_MAGM;
             break;
         case 1:
-            adstr = (olet == BURNING_OIL) ? "burning oil"
-                     : (olet == SCROLL_CLASS) ? "tower of flame" : "fireball";
+            if (olet == BURNING_OIL)
+                adstr = "горящее масло", adkill = "горящем масле";
+            else if (olet == SCROLL_CLASS)
+                adstr = "огненный столп", adkill = "огненном столпе";
+            else
+                adstr = "огненный шар", adkill = "огненном шаре";
             /* fire damage, not physical damage */
             adtyp = AD_FIRE;
             break;
         case 2:
-            adstr = "ball of cold";
+            adstr = "ледяной шар", adkill = "ледяного шара";
             adtyp = AD_COLD;
             break;
         case 4:
-            adstr = (olet == WAND_CLASS) ? "death field"
-                                         : "disintegration field";
+            if (olet == WAND_CLASS)
+                adstr = "поле смерти", adkill = "поля смерти";
+            else
+                adstr = "поле дезинтеграции", adkill = "поля дезинтеграции";
             adtyp = AD_DISN;
             break;
         case 5:
-            adstr = "ball of lightning";
+            adstr = "шаровую молнию", adkill = "шаровой молнии";
             adtyp = AD_ELEC;
             break;
         case 6:
-            adstr = "poison gas cloud";
+            adstr = "облако ядовитого газа", adkill = "облака ядовитого газа";
             adtyp = AD_DRST;
             break;
         case 7:
-            adstr = "splash of acid";
+            adstr = "брызги кислоты", adkill = "брызг кислоты";
             adtyp = AD_ACID;
             break;
         default:
@@ -438,7 +446,7 @@ explode(
         tmp_at(DISP_END, 0); /* clear the explosion */
     } else {
         if (olet == MON_EXPLODE || olet == TRAP_EXPLODE) {
-            str = "explosion";
+            str = "взрыв";
             generic = TRUE;
         }
         if (!Deaf && olet != SCROLL_CLASS) {
@@ -528,7 +536,7 @@ explode(
                     if (resist(mtmp, olet, 0, FALSE)) {
                         /* inside_engulfer: <xx,yy> == <u.ux,u.uy> */
                         if (cansee(xx, yy) || inside_engulfer)
-                            pline("%s resists the %s!", Monnam(mtmp), str);
+                            pline("%s сопротивляется взрыву!", Monnam(mtmp));
                         mdam = (dam + 1) / 2;
                     }
                     /* if grabber is reaching into hero's spot and
@@ -643,25 +651,23 @@ explode(
                 } else if (olet == TRAP_EXPLODE) {
                     svk.killer.format = NO_KILLER_PREFIX;
                     Snprintf(svk.killer.name, sizeof svk.killer.name,
-                             "caught %sself in a %s", uhim(),
+                             "угодил%s в %s", flags.female ? "а" : "",
                              str);
                 } else if (type >= 0 && olet != SCROLL_CLASS) {
                     svk.killer.format = NO_KILLER_PREFIX;
                     Snprintf(svk.killer.name, sizeof svk.killer.name,
-                             "caught %sself in %s own %s", uhim(),
-                             uhis(), str);
+                             "угодил%s в собственный %s",
+                             flags.female ? "а" : "", str);
                 } else {
-                    svk.killer.format = (!strcmpi(str, "tower of flame")
-                                     || !strcmpi(str, "fireball"))
-                                        ? KILLED_BY_AN
-                                        : KILLED_BY;
-                    Strcpy(svk.killer.name, str);
+                    svk.killer.format = KILLED_BY;
+                    Strcpy(svk.killer.name,
+                           (adkill && str != hallu_buf) ? adkill : str);
                 }
                 if (iflags.last_msg == PLNMSG_CAUGHT_IN_EXPLOSION
                     || iflags.last_msg == PLNMSG_TOWER_OF_FLAME) /*seffects()*/
                     pline("Это смертельно.");
                 else
-                    pline_The("%s is fatal.", str);
+                    pline("Это смертельно.");
                 /* Known BUG: BURNING suppresses corpse in bones data,
                    but done does not handle killer reason correctly */
                 done((adtyp == AD_FIRE) ? BURNING : DIED);
@@ -767,7 +773,7 @@ scatter(
             && rn2(10)) {
             if (otmp->otyp == BOULDER) {
                 if (cansee(sx, sy)) {
-                    pline("%s apart.", Tobjnam(otmp, "break"));
+                    pline("%s разваливается на куски.", Tobjnam(otmp, (char *) 0));
                 } else {
                     Soundeffect(se_stone_breaking, 100);
                     You_hear("ломающийся камень.");
@@ -785,7 +791,7 @@ scatter(
                 if ((trap = t_at(sx, sy)) && trap->ttyp == STATUE_TRAP)
                     deltrap(trap);
                 if (cansee(sx, sy)) {
-                    pline("%s.", Tobjnam(otmp, "crumble"));
+                    pline("%s рассыпается.", Tobjnam(otmp, (char *) 0));
                 } else {
                     Soundeffect(se_stone_crumbling, 100);
                     You_hear("рассыпающийся камень.");
@@ -900,7 +906,7 @@ scatter(
                 total += stmp->obj->quan;
                 obj_left_shop = (shop_origin && !costly_spot(x, y));
             }
-            if (!flooreffects(stmp->obj, x, y, "land")) {
+            if (!flooreffects(stmp->obj, x, y, "приземляется")) {
                 if (obj_left_shop
                     && strchr(u.urooms, *in_rooms(u.ux, u.uy, SHOPBASE))) {
                     /* At the moment this only takes on gold. While it is

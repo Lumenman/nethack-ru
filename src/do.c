@@ -97,11 +97,10 @@ boulder_hits_pool(
             if (pushing) {
                 char whobuf[BUFSZ];
 
-                Strcpy(whobuf, "you");
+                Strcpy(whobuf, "вы сталкиваете");
                 if (u.usteed)
-                    Strcpy(whobuf, y_monnam(u.usteed));
-                pline("%s %s %s в %s.", upstart(whobuf),
-                      vtense(whobuf, "push"), the(xname(otmp)), what);
+                    Sprintf(whobuf, "%s сталкивает", y_monnam(u.usteed));
+                pline("%s %s в %s.", upstart(whobuf), the(xname(otmp)), what);
                 if (flags.verbose && !Blind)
                     pline("Теперь вы можете пересечь её!");
                 /* no splashing in this case */
@@ -162,7 +161,7 @@ boolean
 flooreffects(
     struct obj *obj,      /* the object landing on the floor */
     coordxy x, coordxy y, /* map coordinates for spot where it is landing */
-    const char *verb)     /* "fall", "drop", "land", &c */
+    const char *verb)     /* "падает", "приземляется", &c */
 {
     struct trap *t;
     struct monst *mtmp;
@@ -191,9 +190,7 @@ flooreffects(
         if (((mtmp = m_at(x, y)) && mtmp->mtrapped)
             || (u.utrap && u_at(x,y))) {
             if (*verb && (cansee(x, y) || distu(x, y) == 0))
-                pline("%s валун %s в яму%s.",
-                      Blind ? "" : "",
-                      vtense((const char *) 0, verb),
+                pline("Валун %s в яму%s.", verb,
                       mtmp ? "" : " вместе с вами");
             if (mtmp) {
                 if (!passes_walls(mtmp->data) && !throws_rocks(mtmp->data)) {
@@ -242,13 +239,13 @@ flooreffects(
                 You_hear("ГРОХОТ! под вами.");
             } else if (!Blind && cansee(x, y)) {
                 pline("Валун %s%s.",
-                          (ttyp == TRAPDOOR && !tseen) ? "Срабатывает, и " : "",
-                          (ttyp == TRAPDOOR) ? "Затыкает люк"
-                          : (ttyp == HOLE) ? "Затыкает яму"
-                            : "Заполняет яму");
+                          (ttyp == TRAPDOOR && !tseen) ? "приводит в действие и " : "",
+                          (ttyp == TRAPDOOR) ? "затыкает люк"
+                          : (ttyp == HOLE) ? "затыкает дыру"
+                            : "заполняет яму");
             } else {
                 Soundeffect(se_boulder_drop, 100);
-                You_hear("валун %s.", verb);
+                You_hear("грохот падающего валуна.");
             }
         }
         /*
@@ -292,7 +289,7 @@ flooreffects(
                 Soundeffect(se_item_tumble_downwards, 50);
                 You_hear("%s катится вниз.", the(xname(obj)));
             } else {
-                pline("%s в %sяму.", Tobjnam(obj, "tumble"),
+                pline("%s скатывается в %sяму.", Tobjnam(obj, (char *) 0),
                       t->madeby_u ? "вашу " : "");
             }
         } else if (ship_object(obj, x, y, FALSE)) {
@@ -332,7 +329,7 @@ flooreffects(
         if (cansee(x,y)) {
             /* unconditional "ground" is safe as this only runs for
                room and corridor tiles */
-            pline("%s, когда %s раскалённой земли.", Tobjnam(obj, "heat"),
+            pline("%s нагревается, когда %s раскалённой земли.", Tobjnam(obj, (char *) 0),
                   is_plural(obj) ? "они касаются" : "оно касается");
         }
 
@@ -377,13 +374,13 @@ doaltarobj(struct obj *obj)
     }
 
     if (obj->blessed || obj->cursed) {
-        There("%s вспышка: %s %s алтарь.",
-              an(hcolor(obj->blessed ? NH_AMBER : NH_BLACK)), doname(obj),
-              otense(obj, "hit"));
+        pline("%s вспышка: %s %s алтаря.",
+              obj->blessed ? "Янтарная" : "Чёрная", doname(obj),
+              is_plural(obj) ? "касаются" : "касается");
         if (!Hallucination)
             obj->bknown = 1; /* ok to bypass set_bknown() */
     } else {
-        pline("%s %s на алтаре.", Doname2(obj), otense(obj, "land"));
+        pline("%s %s на алтарь.", Doname2(obj), is_plural(obj) ? "падают" : "падает");
         if (obj->oclass != COIN_CLASS)
             obj->bknown = 1; /* ok to bypass set_bknown() */
     }
@@ -561,7 +558,7 @@ dosinkring(struct obj *obj)
                 && !obj_resists(otmp, 1, 99)) {
                 if (!Blind) {
                     pline("Внезапно %s %s из раковины!", doname(otmp),
-                          otense(otmp, "vanish"));
+                          is_plural(otmp) ? "исчезают" : "исчезает");
                     ideed = TRUE;
                 }
                 delobj(otmp);
@@ -824,7 +821,7 @@ dropz(struct obj *obj, boolean with_impact)
                 (void) mpickobj(u.ustuck, obj);
         }
     } else {
-        if (flooreffects(obj, u.ux, u.uy, "drop"))
+        if (flooreffects(obj, u.ux, u.uy, "падает"))
             return;
         place_object(obj, u.ux, u.uy);
         if (with_impact)
@@ -2206,7 +2203,7 @@ revive_corpse(struct obj *corpse)
             } else if (container_where == OBJ_INVENT) {
                 Strcpy(sackname, an(xname(container)));
                 pline("%s %s из %s в вашем рюкзаке!", mnam,
-                      locomotion(mtmp->data, "writhes"), sackname);
+                      locomotion(mtmp->data, "выбирается"), sackname);
             } else if (container_where == OBJ_FLOOR
                        && cansee(corpsex, corpsey)) {
                 Strcpy(sackname, an(xname(container)));
@@ -2458,13 +2455,13 @@ heal_legs(
            before the final stages and that calls us (how==2) to cure
            wounded legs, but we want to suppress the feel better message */
         if (!u.usteed && how != 2) {
-            const char *legs =
-                body_part_case(LEG, (EWounded_legs & BOTH_SIDES) == BOTH_SIDES
-                                       ? BP_NOM | BP_PLURAL
-                                       : BP_NOM);
+            char lbuf[BUFSZ];
             /* this used to say "somewhat better" but that was
                misleading since legs are being fully healed */
-            Your("%s %s лучше.", legs, vtense(legs, "feel"));
+            pline("%s стало лучше.",
+                  upstart(strcpy(lbuf, body_part_case(LEG,
+                          (EWounded_legs & BOTH_SIDES) == BOTH_SIDES
+                              ? BP_DAT | BP_PLURAL : BP_DAT))));
         }
 
         HWounded_legs = EWounded_legs = 0L;

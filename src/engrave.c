@@ -218,12 +218,12 @@ void
 cant_reach_floor(coordxy x, coordxy y, boolean up,
                  boolean check_pit, boolean wand_engraving)
 {
-    pline("%s не может достать %s.",
+    pline("%s: %s слишком далеко.",
           wand_engraving
-              ? "The wand does nothing more, and the tip of the wand"
-              : "You",
+              ? "∆езл больше ничего не делает, его кончик не достаЄт"
+              : "¬ы не можете дот€нутьс€",
           up  ? ceiling(x, y)
-              : (check_pit && can_reach_floor(FALSE)) ? "bottom of the pit"
+              : (check_pit && can_reach_floor(FALSE)) ? "дно €мы"
                                                       : surface(x, y));
 }
 
@@ -859,16 +859,16 @@ doengrave_sfx_item(struct _doengrave_ctx *de)
                     if (!Blind)
                         You("стираете послание здесь.");
                     else
-                        pline("%s %s.", Yobjnam2(de->otmp, "get"),
-                              de->frosted ? "в инее" : "в пыли");
+                        pline("%s покрываетс€ %s.", Yobjnam2(de->otmp, (char *) 0),
+                              de->frosted ? "инеем" : "пылью");
                     de->dengr = TRUE;
                 } else {
                     pline("%s не может стереть эту надпись.",
                           Yname2(de->otmp));
                 }
             } else {
-                pline("%s %s.", Yobjnam2(de->otmp, "get"),
-                      de->frosted ? "в инее" : "в пыли");
+                pline("%s покрываетс€ %s.", Yobjnam2(de->otmp, (char *) 0),
+                      de->frosted ? "инеем" : "пылью");
             }
             break;
         default:
@@ -1174,11 +1174,11 @@ doengrave(void)
 
     /* Tell adventurer what is going on */
     if (de->otmp != &hands_obj)
-        You("%s the %s with %s%s.", de->everb, de->eloc,
+        You("%s %s; в ход идЄт %s%s.", de->everb, de->eloc,
             /* since doname() yields "N items" when quantity is more than
                one, match that by using "1 of" rather than "one of" when
                informing the player that the stack will be split */
-            (de->type == ENGRAVE && de->otmp->quan > 1L) ? "1 of " : "",
+            (de->type == ENGRAVE && de->otmp->quan > 1L) ? "" : "",
             doname(de->otmp));
     else
         You("%s %s вашим %s.",

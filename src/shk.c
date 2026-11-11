@@ -5089,7 +5089,7 @@ shopdig(int fall)
                 return;
             } else
                 pline("%s %s и %s ваш рюкзак!", Shknam(shkp),
-                      makeplural(locomotion(shkp->data, "leap")), grabs);
+                      locomotion(shkp->data, "прыгает"), grabs);
         } else
             pline("%s %s ваш рюкзак!", Shknam(shkp), grabs);
 

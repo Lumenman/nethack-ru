@@ -357,14 +357,14 @@ mplayer_talk(struct monst *mtmp)
 {
     static const char
         *same_class_msg[3] = {
-            "I can't win, and neither will you!",
-            "Вы не заслужили победы!",
-            "Mine should be the honor, not yours!",
+            "Мне не победить, но и тебе тоже!",
+            "Победа не для тебя!",
+            "Эта честь должна быть моей, а не твоей!",
         },
         *other_class_msg[3] = {
-            "The low-life wants to talk, eh?",
-            "Fight, scum!",
-            "Here is what I have to say!",
+            "Это ничтожество хочет поговорить, да?",
+            "Дерись, мразь!",
+            "Вот что я тебе скажу!",
         };
 
     if (mtmp->mpeaceful)

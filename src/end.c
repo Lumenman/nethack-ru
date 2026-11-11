@@ -92,11 +92,11 @@ done2(void)
     boolean abandon_tutorial = FALSE;
 
     if (In_tutorial(&u.uz)
-        && y_n("Switch from the tutorial back to regular play?") == 'y')
+        && y_n("Выйти из обучения и вернуться к обычной игре?") == 'y')
         abandon_tutorial = TRUE;
 
     if (abandon_tutorial || !paranoid_query(
-            ParanoidQuit, "Really quit without saving?")) {
+            ParanoidQuit, "Действительно выйти без сохранения?")) {
 #ifndef NO_SIGNAL
         (void) signal(SIGINT, (SIG_RET_TYPE) done1);
 #endif
@@ -216,9 +216,10 @@ done_in_by(struct monst *mtmp, int how)
     }
     (void) monhealthdescr(mtmp, TRUE, eos(buf));
     if (mtmp->minvis)
-        Strcat(buf, "invisible ");
+        Strcat(buf, mtmp->female ? "невидимая " : "невидимый ");
     if (distorted)
-        Strcat(buf, "hallucinogen-distorted ");
+        Strcat(buf, mtmp->female ? "искажённая галлюцинацией "
+                                 : "искажённый галлюцинацией ");
 
     if (imitator) {
         char shape[BUFSZ];
@@ -231,11 +232,11 @@ done_in_by(struct monst *mtmp, int how)
                set up fake mptr for type_is_pname/the_unique_pm */
             mptr = &mons[mtmp->mappearance];
             fakenm = pmname(mptr, Mgender(mtmp));
-        } else if (alt && strstri(realnm, "vampire")
-                   && !strcmp(fakenm, "vampire bat")) {
+        } else if (alt && strstri(realnm, "вампир")
+                   && strstri(fakenm, "вампир")) {
             /* special case: use "vampire in bat form" in preference
                to redundant looking "vampire in vampire bat form" */
-            fakenm = "bat";
+            fakenm = "летучая мышь";
         }
         /* for the alternate format, always suppress any article;
            pname and the_unique should also have s_suffix() applied,
@@ -243,14 +244,14 @@ done_in_by(struct monst *mtmp, int how)
         if (alt || type_is_pname(mptr)) /* no article */
             Strcpy(shape, fakenm);
         else if (the_unique_pm(mptr)) /* "the"; don't use the() here */
-            Sprintf(shape, "the %s", fakenm);
+            Strcpy(shape, fakenm);
         else /* "a"/"an" */
             Strcpy(shape, an(fakenm));
         /* omit "called" to avoid excessive verbosity */
         Sprintf(eos(buf),
-                alt ? "%s in %s form"
-                    : mimicker ? "%s disguised as %s"
-                               : "%s imitating %s",
+                alt ? "%s в облике «%s»"
+                    : mimicker ? "%s под видом «%s»"
+                               : "%s под личиной «%s»",
                 realnm, shape);
         mptr = mtmp->data; /* reset for mimicker case */
 #if 0  /* hardfought */
@@ -258,15 +259,16 @@ done_in_by(struct monst *mtmp, int how)
         Strcpy(buf, m_monnam(mtmp));
 #endif
     } else if (mptr == &mons[PM_GHOST]) {
-        Strcat(buf, "ghost");
+        Strcat(buf, "призрак");
         if (has_mgivenname(mtmp))
-            Sprintf(eos(buf), " of %s", MGIVENNAME(mtmp));
+            Sprintf(eos(buf), " по имени %s", MGIVENNAME(mtmp));
     } else if (mtmp->isshk) {
         const char *shknm = shkname(mtmp),
                    *honorific = shkname_is_pname(mtmp) ? ""
-                                   : mtmp->female ? "Ms. " : "Mr. ";
+                                   : mtmp->female ? "госпожа " : "господин ";
 
-        Sprintf(eos(buf), "%s%s, the shopkeeper", honorific, shknm);
+        Sprintf(eos(buf), "%s%s, %s магазина", honorific, shknm,
+                mtmp->female ? "владелица" : "владелец");
         svk.killer.format = KILLED_BY;
     } else if (mtmp->ispriest || mtmp->isminion) {
         /* m_monnam() suppresses "the" prefix plus "invisible", and
@@ -276,7 +278,7 @@ done_in_by(struct monst *mtmp, int how)
         Strcat(buf, pmname(mptr, Mgender(mtmp)));
         if (has_mgivenname(mtmp)) {
             Sprintf(eos(buf), " %s %s",
-                    has_ebones(mtmp) ? "of" : "called",
+                    has_ebones(mtmp) ? "— бывший" : "по имени",
                     MGIVENNAME(mtmp));
         }
     }
@@ -522,7 +524,7 @@ dump_plines(void)
     char buf[BUFSZ], **strp;
 
     Strcpy(buf, " "); /* one space for indentation */
-    putstr(0, 0, "Latest messages:");
+    putstr(0, 0, "Последние сообщения:");
     for (i = 0, j = (int) gs.saved_pline_index; i < DUMPLOG_MSG_COUNT;
          ++i, j = (j + 1) % DUMPLOG_MSG_COUNT) {
         strp = &gs.saved_plines[j];
@@ -1352,11 +1354,11 @@ really_done(int how)
         /* give this feedback even if bones aren't going to be created,
            so that its presence or absence doesn't tip off the player to
            new bones or their lack; it might be a lie if makemon fails */
-        Your("%s as %s...",
-             (u.ugrave_arise != PM_GREEN_SLIME)
-                 ? "body rises from the dead"
-                 : "revenant persists",
-             an(pmname(&mons[u.ugrave_arise], Ugender)));
+        pline("%s — теперь это %s...",
+              (u.ugrave_arise != PM_GREEN_SLIME)
+                  ? "Ваше тело восстаёт из мёртвых"
+                  : "Ваша сущность продолжает жить",
+              pmname(&mons[u.ugrave_arise], Ugender));
         display_nhwindow(WIN_MESSAGE, FALSE);
     }
 
@@ -1506,13 +1508,13 @@ really_done(int how)
                     if (has_oname(otmp))
                         free_oname(otmp);
                     otmp->quan = count;
-                    Sprintf(pbuf, "%8ld %s (worth %ld %s),", count,
+                    Sprintf(pbuf, "%8ld %s (стоимостью %ld %s),", count,
                             xname(otmp), count * (long) objects[typ].oc_cost,
                             currency(2L));
                     obfree(otmp, (struct obj *) 0);
                 } else {
-                    Sprintf(pbuf, "%8ld worthless piece%s of colored glass,",
-                            count, plur(count));
+                    Sprintf(pbuf, "%8ld шт. никчёмного цветного стекла,",
+                            count);
                 }
                 dump_forward_putstr(endwin, 0, pbuf, 0);
             }

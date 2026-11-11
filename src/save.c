@@ -115,7 +115,7 @@ dosave0(void)
             close_nhfile(nhfp);
             clear_nhwindow(WIN_MESSAGE);
             There("похоже, есть старый файл сохранения.");
-            if (y_n("Overwrite the old file?") == 'n') {
+            if (y_n("Перезаписать старый файл?") == 'n') {
                 nh_sfconvert(fq_save);
                 nh_compress(fq_save);
                 goto done;
