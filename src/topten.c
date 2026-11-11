@@ -152,11 +152,11 @@ formatkiller(
     if (incl_helpless && gm.multi < 0) {
         /* X <= siz: 'sizeof "string"' includes 1 for '\0' terminator */
         if (gm.multi_reason
-            && strlen(gm.multi_reason) + sizeof ", while " <= siz)
-            Sprintf(buf, ", while %s", gm.multi_reason);
+            && strlen(gm.multi_reason) + sizeof ", " <= siz)
+            Sprintf(buf, ", %s", gm.multi_reason);
         /* either gm.multi_reason wasn't specified or wouldn't fit */
-        else if (sizeof ", while helpless" <= siz)
-            Strcpy(buf, ", while helpless");
+        else if (sizeof ", в беспомощном состоянии" <= siz)
+            Strcpy(buf, ", в беспомощном состоянии");
         /* else extra death info won't fit, so leave it out */
     }
 }
@@ -945,7 +945,7 @@ DISABLE_WARNING_FORMAT_NONLITERAL
 staticfn void
 outentry(int rank, struct toptenentry *t1, boolean so)
 {
-    boolean second_line = TRUE;
+    boolean second_line = TRUE, fem = (t1->plgend[0] == 'F');
     char linebuf[BUFSZ];
     char *bp, hpbuf[24], linebuf3[BUFSZ];
     int hppos, lngr;
@@ -971,7 +971,8 @@ outentry(int rank, struct toptenentry *t1, boolean so)
     else
         Strcat(linebuf, " ");
     if (!strncmp("escaped", t1->death, 7)) {
-        Sprintf(eos(linebuf), "escaped the dungeon %s[max level %d]",
+        Sprintf(eos(linebuf), "сбежал%s из подземелья %s[макс. уровень %d]",
+                fem ? "а" : "",
                 !strncmp(" (", t1->death + 7, 2) ? t1->death + 7 + 2 : "",
                 t1->maxlvl);
         /* fixup for closing paren in "escaped... with...Amulet)[max..." */
@@ -979,59 +980,63 @@ outentry(int rank, struct toptenentry *t1, boolean so)
             *bp = (t1->deathdnum == astral_level.dnum) ? '\0' : ' ';
         second_line = FALSE;
     } else if (!strncmp("ascended", t1->death, 8)) {
-        Sprintf(eos(linebuf), "ascended to demigod%s-hood",
-                (t1->plgend[0] == 'F') ? "dess" : "");
+        Sprintf(eos(linebuf), "%s",
+                fem ? "вознеслась, став полубогиней" : "вознёсся, став полубогом");
         second_line = FALSE;
     } else {
+        /* RU: t1->death starts with a Russian killed_by_prefix[] */
         if (!strncmp(t1->death, "quit", 4)) {
-            Strcat(linebuf, "quit");
+            Sprintf(eos(linebuf), "вышел%s из игры", fem ? "а" : "");
             second_line = FALSE;
-        } else if (!strncmp(t1->death, "died of st", 10)) {
-            Strcat(linebuf, "starved to death");
+        } else if (!strncmp(t1->death, "умер от голода", 14)
+                   || !strncmp(t1->death, "умер от истощ", 13)) {
+            Sprintf(eos(linebuf), "умер%s от голода", fem ? "ла" : "");
             second_line = FALSE;
-        } else if (!strncmp(t1->death, "choked", 6)) {
-            Sprintf(eos(linebuf), "choked on h%s food",
-                    (t1->plgend[0] == 'F') ? "er" : "is");
-        } else if (!strncmp(t1->death, "poisoned", 8)) {
-            Strcat(linebuf, "was poisoned");
-        } else if (!strncmp(t1->death, "crushed", 7)) {
-            Strcat(linebuf, "was crushed to death");
-        } else if (!strncmp(t1->death, "petrified by ", 13)) {
-            Strcat(linebuf, "turned to stone");
+        } else if (!strncmp(t1->death, "задохнулся", 10)) {
+            Sprintf(eos(linebuf), "подавил%s едой", fem ? "ась" : "ся");
+        } else if (!strncmp(t1->death, "отравлен", 8)) {
+            Sprintf(eos(linebuf), "был%s отравлен%s", fem ? "а" : "",
+                    fem ? "а" : "");
+        } else if (!strncmp(t1->death, "раздавлен", 9)) {
+            Sprintf(eos(linebuf), "был%s раздавлен%s насмерть", fem ? "а" : "",
+                    fem ? "а" : "");
+        } else if (!strncmp(t1->death, "окаменел", 8)) {
+            Sprintf(eos(linebuf), "окаменел%s", fem ? "а" : "");
         } else
-            Strcat(linebuf, "died");
+            Sprintf(eos(linebuf), "погиб%s", fem ? "ла" : "");
 
         if (t1->deathdnum == astral_level.dnum) {
-            const char *arg, *fmt = " on the Plane of %s";
+            const char *arg, *fmt = " на Плане %s";
 
             switch (t1->deathlev) {
             case -5:
-                fmt = " on the %s Plane";
-                arg = "Astral";
+                fmt = " на %s Плане";
+                arg = "Астральном";
                 break;
             case -4:
-                arg = "Water";
+                arg = "Воды";
                 break;
             case -3:
-                arg = "Fire";
+                arg = "Огня";
                 break;
             case -2:
-                arg = "Air";
+                arg = "Воздуха";
                 break;
             case -1:
-                arg = "Earth";
+                arg = "Земли";
                 break;
             default:
-                arg = "Void";
+                arg = "Пустоты";
                 break;
             }
             Sprintf(eos(linebuf), fmt, arg);
         } else {
-            Sprintf(eos(linebuf), " in %s", svd.dungeons[t1->deathdnum].dname);
+            Sprintf(eos(linebuf), " (%s", svd.dungeons[t1->deathdnum].dname);
             if (t1->deathdnum != knox_level.dnum)
-                Sprintf(eos(linebuf), " on level %d", t1->deathlev);
+                Sprintf(eos(linebuf), ", уровень %d", t1->deathlev);
+            Strcat(linebuf, ")");
             if (t1->deathlev != t1->maxlvl)
-                Sprintf(eos(linebuf), " [max %d]", t1->maxlvl);
+                Sprintf(eos(linebuf), " [макс. %d]", t1->maxlvl);
         }
 
         /* kludge for "quit while already on Charon's boat" */
@@ -1047,7 +1052,7 @@ outentry(int rank, struct toptenentry *t1, boolean so)
         /* fix up "Killed by Mr. Asidonhopo; the shopkeeper"; that starts
            with a comma but has it changed to semi-colon to keep the comma
            out of 'record'; change it back for display */
-        (void) strsubst(bp, "; the ", ", the ");
+        (void) strsubst(bp, "; владел", ", владел");
     }
 
     lngr = (int) strlen(linebuf);
@@ -1065,7 +1070,7 @@ outentry(int rank, struct toptenentry *t1, boolean so)
             bp = linebuf + hppos - 1;
         /* special case: if about to wrap in the middle of maximum
            dungeon depth reached, wrap in front of it instead */
-        if (bp > linebuf + 5 && !strncmp(bp - 5, " [max", 5))
+        if (bp > linebuf + 5 && !strncmp(bp - 5, " [мак", 5))
             bp -= 5;
         if (*bp != ' ')
             Strcpy(linebuf3, bp);

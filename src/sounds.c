@@ -1507,12 +1507,12 @@ tiphat(void)
             if ((otmp = which_armor(mtmp, W_ARMH)) == 0) {
                 pline("%s машет.", Monnam(mtmp));
             } else if (otmp->cursed) {
-                pline("%s grasps %s %s but can't remove it.", Monnam(mtmp),
-                      mhis(mtmp), helm_simple_name(otmp));
+                pline("%s хватается за %s, но не может его снять.", Monnam(mtmp),
+                      helm_simple_name(otmp));
                 otmp->bknown = 1;
             } else {
-                pline("%s tips %s %s in response.", Monnam(mtmp),
-                      mhis(mtmp), helm_simple_name(otmp));
+                pline("%s в ответ приподнимает %s.", Monnam(mtmp),
+                      helm_simple_name(otmp));
             }
         } else if (vismon && humanoid(mtmp->data)) {
             static const char *const reaction[3] = {
@@ -1522,7 +1522,7 @@ tiphat(void)
             int which = !Deaf ? rn2(3) : rn1(2, 1),
                 twice = (Deaf || which > 0 || rn2(3)) ? 0 : rn1(2, 1);
 
-            pline("%s %s%s%s at you...", Monnam(mtmp), reaction[which],
+            pline("%s %s%s%s в вашу сторону...", Monnam(mtmp), reaction[which],
                   twice ? " и " : "", twice ? reaction[twice] : "");
         } else if (next2u(x, y) && !Deaf && domonnoise(mtmp)) {
             if (!vismon)

@@ -954,10 +954,10 @@ polymon(int mntmp)
 
     if (u.usteed) {
         if (touch_petrifies(u.usteed->data) && !Stone_resistance && rnl(3)) {
-            pline("%s touch %s.", no_longer_petrify_resistant,
+            pline("%s касаетесь %s.", no_longer_petrify_resistant,
                   mon_nam(u.usteed));
-            Sprintf(buf, "riding %s",
-                    an(pmname(u.usteed->data, Mgender(u.usteed))));
+            Sprintf(buf, "езды верхом (%s)",
+                    pmname(u.usteed->data, Mgender(u.usteed)));
             instapetrify(buf);
         }
         if (!can_ride(u.usteed))
@@ -1985,6 +1985,11 @@ static const int bp_pl_slot[6] = { BP_NOM, BP_GEN, BP_DAT, BP_NOM,
                                    BP_INS, BP_PREP };
 
 static const struct bp_paradigm bp_paradigms[] = {
+    /* хобот, роговица -- mbodypart() special cases */
+    { "хобот", "хобота", "хоботу", "хобот", "хоботом", "хоботе",
+      "хоботы", "хоботов", "хоботам", NULL, "хоботами", "хоботах" },
+    { "роговица", "роговицы", "роговице", "роговицу", "роговицей", "роговице",
+      "роговицы", "роговиц", "роговицам", NULL, "роговицами", "роговицах" },
     /* рука -- ARM, HAND */
     { "рука", "руки", "руке",
       "руку", "рукой", "руке",
@@ -3163,11 +3168,11 @@ mbodypart(struct monst *mon, int part)
         || mptr->mlet == S_RODENT || mptr == &mons[PM_OWLBEAR]) {
         switch (part) {
         case HAND:
-            return "paw";
+            return "передняя лапа";
         case HANDED:
-            return "pawed";
+            return "когтистая";
         case FOOT:
-            return "rear paw";
+            return "задняя лапа";
         case ARM:
         case LEG:
             return horse_parts[part]; /* "foreleg", "rear leg" */
@@ -3182,18 +3187,18 @@ mbodypart(struct monst *mon, int part)
         && (humanoid(mptr) && attacktype(mptr, AT_CLAW)
             && !strchr(not_claws, mptr->mlet) && mptr != &mons[PM_STONE_GOLEM]
             && mptr != &mons[PM_AMOROUS_DEMON]))
-        return (part == HAND) ? "claw" : "clawed";
+        return (part == HAND) ? "коготь" : "когтистая";
     if ((mptr == &mons[PM_MUMAK] || mptr == &mons[PM_MASTODON])
         && part == NOSE)
-        return "trunk";
+        return "хобот";
     if (mptr == &mons[PM_SHARK] && part == HAIR)
-        return "skin"; /* sharks don't have scales */
+        return "кожа"; /* sharks don't have scales */
     if ((mptr == &mons[PM_JELLYFISH] || mptr == &mons[PM_KRAKEN])
         && (part == ARM || part == FINGER || part == HAND || part == FOOT
             || part == TOE))
-        return "tentacle";
+        return "щупальце";
     if (mptr == &mons[PM_FLOATING_EYE] && part == EYE)
-        return "cornea";
+        return "роговица";
     if (humanoid(mptr) && (part == ARM || part == FINGER || part == FINGERTIP
                            || part == HAND || part == HANDED))
         return humanoid_parts[part];

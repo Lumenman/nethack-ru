@@ -43,9 +43,12 @@ staticfn void bel_copy1(char **, char *);
  */
 static NEARDATA const char *deaths[] = {
     /* the array of death */
-    "died", "choked", "poisoned", "starvation", "drowning", "burning",
-    "dissolving under the heat and pressure", "crushed", "turned to stone",
-    "turned into slime", "genocided", "panic", "trickery", "quit",
+    /* RU: fallback killer names, appended to killed_by_prefix[] in
+       topten.c; "quit", "escaped", "ascended" stay English: topten.c and
+       xlogfile readers match them */
+    "неизвестной причины", "еды", "ядом", "голода", "воде", "огне",
+    "лаве", "насмерть", "чего-то", "чем-то", "уничтожен геноцидом", "паника",
+    "обман", "quit",
     "escaped", "ascended"
 };
 
@@ -413,10 +416,10 @@ panic VA_DECL(const char *, str)
     }
 
     raw_print(program_state.gameover
-                  ? "Postgame wrapup disrupted."
+                  ? "Завершение игры прервано."
                   : !program_state.something_worth_saving
-                        ? "Program initialization has failed."
-                        : "Suddenly, the dungeon collapses.");
+                        ? "Не удалось запустить программу."
+                        : "Внезапно подземелье обрушивается.");
 #ifndef MICRO
 #ifdef NOTIFY_NETHACK_BUGS
     if (!wizard)

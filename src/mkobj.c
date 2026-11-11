@@ -742,9 +742,11 @@ bill_dummy_object(struct obj *otmp)
 
 /* alteration types; must match COST_xxx macros in hack.h */
 static const char *const alteration_verbs[] = {
-    "cancel", "drain", "uncharge", "unbless", "uncurse", "disenchant",
-    "degrade", "dilute", "erase", "burn", "neutralize", "destroy", "splatter",
-    "bite", "open", "break the lock on", "rust", "rot", "tarnish", "crack",
+    /* RU: past plural, transitive (accusative object) */
+    "обезвредили", "истощили", "разрядили", "осквернили", "очистили",
+    "расколдовали", "испортили", "разбавили", "стёрли", "сожгли",
+    "нейтрализовали", "уничтожили", "разбрызгали", "надкусили", "вскрыли",
+    "взломали", "заржавили", "сгноили", "запачкали", "раскололи",
 };
 
 /* possibly bill for an object which the player has just modified */
@@ -786,9 +788,9 @@ costly_alteration(struct obj *obj, int alter_type)
     }
 
     if (obj->quan == 1L)
-        those = "that", them = "it";
+        those = "это", them = "него";
     else
-        those = "those", them = "them";
+        those = "всё это", them = "них";
 
     /* when shopkeeper describes the object as being uncursed or unblessed
        hero will know that it is now uncursed; will also make the feedback
@@ -803,9 +805,9 @@ costly_alteration(struct obj *obj, int alter_type)
         if (shkp) {
             SetVoice(shkp, 0, 80, 0);
         }
-        verbalize("You %s %s %s, you pay for %s!",
-                  alteration_verbs[alter_type], those, simpleonames(obj),
-                  them);
+        verbalize("Вы %s %s, так что платите за %s!",
+                  alteration_verbs[alter_type], obj_case(obj, BP_ACC), them);
+        nhUse(those);
         bill_dummy_object(obj);
         break;
     case OBJ_FLOOR:
@@ -815,7 +817,7 @@ costly_alteration(struct obj *obj, int alter_type)
             if (shkp) {
                 SetVoice(shkp, 0, 80, 0);
             }
-            verbalize("You %s %s, you pay for %s!",
+            verbalize("Вы %s %s, так что платите за %s!",
                       alteration_verbs[alter_type], those, them);
             bill_dummy_object(obj);
         } else {
@@ -1605,7 +1607,7 @@ shrink_glob(
             pline("%s %s.", globnambuf,
                   /* globs always have quantity 1 so we don't need otense()
                      because the verb always references a singular item */
-                  gone ? "dissolves completely" : "shrinks");
+                  gone ? "полностью растворяется" : "уменьшается");
         updinv = TRUE;
     } else if (contnr) {
         /* when in a container, it might be nested so find outermost one */

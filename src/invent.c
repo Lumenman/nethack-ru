@@ -1519,27 +1519,28 @@ carrying_stoning_corpse(void)
  * http://concord.wikia.com/wiki/List_of_Fictional_Currencies
  */
 static const char *const currencies[] = {
-    "Altarian Dollar",       /* The Hitchhiker's Guide to the Galaxy */
-    "Ankh-Morpork Dollar",   /* Discworld */
-    "auric",                 /* The Domination of Draka */
-    "buckazoid",             /* Space Quest */
-    "cirbozoid",             /* Starslip */
-    "credit chit",           /* Deus Ex */
-    "cubit",                 /* Battlestar Galactica */
-    "Flanian Pobble Bead",   /* The Hitchhiker's Guide to the Galaxy */
-    "fretzer",               /* Jules Verne */
-    "imperial credit",       /* Star Wars */
-    "Hong Kong Luna Dollar", /* The Moon is a Harsh Mistress */
-    "kongbuck",              /* Snow Crash */
-    "nanite",                /* System Shock 2 */
-    "quatloo",               /* Star Trek, Sim City */
-    "simoleon",              /* Sim City */
-    "solari",                /* Spaceballs */
-    "spacebuck",             /* Spaceballs */
-    "sporebuck",             /* Spore */
-    "Triganic Pu",           /* The Hitchhiker's Guide to the Galaxy */
-    "woolong",               /* Cowboy Bebop */
-    "zorkmid",               /* Zork, NetHack */
+    /* RU: singular, plural pairs */
+    "альтаирский доллар", "альтаирские доллары", /* Hitchhiker's Guide */
+    "анк-морпоркский доллар", "анк-морпоркские доллары", /* Discworld */
+    "аурик", "аурики",                 /* The Domination of Draka */
+    "бакзоид", "бакзоиды",             /* Space Quest */
+    "цирбозоид", "цирбозоиды",         /* Starslip */
+    "кредитный чип", "кредитные чипы", /* Deus Ex */
+    "кубит", "кубиты",                 /* Battlestar Galactica */
+    "фланианская бусина", "фланианские бусины", /* Hitchhiker's Guide */
+    "фретцер", "фретцеры",             /* Jules Verne */
+    "имперский кредит", "имперские кредиты", /* Star Wars */
+    "гонконгский лунный доллар", "гонконгские лунные доллары",
+    "конгбак", "конгбаки",             /* Snow Crash */
+    "нанит", "наниты",                 /* System Shock 2 */
+    "кватлу", "кватлу",                /* Star Trek, Sim City */
+    "симолеон", "симолеоны",           /* Sim City */
+    "солари", "солари",                /* Spaceballs */
+    "спейсбак", "спейсбаки",           /* Spaceballs */
+    "спорбак", "спорбаки",             /* Spore */
+    "триганский пу", "триганских пу",  /* Hitchhiker's Guide */
+    "вулонг", "вулонги",               /* Cowboy Bebop */
+    "зоркмид", "зоркмиды",             /* Zork, NetHack */
 };
 
 const char *
@@ -1548,9 +1549,9 @@ currency(long amount)
     const char *res;
 
     if (Hallucination) {
-        res = ROLL_FROM(currencies);
-        if (amount != 1L)
-            res = makeplural(res);
+        int i = rn2(SIZE(currencies) / 2) * 2; /* RU: pairs of sing/plural */
+
+        res = currencies[i + (amount != 1L)];
     } else {
         res = (amount == 1L) ? "зоркмид" : "зоркмиды";
     }

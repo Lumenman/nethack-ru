@@ -1998,17 +1998,17 @@ static struct sfstatus_to_msg {
     int sfstatus;
     const char *msg;
 } sf2msg[] = {
-    { SF_UPTODATE, "everything matches" },
-    { SF_OUTDATED, "outdated savefile" },
+    { SF_UPTODATE, "всё совпадает" },
+    { SF_OUTDATED, "устаревший файл сохранения" },
     { SF_CRITICAL_BYTE_COUNT_MISMATCH,
-        "savefile critical byte-count mismatch" },
-    { SF_DM_IL32LLP64_ON_ILP32LL64, "Windows x64 savefile on x86" },
-    { SF_DM_I32LP64_ON_ILP32LL64, "Unix 64 savefile on x86" },
-    { SF_DM_ILP32LL64_ON_I32LP64, "x86 savefile on Unix 64" },
-    { SF_DM_ILP32LL64_ON_IL32LLP64, "x86 savefile on Windows x64" },
-    { SF_DM_I32LP64_ON_IL32LLP64, "Unix 64 savefile on Windows x64" },
-    { SF_DM_IL32LLP64_ON_I32LP64, "Windows x64 savefile on Unix 64" },
-    { SF_DM_MISMATCH, "generic savefile mismatch" },
+        "критическое несовпадение размеров в файле сохранения" },
+    { SF_DM_IL32LLP64_ON_ILP32LL64, "сохранение Windows x64 на x86" },
+    { SF_DM_I32LP64_ON_ILP32LL64, "сохранение Unix 64 на x86" },
+    { SF_DM_ILP32LL64_ON_I32LP64, "сохранение x86 на Unix 64" },
+    { SF_DM_ILP32LL64_ON_IL32LLP64, "сохранение x86 на Windows x64" },
+    { SF_DM_I32LP64_ON_IL32LLP64, "сохранение Unix 64 на Windows x64" },
+    { SF_DM_IL32LLP64_ON_I32LP64, "сохранение Windows x64 на Unix 64" },
+    { SF_DM_MISMATCH, "несовместимый файл сохранения" },
 };
 
 staticfn NHFILE *
@@ -2301,13 +2301,13 @@ lock_file(const char *filename, int whichprefix,
 
 #ifdef USE_FCNTL
         if (retryct--) {
-            HUP raw_printf("Waiting for release of fcntl lock on %s. "
-                           " (%d retries left.)",
+            HUP raw_printf("Ожидание снятия блокировки fcntl с %s. "
+                           " (осталось попыток: %d.)",
                            filename, retryct);
             sleep(1);
         } else {
             HUP raw_print("I give up.  Sorry.");
-            HUP raw_printf("Some other process has an unnatural grip on %s.",
+            HUP raw_printf("Какой-то другой процесс намертво вцепился в %s.",
                            filename);
             gn.nesting--;
             return FALSE;
@@ -2318,8 +2318,8 @@ lock_file(const char *filename, int whichprefix,
         switch (errnosv) { /* George Barbanis */
         case EEXIST:
             if (retryct--) {
-                HUP raw_printf("Waiting for access to %s. "
-                               " (%d retries left).",
+                HUP raw_printf("Ожидание доступа к %s. "
+                               " (осталось попыток: %d).",
                                filename, retryct);
 #if defined(SYSV) || defined(ULTRIX) || defined(VMS)
                 (void)
@@ -2327,7 +2327,7 @@ lock_file(const char *filename, int whichprefix,
                     sleep(1);
             } else {
                 HUP raw_print("I give up.  Sorry.");
-                HUP raw_printf("Perhaps there is an old %s around?",
+                HUP raw_printf("Может быть, остался старый %s?",
                                lockname);
                 gn.nesting--;
                 return FALSE;
@@ -2917,18 +2917,18 @@ recover_savefile(void)
     }
     if (read(gnhfp->fd, (genericptr_t) &hpid, sizeof hpid) != sizeof hpid) {
         raw_printf("\n%s\n%s\n",
-                   "Checkpoint data incompletely written"
-                   " or subsequently clobbered.",
-                   "Recovery impossible.");
+                   "Данные контрольной точки записаны не полностью"
+                   " или затем испорчены.",
+                   "Восстановление невозможно.");
         close_nhfile(gnhfp);
         return FALSE;
     }
     if (read(gnhfp->fd, (genericptr_t) &savelev, sizeof(savelev))
         != sizeof(savelev)) {
         raw_printf("\n%s %s %s\n",
-                   "Checkpointing was not in effect for",
+                   "Контрольные точки не велись для",
                    gl.lock,
-                   "-- recovery impossible.");
+                   "-- восстановление невозможно.");
         close_nhfile(gnhfp);
         return FALSE;
     }
@@ -3629,9 +3629,9 @@ read_tribute(const char *tribsection, const char *tribtitle,
                 if (strchr(lastline, '['))
                     mungspaces(lastline); /* to remove leading spaces */
                 else /* construct one if necessary */
-                    Sprintf(lastline, "[%s, by Terry Pratchett]", tribtitle);
+                    Sprintf(lastline, "[%s, Терри Пратчетт]", tribtitle);
                 if ((p = strrchr(lastline, ']')) != 0)
-                    Sprintf(p, "; passage #%d]", targetpassage);
+                    Sprintf(p, "; отрывок №%d]", targetpassage);
                 putmsghistory(lastline, FALSE);
                 grasped = TRUE;
             }

@@ -471,7 +471,7 @@ ckmailstatus(void)
     }
     if (--mustgetmail <= 0) {
         static struct mail_info deliver = {
-            MSG_MAIL, "I have some mail for you", 0, 0
+            MSG_MAIL, "У меня для вас письмо", 0, 0
         };
         newmail(&deliver);
         mustgetmail = -1;
@@ -490,32 +490,32 @@ readmail(struct obj *otmp UNUSED)
     enum delivery_types delivery = normal_delivery;
     const char *recipient = 0;
     static const char *const junk_templates[] = {
-        "%sReport bugs to <%s>.%s", /*** must be first entry ***/
-        "Please disregard previous letter.",
-        "Welcome to NetHack.",
+        "%sОб ошибках сообщайте на <%s>.%s", /*** must be first entry ***/
+        "Просим не обращать внимания на предыдущее письмо.",
+        "Добро пожаловать в NetHack.",
 #ifdef AMIGA
         "Only Amiga makes it possible.",
         "CATS have all the answers.",
 #endif
-        "This mail complies with the Yendorian Anti-Spam Act (YASA)",
-        "Please find enclosed a small token to represent your Owlbear",
-        "**FR33 P0T10N 0F FULL H34L1NG**",
-        "Please return to sender (Asmodeus)",
+        "Письмо соответствует Йендорианскому закону о спаме (ЙЗОС)",
+        "Прилагаем небольшой сувенир в память о вашем совомедведе",
+        "**БЕСПЛ4ТНОЕ З3ЛЬЕ П0ЛН0Г0 ИСЦ3ЛЕНИЯ**",
+        "Просьба вернуть отправителю (Асмодею)",
         /* when enclosed by "It reads:  \"...\"", this is too long
            for an ordinary 80-column display so wraps to a second line
            (suboptimal but works correctly);
            dollar sign and fractional zorkmids are inappropriate within
            nethack but are suitable for typical dysfunctional spam mail */
-        ("Buy a potion of gain level for only $19.99! "
-         " Guaranteed to be blessed!"),
+        ("Купите зелье повышения уровня всего за $19.99! "
+         " Гарантированно благословлённое!"),
         /* DEVTEAM_URL will be substituted for 2nd "%s";
            terminating punctuation (formerly "!") has deliberately been
            omitted so that it can't be mistaken for part of the URL
            (unfortunately that is still followed by a closing quote--in
            the pline below, not the data here) */
-        "%sInvitation: Visit the NetHack web site at %s%s"
+        "%sПриглашение: посетите сайт NetHack %s%s"
     };
-    const char *const it_reads = "It reads:  \"";
+    const char *const it_reads = "Там написано:  \"";
 
     i = rn2(SIZE(junk_templates));
     if (strchr(junk_templates[i], '%')) {
@@ -570,7 +570,7 @@ ckmailstatus(void)
         if (nmstat.st_size) {
             static struct mail_info deliver = {
 #ifndef NO_MAILREADER
-                MSG_MAIL, "I have some mail for you",
+                MSG_MAIL, "У меня для вас письмо",
 #else
                 /* suppress creation and delivery of scroll of mail */
                 MSG_OTHER, "У вас есть почта во внешнем мире",

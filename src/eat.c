@@ -3443,7 +3443,7 @@ newuhs(boolean incr)
             bot();
             You("умираете от голода.");
             svk.killer.format = KILLED_BY;
-            Strcpy(svk.killer.name, "истощение");
+            Strcpy(svk.killer.name, "истощения");
             done(STARVING);
             /* if we return, we lifesaved, and that calls newuhs */
             return;
@@ -3508,7 +3508,7 @@ newuhs(boolean incr)
         if ((Upolyd ? u.mh : u.uhp) < 1) {
             You("умираете от голода и истощения.");
             svk.killer.format = KILLED_BY;
-            Strcpy(svk.killer.name, "истощение");
+            Strcpy(svk.killer.name, "истощения");
             done(STARVING);
             return;
         }
