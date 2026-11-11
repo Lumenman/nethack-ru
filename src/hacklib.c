@@ -75,14 +75,23 @@ letter(char c)
 char
 highc(char c)
 {
-    return (char) (('a' <= c && c <= 'z') ? (c & ~040) : c);
+    unsigned char u = (unsigned char) c;
+
+    /* RU: also CP1251 Cyrillic (à-ÿ -> À-ß, ¸ -> ¨) */
+    return (char) (('a' <= c && c <= 'z') ? (c & ~040)
+                   : (u >= 0xE0) ? u - 0x20 : (u == 0xB8) ? 0xA8 : u);
 }
 
 /* force 'c' into lowercase */
 char
 lowc(char c)
 {
-    return (char) (('A' <= c && c <= 'Z') ? (c | 040) : c);
+    unsigned char u = (unsigned char) c;
+
+    /* RU: also CP1251 Cyrillic (À-ß -> à-ÿ, ¨ -> ¸) */
+    return (char) (('A' <= c && c <= 'Z') ? (c | 040)
+                   : (u >= 0xC0 && u <= 0xDF) ? u + 0x20
+                   : (u == 0xA8) ? 0xB8 : u);
 }
 
 /* convert a string into all lowercase */
@@ -92,8 +101,7 @@ lcase(char *s)
     char *p;
 
     for (p = s; *p; p++)
-        if ('A' <= *p && *p <= 'Z')
-            *p |= 040;
+        *p = lowc(*p);
     return s;
 }
 
@@ -104,8 +112,7 @@ ucase(char *s)
     char *p;
 
     for (p = s; *p; p++)
-        if ('a' <= *p && *p <= 'z')
-            *p &= ~040;
+        *p = highc(*p);
     return s;
 }
 

@@ -3727,9 +3727,9 @@ print_mapseen(
         Sprintf(buf, "%sДом%s.", PREFIX,
                 mptr->flags.notreachable ? " (нет пути назад...)" : "");
         if (u.uevent.qcompleted)
-            Sprintf(buf, "%sКвест для %s выполнен.", PREFIX, ldrname());
+            Sprintf(buf, "%sКвест выполнен (%s).", PREFIX, ldrname());
         else if (mptr->flags.questing)
-            Sprintf(buf, "%sКвест дан %s.", PREFIX, ldrname());
+            Sprintf(buf, "%sКвест получен (%s).", PREFIX, ldrname());
     } else if (mptr->flags.ludios) {
         /* presence of the ludios branch in #overview output indicates that
            the player has made it onto the level; presence of this annotation
@@ -3750,7 +3750,7 @@ print_mapseen(
     }
     /* quest entrance is not mutually-exclusive with bigroom or rogue level */
     if (mptr->flags.quest_summons) {
-        Sprintf(buf, "%sПризван %s.", PREFIX, ldrname());
+        Sprintf(buf, "%sПризыв (%s).", PREFIX, ldrname());
         add_menu_str(win, buf);
     }
 

@@ -51,8 +51,7 @@ ldrname(void)
 {
     int i = gu.urole.ldrnum;
 
-    Sprintf(gn.nambuf, "%s%s", type_is_pname(&mons[i]) ? "" : "the ",
-            mons[i].pmnames[NEUTRAL]);
+    Strcpy(gn.nambuf, mons[i].pmnames[NEUTRAL]); /* RU: no article */
     return gn.nambuf;
 }
 
@@ -125,8 +124,7 @@ neminame(void)
 {
     int i = gu.urole.neminum;
 
-    Sprintf(gn.nambuf, "%s%s", type_is_pname(&mons[i]) ? "" : "the ",
-            mons[i].pmnames[NEUTRAL]);
+    Strcpy(gn.nambuf, mons[i].pmnames[NEUTRAL]); /* RU: no article */
     return gn.nambuf;
 }
 
@@ -186,6 +184,10 @@ stinky_nemesis(struct monst *mon)
              || (p = strstri(mesg, "poisonous")) != 0
              || (p = strstri(mesg, "toxic")) != 0)
             && (strstri(p, " gas") || strstri(p, " fumes")))
+            res = 1;
+        /* RU: "ядовитых испарений", "ядовитого газа" */
+        if ((p = strstri(mesg, "ядовит")) != 0
+            && (strstri(p, " газ") || strstri(p, " испарени")))
             res = 1;
 
         free((genericptr_t) mesg);
@@ -309,7 +311,16 @@ convert_arg(char c)
         str = "законопослушный";
         break;
     case 'x':
-        str = Blind ? "чувствуете" : "видите";
+        str = Blind ? "чувствуешь" : "видишь";
+        break;
+    case 'e': /* RU: past-tense/short-adjective ending by hero's gender */
+        str = flags.female ? "а" : "";
+        break;
+    case 'y': /* RU: reflexive past-tense ending by hero's gender */
+        str = flags.female ? "ась" : "ся";
+        break;
+    case 'E': /* RU: same, by gender of hero's god (for %d) */
+        str = (svq.quest_status.godgend == 1) ? "а" : "";
         break;
     case 'Z':
         str = svd.dungeons[0].dname;
@@ -387,6 +398,14 @@ convert_line(char *in_line, char *out_line)
                     /*FALLTHRU*/
                 case 's':
                     Strcpy(gc.cvt_buf, s_suffix(gc.cvt_buf));
+                    break;
+
+                /* RU: genitive of deity name (%d1, %D1) */
+                case '1':
+                    if (strchr("dD", *(c - 1)))
+                        Strcpy(gc.cvt_buf, god_gen(gc.cvt_buf));
+                    else
+                        --c;
                     break;
 
                 /* strip any "the" prefix */
