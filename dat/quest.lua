@@ -1988,442 +1988,440 @@ questtext = {
    },
    Rog = {
       assignquest = {
-         synopsis = "[Get %o from %n and bring it to %l.]",
+         synopsis = "[Отбери Главный Ключ Воровства у Мастера Ассасина и принеси его Мастеру Воров.]",
          output = "text",
-         text = [["Will everyone not going to retrieve %o from that
-jerk, %n, take one step backwards.  Good choice,
-%p, because I was going to send you anyway.  My other %gp
-are too valuable to me.
+         text = [["Пусть каждый, кто НЕ идёт отбирать Главный Ключ Воровства у этого
+придурка, Мастера Ассасина, сделает шаг назад.  Правильный выбор,
+%p, — я бы всё равно послал тебя.  Остальные мои головорезы
+слишком мне дороги.
 
-"Here's the deal.  I want %o, %n
-has %o.  You are going to get %o
-and bring it back to me.  So simple an assignment even you can understand
-it."]],
+"Расклад такой.  Мне нужен Главный Ключ Воровства, а он у Мастера
+Ассасина.  Ты добудешь Главный Ключ Воровства и принесёшь его мне.
+Задание настолько простое, что даже ты его поймёшь."]],
       },
       badalign = {
-         synopsis = "[Come back when you are really %a.]",
+         synopsis = "[Возвращайся, когда тебе можно будет доверять.]",
          output = "text",
-         text = [["Maybe I should chain you to my perch here for a while.  Perhaps watching
-real %a men at work will bring some sense back to you.  I don't
-think I could stand the sight of you for that long though.  Come back
-when you can be trusted to act properly."]],
+         text = [["Может, приковать тебя тут к моему насесту на время?  Глядишь,
+понаблюдав, как работают настоящие профессионалы, ты возьмёшься
+за ум.  Хотя вряд ли я вынесу твой вид так долго.  Возвращайся,
+когда тебе можно будет доверять."]],
       },
       badlevel = {
-         synopsis = "[%rA is not adequately trained to handle this job.]",
+         synopsis = "[Тому, кто всего лишь «%r», не по силам такая работа.]",
          output = "text",
-         text = [["In the time that you've been gone you've only been able to master the
-arts of %ra?  I've trained ten times again as many %Rp
-in that time.  Maybe I should send one of them, no?  Where would that
-leave you, %p?  Oh yeah, I remember, I was going to kill you!"]],
+         text = [["За всё время, пока тебя не было, ты освоил%e лишь ремесло того,
+кто зовётся «%r»?  Я за это время выучил вдесятеро больше
+народу.  Может, послать кого-нибудь из них, а?  И что тогда
+будет с тобой, %p?  Ах да, вспомнил: я собирался тебя убить!"]],
       },
       discourage = {
-         "\"May I suggest a compromise.  Are you interested in gold or gems?\"",
-         "\"Please don't force me to kill you.\"",
-         "\"Grim times are upon us all.  Will you not see reason?\"",
-         "\"I knew %l, and you're no %lt, thankfully.\"",
-         "\"It is a shame that we are not meeting under more pleasant circumstances.\"",
-         "\"I was once like you are now, %p.  Believe in me -- our way is better.\"",
-         "\"Stay with me, and I will make you %os guardian.\"",
-         "\"When you return, with or without %o, %l will have you killed.\"",
-         "\"Do not be fooled; I am prepared to kill to defend %o.\"",
-         "\"I can reunite you with the Twain.  Oh, the stories you can swap.\"",
+         "\"Позволь предложить компромисс.  Тебя интересует золото или самоцветы?\"",
+         "\"Прошу, не вынуждай меня тебя убивать.\"",
+         "\"Мрачные времена настали для всех нас.  Неужели ты не внемлешь голосу разума?\"",
+         "\"Я знавал Мастера Воров, и ты, к счастью, на него ничуть не похож%e.\"",
+         "\"Жаль, что мы встретились не при более приятных обстоятельствах.\"",
+         "\"Когда-то я был таким же, как ты, %p.  Поверь мне — наш путь лучше.\"",
+         "\"Оставайся со мной, и я сделаю тебя хранителем Главного Ключа Воровства.\"",
+         "\"Когда ты вернёшься — с Главным Ключом Воровства или без него, — Мастер Воров велит тебя убить.\"",
+         "\"Не обманывайся: я готов убивать, защищая Главный Ключ Воровства.\"",
+         "\"Я могу устроить тебе встречу с теми Двумя.  Ох, и историями же вы обменяетесь.\"",
       },
       encourage = {
-         "\"You don't seem to understand, %o isn't here so neither should you be!\"",
-         "\"May %d curse you with lead fingers.  Get going!\"",
-         "\"We don't have all year.  GET GOING!\"",
-         "\"How would you like a scar necklace?  I'm just the jeweler to do it!\"",
-         "\"Lazy S.O.B.  Maybe I should call up someone else...\"",
-         "\"Maybe I should open your skull and see if my instructions are inside?\"",
-         "\"This is not a task you can complete in the afterlife, you know.\"",
-         "\"Inside every living person is a dead person trying to get out, and I have your key!\"",
-         "\"We're almost out of hell-hound chow, so why don't you just get moving!\"",
-         "\"You know, %o isn't going to come when you whistle.  You must get it yourself.\"",
+         "\"До тебя что, не доходит?  Главного Ключа Воровства здесь нет, значит, и тебе тут делать нечего!\"",
+         "\"Чтоб %d наградил%E тебя свинцовыми пальцами.  Пошевеливайся!\"",
+         "\"У нас нет в запасе целого года.  ПОШЕВЕЛИВАЙСЯ!\"",
+         "\"Как насчёт ожерелья из шрамов?  Я как раз тот ювелир, что тебе его сделает!\"",
+         "\"Ленивая скотина.  Может, позвать кого-нибудь другого...\"",
+         "\"Может, вскрыть тебе череп и посмотреть, есть ли там мои указания?\"",
+         "\"Знаешь, это задание не выполнить в загробной жизни.\"",
+         "\"В каждом живом сидит мертвец, который рвётся наружу, — и ключ от тебя у меня!\"",
+         "\"Корм для адских гончих почти кончился, так что живо за дело!\"",
+         "\"Знаешь, Главный Ключ Воровства не прибежит на свист.  Добывать его придётся тебе.\"",
       },
       firsttime = {
-         synopsis = "[You are in Ransmannsby, where you trained.  Find %l.]",
+         synopsis = "[Ты в Рансманнсби, где тебя обучали.  Найди Мастера Воров.]",
          output = "text",
-         text = [[Unexpectedly, you find yourself back in Ransmannsby, where you trained to
-be a thief.  Quickly you make the guild sign, hoping that you AND word
-of your arrival reach %ls den.]],
+         text = [[Неожиданно ты оказываешься в Рансманнсби, где тебя учили воровскому
+ремеслу.  Ты быстро подаёшь знак гильдии в надежде, что до логова Мастера
+Воров доберёшься и ты, И весть о твоём прибытии.]],
       },
       goal_first = {
-         synopsis = "[You sense %o.]",
+         synopsis = "[Ты чувствуешь Главный Ключ Воровства.]",
          output = "text",
-         text = [[You feel a great swelling up of courage, sensing the presence of
-%o.  Or is it fear?]],
+         text = [[Ощутив присутствие Главного Ключа Воровства, ты чувствуешь,
+как в тебе поднимается волна отваги.  Или это страх?]],
       },
       goal_next = {
-         text = "The hairs on the back of your neck whisper -- it's fear.",
+         text = "Волоски на затылке шепчут: это страх.",
       },
       gotit = {
-         synopsis = "[You pick up %o and know that %l should not have it.]",
+         synopsis = "[Ты берёшь Главный Ключ Воровства и понимаешь: Мастеру Воров его отдавать нельзя.]",
          output = "text",
-         text = [[As you pick up %o, the hairs on the back of your
-neck fall out.  At once you realize why %n was
-willing to die to keep it out of %ls hands.  Somehow
-you know that you must do likewise.]],
+         text = [[Когда ты берёшь Главный Ключ Воровства, волоски у тебя на затылке
+выпадают.  Ты сразу понимаешь, почему Мастер Ассасин был готов
+умереть, лишь бы ключ не попал в руки Мастера Воров.  Каким-то
+образом ты знаешь, что тебе придётся поступить так же.]],
       },
       guardtalk_after = {
-         "\"I was sure wrong about Lady Tyvefelle's house; I barely got away with my life and lost my lock pick in the process.\"",
-         "\"You're back?  Even the Twain don't come back anymore.\"",
-         "\"Can you spare an old cutpurse a zorkmid for some grog?\"",
-         "\"Fritz tried to join the other side, and now he's hell-hound chow.\"",
-         "\"Be careful what you steal, I hear the boss has perfected turning rocks into worthless pieces of glass.\"",
+         "\"Насчёт дома леди Тайвфелл я здорово ошибся: еле ноги унёс, да ещё и отмычку потерял.\"",
+         "\"Ты вернул%y?  Даже те Двое больше не возвращаются.\"",
+         "\"Не подкинешь старому карманнику зоркмид на грог?\"",
+         "\"Фриц попытался переметнуться на другую сторону, и теперь он корм для адских гончих.\"",
+         "\"Осторожнее с тем, что крадёшь: говорят, босс научился превращать камни в никчёмные стекляшки.\"",
       },
       guardtalk_before = {
-         "\"I hear that Lady Tyvefelle's household is lightly guarded.\"",
-         "\"You're back?  Even the Twain don't come back anymore.\"",
-         "\"Can you spare an old cutpurse a zorkmid for some grog?\"",
-         "\"Fritz tried to join the other side, and now he's hell-hound chow.\"",
-         "\"Be careful what you steal, I hear the boss has perfected turning rocks into worthless pieces of glass.\"",
+         "\"Говорят, дом леди Тайвфелл почти не охраняется.\"",
+         "\"Ты вернул%y?  Даже те Двое больше не возвращаются.\"",
+         "\"Не подкинешь старому карманнику зоркмид на грог?\"",
+         "\"Фриц попытался переметнуться на другую сторону, и теперь он корм для адских гончих.\"",
+         "\"Осторожнее с тем, что крадёшь: говорят, босс научился превращать камни в никчёмные стекляшки.\"",
       },
       hasamulet = {
-         synopsis = "[Take the Amulet to the Astral Plane and find %ds temple.]",
+         synopsis = "[Отнеси Амулет на Астральный План и найди храм %d1.]",
          output = "text",
-         text = [["I see that with your abilities, and my brains, we could rule this world.
+         text = [["Вижу, с твоими умениями и моими мозгами мы могли бы править этим миром.
 
-"All that we would need to be all-powerful is for you to take that little
-trinket you've got there up to the Astral Plane.  From there, %d will
-show you what to do with it.  Once that's done, we will be invincible!"]],
+"Всё, что нужно, чтобы стать всемогущими, — отнести эту безделушку,
+что у тебя в руках, на Астральный План.  Там %d покажет тебе,
+что с ней делать.  Как только это будет сделано, мы станем
+непобедимы!"]],
       },
       killed_nemesis = {
-         synopsis = "[Before dying, %n tells you to use the %o wisely.]",
+         synopsis = "[Перед смертью Мастер Ассасин просит тебя распорядиться Главным Ключом Воровства мудро.]",
          output = "text",
-         text = [["I know what you are thinking, %p.  It is not too late for you
-to use %o wisely.  For the sake of your guild
-%sp, do what is right."
+         text = [["Я знаю, о чём ты думаешь, %p.  Ещё не поздно распорядиться
+Главным Ключом Воровства мудро.  Ради своих братьев и сестёр
+по гильдии — поступи правильно."
 
-You sit and wait for death to come for %n, and then you
-brace yourself for your next meeting with %l!]],
+Ты сидишь и ждёшь, пока смерть придёт за Мастером Ассасином,
+а затем готовишься к следующей встрече с Мастером Воров!]],
       },
       leader_first = {
-         synopsis = "[You owe back dues to your guild.  You can pay them off if you're up to the job.]",
+         synopsis = "[За тобой должок перед гильдией.  Можешь отработать его, если справишься с работёнкой.]",
          output = "text",
-         text = [["Well, look who it is boys -- %p has come home.  You seem to have
-fallen behind in your dues.  I should kill you as an example to these
-other worthless cutpurses, but I have a better plan.  If you are ready
-maybe you could work off your back dues by performing a little job for
-me.  Let us just see if you are ready..."]],
+         text = [["Ну-ка, ребята, гляньте, кто пришёл, — %p вернул%y домой.  Похоже,
+ты задолжал%e взносы.  Стоило бы убить тебя в назидание этим
+никчёмным карманникам, но у меня есть план получше.  Если ты
+готов%e, то, может, отработаешь долг, выполнив для меня небольшую
+работёнку.  Посмотрим, готов%e ли ты..."]],
       },
       leader_last = {
-         synopsis = "[You must go.]",
+         synopsis = "[Тебе придётся уйти.]",
          output = "text",
-         text = [["Well %gp, it looks like our friend has forgotten who is the boss
-around here.  Our friend seems to think that %rp have been put in
-charge.  Wrong.  DEAD WRONG!"
+         text = [["Ну что, головорезы, похоже, наш друг забыл, кто здесь главный.
+Наш друг, видать, решил, что командовать теперь будут такие, как
+«%r».  Ошибочка.  СМЕРТЕЛЬНАЯ ошибочка!"
 
-Your sudden shift in surroundings prevents you from hearing the end
-of %ls curse.]],
+Внезапная смена обстановки не даёт тебе дослушать проклятие
+Мастера Воров.]],
       },
       leader_next = {
-         synopsis = "[Are you stupid or are you ready?]",
+         synopsis = "[Ты глуп%e или готов%e?]",
          output = "text",
-         text = [["Well, I didn't expect to see you back.  It shows that you are either stupid,
-or you are finally ready to accept my offer.  Let us hope for your sake it
-isn't stupidity that brings you back."]],
+         text = [["Вот уж не ждал тебя снова увидеть.  Значит, либо ты глуп%e,
+либо наконец готов%e принять моё предложение.  Будем надеяться,
+ради твоего же блага, что вернула тебя не глупость."]],
       },
       leader_other = {
-         text = [["Did you perhaps mistake me for some other %lt?  You must
-think me as stupid as your behavior.  I warn you not to try my patience."]],
+         text = [["Ты, часом, не принял%e меня за какого-то другого Мастера Воров?
+Ты, видно, считаешь меня таким же глупым, как твоё поведение.
+Предупреждаю: не испытывай моё терпение."]],
       },
       locate_first = {
-         text = "Those damn little hairs tell you that you are nearer to %o.",
+         text = "Проклятые волоски на затылке подсказывают, что ты ближе к Главному Ключу Воровства.",
       },
       locate_next = {
-         text = "Not wanting to face %l without having stolen %o, you continue.",
+         text = "Не желая предстать перед Мастером Воров без Главного Ключа Воровства, ты идёшь дальше.",
       },
       nemesis_first = {
-         text = "\"Ah!  You must be %ls ... er, `hero'.  A pleasure to meet you.\"",
+         text = "\"А!  Ты, должно быть, ... э-э, «герой» Мастера Воров.  Рад знакомству.\"",
       },
       nemesis_next = {
-         text = "\"We meet again.  Please reconsider your actions.\"",
+         text = "\"Мы снова встретились.  Прошу, подумай ещё раз над тем, что делаешь.\"",
       },
       nemesis_other = {
-         synopsis = "[You cannot trust %l.]",
+         synopsis = "[Мастеру Воров доверять нельзя.]",
          output = "text",
-         text = [["Surely, %p, you have learned that you cannot trust any bargains
-that %l has made.  I can show you how to continue on
-your quest without having to run into him again."]],
+         text = [["Уж наверняка, %p, ты понял%e, что ни одной сделке Мастера Воров
+доверять нельзя.  Я могу показать тебе, как продолжить твой
+поход, не встречаясь с ним снова."]],
       },
       nemesis_wantsit = {
-         synopsis = "[%lC should not have %o.]",
+         synopsis = "[Мастеру Воров нельзя отдавать Главный Ключ Воровства.]",
          output = "text",
-         text = [["Please, think for a moment about what you are doing.  Do you truly
-believe that %d would want %l to have
-%o?"]],
+         text = [["Прошу, задумайся на минуту, что ты делаешь.  Неужели ты и правда
+веришь, что %d хотел%E бы, чтобы Главный Ключ Воровства
+достался Мастеру Воров?"]],
       },
       nexttime = {
-         text = [[Once again, you find yourself back in Ransmannsby.  Fond memories are
-replaced by fear, knowing that %l is waiting for you.]],
+         text = [[Ты снова в Рансманнсби.  Тёплые воспоминания сменяются страхом:
+ты знаешь, что тебя ждёт Мастер Воров.]],
       },
       offeredit = {
-         synopsis = "[Take %o with you and go.]",
+         synopsis = "[Бери Главный Ключ Воровства с собой и ступай.]",
          output = "text",
-         text = [["Well, I'll be damned.  You got it.  I am proud of you, a fine %r
-you've turned out to be.
+         text = [["Ну, будь я проклят.  Ты его добыл%e.  Горжусь тобой: из тебя вышел
+отличный «%r».
 
-"While you were gone I got to thinking, you and %o
-together could bring me more treasure than either of you apart, so why don't
-you take it with you.  All I ask is a cut of whatever loot you come by.
-That is a better deal than I offered %n.
+"Пока тебя не было, я тут поразмыслил: вместе с Главным Ключом
+Воровства ты принесёшь мне больше добра, чем порознь, так почему
+бы тебе не взять его с собой?  Всё, чего я прошу, — долю от любой
+добычи.  Это сделка получше той, что я предлагал Мастеру Ассасину.
 
-"But, you see what happened to %n when he refused.
-Don't make me find another to send after you this time."]],
+"Но ты видел%e, что стало с Мастером Ассасином, когда он отказался.
+Не вынуждай меня на этот раз искать, кого бы послать за тобой."]],
       },
       offeredit2 = {
-         synopsis = "[Take %o and acquire the Amulet.]",
+         synopsis = "[Бери Главный Ключ Воровства и добудь Амулет.]",
          output = "text",
-         text = [[%lC seems tempted to swap %o for
-the mundane one you detect in his pocket, but noticing your alertness,
-evidently chickens out.
+         text = [[Мастер Воров, похоже, не прочь подменить Главный Ключ Воровства
+обычным, который ты замечаешь у него в кармане, но, увидев, что ты
+начеку, явно трусит.
 
-"Go filch the Amulet before someone else beats you to it.
-%Z are back the way you came, through the magic portal."]],
+"Иди стащи Амулет, пока тебя кто-нибудь не опередил.
+%Z — там, откуда ты явил%y, за волшебным порталом."]],
       },
       othertime = {
-         text = [[You rub your hands through your hair, hoping that the little ones on
-the back of your neck stay down, and prepare yourself for your meeting
-with %l.]],
+         text = [[Ты проводишь руками по волосам в надежде, что волоски на затылке
+не встанут дыбом, и готовишься к встрече с Мастером Воров.]],
       },
       posthanks = {
-         synopsis = "[How about trading %o for something?]",
+         synopsis = "[Как насчёт обменять Главный Ключ Воровства на что-нибудь?]",
          output = "text",
-         text = [["Quite the little thief, aren't we, %p.  Can I interest you in a
-swap for %o?  Look around, anything in the keep
-is yours for the asking."]],
+         text = [["Ну и воришка из тебя вырос, %p.  Не хочешь обменять Главный Ключ
+Воровства?  Оглянись: всё, что есть в крепости, — твоё, только
+попроси."]],
       },
    },
    Sam = {
       assignquest = {
-         synopsis = "[You must enter %i, then regain %o from %n.]",
+         synopsis = "[Проникни в Замок Сёгуна и отбери Цуруги Мурамасы у Асикаги Такаудзи.]",
          output = "text",
-         text = [["Domo %p-san, indeed you are ready.  I can now tell you what
-it is that I require of you.
+         text = [["Домо, %p-сан, ты действительно готов%e.  Теперь я могу сказать,
+чего я от тебя жду.
 
-"The daimyo, %n, has betrayed us.  He has stolen from us
-%o and taken it to his donjon deep within
-%i.
+"Даймё Асикага Такаудзи предал нас.  Он похитил у нас Цуруги
+Мурамасы и унёс его в свою башню в глубине Замка Сёгуна.
 
-"If I cannot show the emperor %o when he comes
-for the festival he will know that I have failed in my duty, and
-request that I commit seppuku.
+"Если я не смогу показать Цуруги Мурамасы императору, когда тот
+прибудет на праздник, он поймёт, что я не исполнил свой долг,
+и потребует, чтобы я совершил сэппуку.
 
-"You must gain entrance to %i and retrieve the
-emperor's property.  Be quick!  The emperor will be here for the
-cha-no-you in 5 sticks.
+"Тебе нужно проникнуть в Замок Сёгуна и вернуть собственность
+императора.  Поспеши!  Император прибудет на тя-но-ю через
+пять палочек благовоний.
 
-"Wakarimasu ka?"]],
+"Вакаримас ка?"]],
       },
       badalign = {
-         synopsis = "[When you can think %a and act %a then return.]",
+         synopsis = "[Когда научишься мыслить и поступать как истинный самурай — возвращайся.]",
          output = "text",
-         text = [["%p-san, you would do better to join the kyokaku.
+         text = [["%p-сан, тебе лучше бы примкнуть к кёкаку.
 
-"You have skills, but until you can call upon the bushido to know when and
-how to use them you are not samurai.  When you can think %a and
-act %a then return."]],
+"У тебя есть умения, но пока ты не сможешь призвать бусидо, чтобы
+понять, когда и как ими пользоваться, — ты не самурай.  Когда
+научишься мыслить и поступать как подобает — возвращайся."]],
       },
       badlevel = {
-         synopsis = "[\"I require %Ra to defeat %n.  Return when you are ready.\"]",
+         synopsis = "[\"Чтобы одолеть Асикагу Такаудзи, мне нужен тот, кто достиг звания «%R».  Возвращайся, когда будешь готов%e.\"]",
          output = "text",
-         text = [["%p-san, you have learned well and honored your family.
-I require the skills of %Ra in order to defeat %n.
-Go and seek out teachers.  Learn what they have learned.  When you
-are ready, return to me."]],
+         text = [["%p-сан, ты хорошо учил%y и прославил%e свою семью.
+Но чтобы одолеть Асикагу Такаудзи, мне нужны умения того, кто
+достиг звания «%R».  Ступай и найди себе учителей.  Узнай то,
+что знают они.  Когда будешь готов%e, возвращайся ко мне."]],
       },
       discourage = {
-         "\"Ahh, I finally meet the daimyo of the kyokaku!\"",
-         "\"There is no honor for me in your death.\"",
-         "\"You know that I cannot resash my swords until they have killed.\"",
-         "\"Your presence only compounds the dishonor of %l in not coming %liself.\"",
-         "\"I will make tea with your hair and serve it to %l.\"",
-         "\"Your fear shows in your eyes, coward!\"",
-         "\"I have not heard of you, %p-san; has your life been that unworthy?\"",
-         "\"If you will not obey me, you will die.\"",
-         "\"Kneel now and make the two cuts of honor.  I will tell your %sp of your honorable death.\"",
-         "\"Your master was a poor teacher.  You will pay for his mistakes in your teaching.\"",
+         "\"А-а, наконец-то я встретил даймё кёкаку!\"",
+         "\"В твоей смерти для меня нет чести.\"",
+         "\"Ты ведь знаешь: я не могу вложить мечи в ножны, пока они не убьют.\"",
+         "\"Твоё появление лишь усугубляет бесчестие лорда Сато, который не пришёл сам.\"",
+         "\"Я заварю чай из твоих волос и подам его лорду Сато.\"",
+         "\"Страх виден в твоих глазах, трус!\"",
+         "\"Я ничего не слышал о тебе, %p-сан; неужто твоя жизнь была столь недостойной?\"",
+         "\"Если ты не подчинишься мне, ты умрёшь.\"",
+         "\"Преклони колени и соверши два почётных надреза.  Я расскажу твоей родне о твоей достойной смерти.\"",
+         "\"Твой господин был плохим учителем.  Ты заплатишь за его ошибки в твоём обучении.\"",
       },
       encourage = {
-         "\"To defeat %n you must overcome the seven emotions: hate, adoration, joy, anxiety, anger, grief, and fear.\"",
-         "\"Remember your honor is my honor, you perform in my name.\"",
-         "\"I will go to the temple and burn incense for your safe return.\"",
-         "\"Sayonara.\"",
-         "\"There can be honor in defeat, but no gain.\"",
-         "\"Your kami must be strong in order to succeed.\"",
-         "\"You are indeed a worthy %R, but now you must be a worthy samurai.\"",
-         "\"If you fail, %n will be like a tai-fun on the land.\"",
-         "\"If you are truly %a, %d will listen.\"",
-         "\"Sharpen your swords and your wits for the task before you.\"",
+         "\"Чтобы одолеть Асикагу Такаудзи, тебе нужно превозмочь семь чувств: ненависть, обожание, радость, тревогу, гнев, скорбь и страх.\"",
+         "\"Помни: твоя честь — моя честь, ты действуешь от моего имени.\"",
+         "\"Я пойду в храм и воскурю благовония, чтобы ты вернул%y без единой царапины.\"",
+         "\"Сайонара.\"",
+         "\"В поражении может быть честь, но не может быть выгоды.\"",
+         "\"Чтобы преуспеть, твой ками должен быть силён.\"",
+         "\"Ты достойно носишь звание «%R», но теперь тебе нужно стать достойным самураем.\"",
+         "\"Если ты потерпишь неудачу, Асикага Такаудзи пронесётся над страной, словно тайфун.\"",
+         "\"Если ты чтишь свой путь, %d тебя услышит.\"",
+         "\"Наточи мечи и разум для предстоящего дела.\"",
       },
       firsttime = {
-         synopsis = "[The banner of %n flies above town.  What has happened to %l?]",
+         synopsis = "[Над городом реет знамя Асикаги Такаудзи.  Что случилось с лордом Сато?]",
          output = "text",
-         text = [[Even before your senses adjust, you recognize the kami of
-%H.
+         text = [[Ещё прежде, чем чувства приходят в себя, ты узнаёшь ками
+Замка клана Таро.
 
-You %x the standard of your teki, %n, flying above
-the town.  How could such a thing have happened?  Why are ninja
-wandering freely; where are the samurai of your daimyo, %l?
+Ты %x, что над городом реет знамя твоего тэки — Асикаги Такаудзи.
+Как такое могло случиться?  Почему ниндзя свободно разгуливают
+повсюду?  Где самураи твоего даймё, лорда Сато?
 
-You quickly say a prayer to Izanagi and Izanami and walk towards
-town.]],
+Ты быстро возносишь молитву Идзанаги и Идзанами и идёшь
+к городу.]],
       },
       goal_alt = {
-         text = "As you arrive once again at the home of %n.",
+         text = "Ты снова у обиталища Асикаги Такаудзи.",
       },
       goal_first = {
-         synopsis = "[You feel the taunts %n, but after offering a prayer to %d, you proceed.]",
+         synopsis = "[Ты слышишь насмешки Асикаги Такаудзи, но, вознеся молитву, идёшь дальше.]",
          output = "text",
-         text = [[In your mind, you hear the taunts of %n.
+         text = [[В мыслях ты слышишь насмешки Асикаги Такаудзи.
 
-You become like the rice plant and bend to the ground, offering a
-prayer to %d.  But when the wind has passed, you stand
-proudly again.  Putting your kami in the hands of fate, you advance.]],
+Ты уподобляешься рисовому стеблю и склоняешься к земле, вознося
+молитву во славу %d1.  Но когда ветер стихает, ты вновь гордо
+распрямляешься.  Вверив свой ками судьбе, ты идёшь вперёд.]],
       },
       goal_next = {
-         text = [[As you arrive once again at the home of %n, your thoughts
-turn only to %o.]],
+         text = [[Ты снова у обиталища Асикаги Такаудзи, и все твои мысли
+лишь о Цуруги Мурамасы.]],
       },
       gotit = {
-         synopsis = "[You feel the power of %o and are humbled.]",
+         synopsis = "[Ты чувствуешь силу Цуруги Мурамасы и смиряешься душой.]",
          output = "text",
-         text = [[As you pick up %o, you feel the strength of its karma.
-You realize at once why so many good samurai had to die to defend it.
-You are humbled knowing that you hold one of the artifacts of the
-sun goddess.]],
+         text = [[Взяв Цуруги Мурамасы, ты чувствуешь силу его кармы.  Ты сразу
+понимаешь, почему столько добрых самураев погибло, защищая его.
+Тебя переполняет смирение: ты держишь в руках один из артефактов
+богини солнца.]],
       },
       guardtalk_after = {
-         "\"Come, join us in celebrating with some sake.\"",
-         "\"Ikaga desu ka?\"",
-         "\"You have brought our clan and %l much honor.\"",
-         "\"Please %r, sit for a while and tell us how you overcame the Ninja.\"",
-         "\"%lC still lives!  You have saved us from becoming ronin.\"",
+         "\"Иди к нам, отпразднуем вместе за чашкой саке.\"",
+         "\"Икага дэс ка?\"",
+         "\"Ты прославил%e наш клан и лорда Сато.\"",
+         "\"Прошу, «%r», присядь и расскажи, как ты одолел%e ниндзя.\"",
+         "\"Лорд Сато жив!  Благодаря тебе мы не стали ронинами.\"",
       },
       guardtalk_before = {
-         "\"To succeed, you must walk like a butterfly on the wind.\"",
-         "\"Ikaga desu ka?\"",
-         "\"I fear for The Land of The Gods.\"",
-         "\"%nC has hired the Ninja -- be careful.\"",
-         "\"If %o is not returned, we will all be ronin.\"",
+         "\"Чтобы преуспеть, нужно ступать, словно бабочка на ветру.\"",
+         "\"Икага дэс ка?\"",
+         "\"Я боюсь за Страну Богов.\"",
+         "\"Асикага Такаудзи нанял ниндзя — будь начеку.\"",
+         "\"Если Цуруги Мурамасы не вернуть, мы все станем ронинами.\"",
       },
       hasamulet = {
-         synopsis = "[Take the Amulet to the Astral Plane to finish your task.]",
+         synopsis = "[Отнеси Амулет на Астральный План, чтобы завершить начатое.]",
          output = "text",
-         text = [["Ah, %p-sama.  You have wasted your efforts returning home.
-Now that you are in possession of the Amulet, you are honor-bound to
-finish the quest you have undertaken.  There will be plenty of time
-for saki and stories when you have finished.
+         text = [["А, %p-сама.  Зря ты тратишь силы на возвращение домой.
+Теперь, когда Амулет у тебя, честь обязывает тебя завершить
+поход, за который ты взял%y.  Для саке и рассказов найдётся
+много времени, когда ты закончишь.
 
-"Go now, and may our prayers be a wind at your back."]],
+"Ступай же, и пусть наши молитвы будут тебе попутным ветром."]],
       },
       killed_nemesis = {
-         synopsis = "[%nC dies without honor.]",
+         synopsis = "[Асикага Такаудзи умирает без чести.]",
          output = "text",
-         text = [[Your healing skills tell you that %ns wounds are mortal.
+         text = [[Твои познания в целительстве подсказывают, что раны Асикаги
+Такаудзи смертельны.
 
-You know that the bushido tells you to finish him and let his kami
-die with honor, but the thought of so many samurai dead due to this
-man's dishonor prevents you from giving the final blow.
+Ты знаешь, что бусидо велит добить его и позволить его ками
+умереть с честью, но мысль о стольких самураях, погибших из-за
+бесчестия этого человека, удерживает тебя от последнего удара.
 
-You order that his unwashed head be given to the crows and his body
-thrown into the sea.]],
+Ты приказываешь отдать его немытую голову воронам, а тело
+бросить в море.]],
       },
       leader_first = {
-         synopsis = "[%lC needs someone to lead %lj samurai against %n.  Are you ready?]",
+         synopsis = "[Лорду Сато нужен тот, кто поведёт его самураев против Асикаги Такаудзи.  Готов%e ли ты?]",
          output = "text",
-         text = [["Ah, %p-san, it is good to see you again.  I need someone who can
-lead my samurai against %n.  If you are ready, you will be
-that person."]],
+         text = [["А, %p-сан, рад снова тебя видеть.  Мне нужен тот, кто поведёт
+моих самураев против Асикаги Такаудзи.  Если ты готов%e, этим
+человеком станешь ты."]],
       },
       leader_last = {
-         synopsis = "[Leave and do not come back.]",
+         synopsis = "[Уходи и не возвращайся.]",
          output = "text",
-         text = [["You are no longer my samurai, %p.
+         text = [["Ты больше не мой самурай, %p.
 
-"Hara-kiri is denied.  You are ordered to shave your head and then to
-become a monk.  Your fief and family are forfeit.  Wakarimasu ka?"]],
+"В харакири тебе отказано.  Тебе приказано обрить голову и
+стать монахом.  Твой удел и семья конфискованы.  Вакаримас ка?"]],
       },
       leader_next = {
-         text = [["Once again, %p-san, you kneel before me.  Are you yet capable of
-being my vassal?"]],
+         text = [["Ты снова преклоняешь передо мной колени, %p-сан.  Годишься
+ли ты уже в мои вассалы?"]],
       },
       leader_other = {
-         synopsis = "[Are you truly a samurai?]",
+         synopsis = "[Истинный ли ты самурай?]",
          output = "text",
-         text = [["You begin to test my matsu, %p-san.
-If you cannot determine what I want in a samurai, how can I rely on you
-to figure out what I need from a samurai?"]],
+         text = [["Ты начинаешь испытывать моё мацу, %p-сан.
+Если ты не можешь понять, чего я жду от самурая, как я могу
+положиться на тебя в том, что мне нужно от самурая?"]],
       },
       locate_first = {
-         text = [[You instinctively reach for your swords.  You do not recognize the
-lay of this land, but you know that your teki are everywhere.]],
+         text = [[Ты невольно тянешься к мечам.  Ты не узнаёшь этих мест, но знаешь,
+что твои тэки повсюду.]],
       },
       locate_next = {
-         text = [[Thankful that your %sp at %H cannot see
-your fear, you prepare again to advance.]],
+         text = [[Радуясь, что твои братья в Замке клана Таро не видят твоего страха,
+ты вновь готовишься идти вперёд.]],
       },
       nemesis_first = {
-         text = [["Ah, so it is to be you, %p-san.  I offer you seppuku.
-I will be your second if you wish."]],
+         text = [["А, так это будешь ты, %p-сан.  Я предлагаю тебе сэппуку.
+Если пожелаешь, я буду твоим секундантом."]],
       },
       nemesis_next = {
-         text = [["I have offered you the honorable exit.  Now I will have your
-head to send unwashed to %l."]],
+         text = [["Я предложил тебе почётный выход.  Теперь я заберу твою голову
+и пошлю её немытой лорду Сато."]],
       },
       nemesis_other = {
-         text = "\"After I have dispatched you, I will curse your kami.\"",
+         text = "\"Покончив с тобой, я прокляну твой ками.\"",
       },
       nemesis_wantsit = {
-         text = [["You have fought my samurai; surely you must know that you
-will not be able to take %o back to
-%H."]],
+         text = [["Ты сражал%y с моими самураями; уж наверняка ты понимаешь,
+что тебе не унести Цуруги Мурамасы обратно в Замок клана Таро."]],
       },
       nexttime = {
-         text = "Once again, you are back at %H.",
+         text = "Ты снова в Замке клана Таро.",
       },
       offeredit = {
-         synopsis = "[The emperor wants you to take %o and recover the Amulet.]",
+         synopsis = "[Император желает, чтобы ты взял%e Цуруги Мурамасы и добыл%e Амулет.]",
          output = "text",
-         text = [[As you bow before %l, he welcomes you:
+         text = [[Когда ты кланяешься лорду Сато, он приветствует тебя:
 
-    "You have brought your family great honor, %p-sama.
+    "Ты прославил%e свою семью, %p-сама.
 
-    "While you have been gone the emperor's advisors have discovered in
-    the ancient texts that the karma of the samurai who seeks to recover
-    the Amulet and the karma of %o are joined
-    as the seasons join to make a year.
+    "Пока тебя не было, советники императора отыскали в древних
+    текстах, что карма самурая, ищущего Амулет, и карма Цуруги
+    Мурамасы связаны, как времена года, что вместе составляют год.
 
-    "Because you have shown such fidelity, the emperor requests
-    that you take leave of other obligations and continue on the
-    road that fate has set your feet upon.  I would consider it
-    an honor if you would allow me to watch your household until
-    you return with the Amulet."
+    "Ты проявил%e такую верность, что император просит тебя
+    оставить прочие обязанности и продолжить путь, на который
+    поставила тебя судьба.  Я почту за честь, если ты позволишь
+    мне присмотреть за твоим домом, пока ты не вернёшься
+    с Амулетом."
 
-With that, %l bows, and places his sword atop
-%o.]],
+С этими словами лорд Сато кланяется и кладёт свой меч поверх
+Цуруги Мурамасы.]],
       },
       offeredit2 = {
-         synopsis = "[Take %o, return to %Z, and recover the Amulet.]",
+         synopsis = "[Бери Цуруги Мурамасы, возвращайся в %Z и добудь Амулет.]",
          output = "text",
-         text = [[%l holds %o tightly for a moment, then returns
-his gaze to you.
+         text = [[Лорд Сато на миг крепко сжимает Цуруги Мурамасы, затем вновь
+переводит взгляд на тебя.
 
-"The time is ripe to recover the Amulet.  Return to %Z
-through the magic portal that transported you here so that you may
-achieve the destiny which awaits you."]],
+"Пришло время добыть Амулет.  Возвращайся в %Z через
+волшебный портал, что перенёс тебя сюда, и исполни
+предназначение, что ждёт тебя."]],
       },
       othertime = {
-         synopsis = "[%HC is threatened by %n.]",
+         synopsis = "[Замку клана Таро угрожает Асикага Такаудзи.]",
          output = "text",
-         text = [[You are back at %H.
+         text = [[Ты снова в Замке клана Таро.
 
-Instantly you sense a subtle change in your karma.  You seem to know that
-if you do not succeed in your quest, %n will have destroyed
-the kami of %H before you return again.]],
+Ты сразу ощущаешь едва заметную перемену в своей карме.  Ты словно
+знаешь: если твой поход не увенчается успехом, Асикага Такаудзи
+уничтожит ками Замка клана Таро прежде, чем ты вернёшься сюда снова.]],
       },
       posthanks = {
-         text = "%lC bows.  \"%p-sama, tell us of your search for the Amulet.\"",
+         text = "Лорд Сато кланяется.  \"%p-сама, расскажи нам о поисках Амулета.\"",
       },
    },
    Tou = {
