@@ -77,8 +77,8 @@ local diagmovekeys = tut_key("movesouthwest") .. " " ..
    tut_key("movesoutheast") .. " " ..
    tut_key("movenorthwest");
 
-des.engraving({ coord = { 9,3 }, type = "engrave", text = "Двигайся с помощью " .. movekeys, degrade = false });
-des.engraving({ coord = { 5,2 }, type = "engrave", text = "Двигайся по диагонали с помощью " .. diagmovekeys, degrade = false });
+des.engraving({ coord = { 9,3 }, type = "engrave", text = "Двигайтесь с помощью " .. movekeys, degrade = false });
+des.engraving({ coord = { 5,2 }, type = "engrave", text = "Двигайтесь по диагонали с помощью " .. diagmovekeys, degrade = false });
 
 if (u.role == "Рыцарь") then
    des.engraving({ coord = { 12,1 }, type = "engrave", text = "Рыцари могут прыгать с помощью '" .. tut_key("jump") .. "'", degrade = false });
@@ -87,31 +87,31 @@ end
 --
 
 des.engraving({ coord = { 2,4 }, type = "engrave", text = "Некоторые действия могут потребовать несколько попыток, прежде чем удастся", degrade = false });
-des.engraving({ coord = { 2,5 }, type = "engrave", text = "Открой дверь, войдя в неё", degrade = false });
+des.engraving({ coord = { 2,5 }, type = "engrave", text = "Откройте дверь, войдя в неё", degrade = false });
 des.door({ coord = { 2,6 }, state = "closed" });
 
-des.engraving({ coord = { 2,7 }, type = "engrave", text = "Закрой дверь с помощью '" .. tut_key("close") .. "'", degrade = false });
+des.engraving({ coord = { 2,7 }, type = "engrave", text = "Закройте дверь с помощью '" .. tut_key("close") .. "'", degrade = false });
 
 
 --
 
-des.engraving({ coord = { 4,5 }, type = "engrave", text = "Ты можешь покинуть туториал через магический портал.", degrade = false });
+des.engraving({ coord = { 4,5 }, type = "engrave", text = "Вы можете покинуть туториал через магический портал.", degrade = false });
 des.trap({ type = "magic portal", coord = { 4,4 }, seen = true });
 
 --
 
-des.engraving({ coord = { 5,9 }, type = "engrave", text = "Эта дверь заперта. Вышиби её с помощью '" .. tut_key("kick") .. "'", degrade = false });
+des.engraving({ coord = { 5,9 }, type = "engrave", text = "Эта дверь заперта. Вышибите её с помощью '" .. tut_key("kick") .. "'", degrade = false });
 des.door({ coord = { 5,10 }, state = "locked" });
 
 -- by default, kick is the first command that can be a ctrl-key combo
 tut_key_help(6, 8);
 
 
-des.engraving({ coord = { 5,12 }, type = "engrave", text = "Осмотри карту с помощью '" .. tut_key("glance") .. "', нажми ESC, когда закончишь", degrade = false });
+des.engraving({ coord = { 5,12 }, type = "engrave", text = "Осмотрите карту с помощью '" .. tut_key("glance") .. "', нажмите ESC, когда закончите", degrade = false });
 
 --
 
-des.engraving({ coord = { 10,13 }, type = "engrave", text = "Используй '" .. tut_key("search") .. "' для поиска тайных дверей", degrade = false });
+des.engraving({ coord = { 10,13 }, type = "engrave", text = "Используйте '" .. tut_key("search") .. "' для поиска тайных дверей", degrade = false });
 
 des.engraving({ coord = { 10,15 }, type = "engrave", text = "Не та тайная дверь", degrade = false });
 
@@ -125,7 +125,7 @@ des.door({ coord = { 15,10 }, state = percent(50) and "locked" or "closed" });
 
 --
 
-des.engraving({ coord = { 15,11 }, type = "engrave", text = "Рядом с тобой четыре ловушки! Поищи их.", degrade = false });
+des.engraving({ coord = { 15,11 }, type = "engrave", text = "Рядом с вами четыре ловушки! Поищите их.", degrade = false });
 local locs = { {14,11}, {14,12}, {15,12}, {16,12}, {16,11} };
 shuffle(locs);
 for i = 1, 4 do
@@ -140,44 +140,44 @@ des.trap({ coord = { 15,16 }, type = "web", spider_on_web = false });
 
 des.door({ coord = { 18,13 }, state = "closed" });
 
-des.engraving({ coord = { 19,13 }, type = "engrave", text = "Подбирай предметы с помощью '" .. tut_key("pickup") .. "'", degrade = false });
+des.engraving({ coord = { 19,13 }, type = "engrave", text = "Подбирайте предметы с помощью '" .. tut_key("pickup") .. "'", degrade = false });
 
 local armor = (u.role == "Монах") and "кожаные перчатки" or "кожаная куртка";
 
 des.object({ id = armor, spe = 0, buc = "cursed", coord = { 19,14} });
 
-des.engraving({ coord = { 19,15 }, type = "engrave", text = "Надевай броню с помощью '" .. tut_key("wear") .. "'", degrade = false });
+des.engraving({ coord = { 19,15 }, type = "engrave", text = "Надевайте броню с помощью '" .. tut_key("wear") .. "'", degrade = false });
 
 des.object({ id = "кинжал", spe = 0, buc = "not-cursed", coord = { 21,15} });
 
-des.engraving({ coord = { 21,14 }, type = "engrave", text = "Вооружайся с помощью '" .. tut_key("wield") .. "'", degrade = false });
+des.engraving({ coord = { 21,14 }, type = "engrave", text = "Вооружайтесь с помощью '" .. tut_key("wield") .. "'", degrade = false });
 
 
-des.engraving({ coord = { 22,13 }, type = "engrave", text = "Атакуй монстров, врезаясь в них.", degrade = false });
+des.engraving({ coord = { 22,13 }, type = "engrave", text = "Атакуйте монстров, врезаясь в них.", degrade = false });
 
 des.monster({ id = "лишайник", coord = { 23,15 }, waiting = true, countbirth = false });
 
 --
 
-des.engraving({ coord = { 24,16 }, type = "engrave", text = "Теперь ты знаешь самые основы. Ты можешь покинуть туториал через магический портал.", degrade = false });
+des.engraving({ coord = { 24,16 }, type = "engrave", text = "Теперь вы знаете самые основы. Вы можете покинуть туториал через магический портал.", degrade = false });
 
-des.engraving({ coord = { 26,16 }, type = "engrave", text = "Войди в этот портал, чтобы покинуть туториал", degrade = false });
+des.engraving({ coord = { 26,16 }, type = "engrave", text = "Войдите в этот портал, чтобы покинуть туториал", degrade = false });
 des.trap({ type = "magic portal", coord = { 27,16 }, seen = true });
 
 --
 
-des.engraving({ coord = { 25,13 }, type = "engrave", text = "Толкай валуны, врезаясь в них", degrade = false });
+des.engraving({ coord = { 25,13 }, type = "engrave", text = "Толкайте валуны, врезаясь в них", degrade = false });
 des.object({ id = "валун", coord = {25,12} });
 
 --
 
-des.engraving({ coord = { 27,9 }, type = "engrave", text = "Снимай броню с помощью '" .. tut_key("takeoff") .. "'", degrade = false });
+des.engraving({ coord = { 27,9 }, type = "engrave", text = "Снимайте броню с помощью '" .. tut_key("takeoff") .. "'", degrade = false });
 
 --
 
 des.object({ class = "?", id = "снятие проклятия", buc = "blessed", coord = {23,11} })
 des.engraving({ coord = { 22,11 }, type = "engrave", text = "Некоторые предметы имеют перемешанные описания, разные в каждой игре", degrade = false });
-des.engraving({ coord = { 23,11 }, type = "engrave", text = "Подними этот свиток, прочитай его с помощью '" .. tut_key("read") .. "', и попробуй снять броню снова", degrade = false });
+des.engraving({ coord = { 23,11 }, type = "engrave", text = "Поднимите этот свиток, прочитайте его с помощью '" .. tut_key("read") .. "', и попробуйте снять броню снова", degrade = false });
 
 --
 
@@ -196,15 +196,15 @@ des.object({ coord = {14, 6}, id = "валун" });
 
 des.door({ coord = { 20,3 }, state = percent(50) and "open" or "closed" });
 
-des.engraving({ coord = { 21,3 }, type = "engrave", text = "Избегай перегрузки - она замедляет тебя", degrade = false });
-des.engraving({ coord = { 22,3 }, type = "engrave", text = "Бросай предметы с помощью '" .. tut_key("drop") .. "'", degrade = false });
-des.engraving({ coord = { 22,4 }, type = "engrave", text = "Ты можешь бросить часть стопки, набрав перед буквой слота число", degrade = false });
+des.engraving({ coord = { 21,3 }, type = "engrave", text = "Избегайте перегрузки - она замедляет вас", degrade = false });
+des.engraving({ coord = { 22,3 }, type = "engrave", text = "Бросайте предметы с помощью '" .. tut_key("drop") .. "'", degrade = false });
+des.engraving({ coord = { 22,4 }, type = "engrave", text = "Вы можете бросить часть стопки, набрав перед буквой слота число", degrade = false });
 
 --
 
 des.monster({ id = "жёлтая плесень", coord = { 26,2 }, waiting = true, countbirth = false });
 
-des.engraving({ coord = { 25,5 }, type = "engrave", text = "Метай предметы с помощью '" .. tut_key("throw") .. "'", degrade = false });
+des.engraving({ coord = { 25,5 }, type = "engrave", text = "Метайте предметы с помощью '" .. tut_key("throw") .. "'", degrade = false });
 
 des.trap({ type = "magic portal", coord = { 21,1 }, seen = true });
 
@@ -215,19 +215,19 @@ des.monster({ id = "волк", coord = { 29,2 }, peaceful = 0, waiting = true, count
 des.engraving({ coord = { 37,4 }, type = "engrave", text = "Метательные снаряды, например камни, летят лучше при стрельбе из подходящего лука", degrade = false });
 
 des.object({ coord = { 37,3 }, id = "праща", buc = "not-cursed", spe = 9 });
-des.engraving({ coord = { 37,3 }, type = "engrave", text = "Возьми пращу в руки", degrade = false });
-des.engraving({ coord = { 36,1 }, type = "engrave", text = "Используй '" .. tut_key("fire") .. "', чтобы стрелять из взятого в руки лука", degrade = false });
+des.engraving({ coord = { 37,3 }, type = "engrave", text = "Возьмите пращу в руки", degrade = false });
+des.engraving({ coord = { 36,1 }, type = "engrave", text = "Используйте '" .. tut_key("fire") .. "', чтобы стрелять из взятого в руки лука", degrade = false });
 
-des.engraving({ coord = { 35,4 }, type = "engrave", text = "Выстрел запускает снаряды из твоего колчана; используй '" .. tut_key("quiver") .. "', чтобы положить в него снаряды", degrade = false });
+des.engraving({ coord = { 35,4 }, type = "engrave", text = "Выстрел запускает снаряды из вашего колчана; используйте '" .. tut_key("quiver") .. "', чтобы положить в него снаряды", degrade = false });
 
-des.engraving({ coord = { 33,4 }, type = "engrave", text = "Ты можешь подождать ход с помощью '" .. tut_key("wait") .. "'", degrade = false });
+des.engraving({ coord = { 33,4 }, type = "engrave", text = "Вы можете подождать ход с помощью '" .. tut_key("wait") .. "'", degrade = false });
 
 
 --
 
 des.door({ coord = { 38,6 }, state = "closed" });
 
-des.engraving({ coord = { 39,6 }, type = "engrave", text = "Ты обыскиваешь контейнеры с помощью '" .. tut_key("loot") .. "'", degrade = false });
+des.engraving({ coord = { 39,6 }, type = "engrave", text = "Вы обыскиваете контейнеры с помощью '" .. tut_key("loot") .. "'", degrade = false });
 
 des.object({ coord = { 41,6 }, id = "большой ящик", broken = true, trapped = false,
              contents = function(obj)
@@ -240,12 +240,12 @@ des.engraving({ coord = { 45,6 }, type = "engrave", text = "Магические жезлы исп
 --
 
 des.door({ coord = { 35,9 }, state = "nodoor" });
-des.engraving({ coord = { 34,9 }, type = "engrave", text = "Ты можешь бежать, нажав перед клавишей движения '" .. tut_key("run") .. "'", degrade = false });
+des.engraving({ coord = { 34,9 }, type = "engrave", text = "Вы можете бежать, нажав перед клавишей движения '" .. tut_key("run") .. "'", degrade = false });
 
 --
 
 des.door({ coord = { 33,16 }, state = "nodoor" });
-des.engraving({ coord = { 35,15 }, type = "engrave", text = "Путешествуй по уровню с помощью '" .. tut_key("travel") .. "'", degrade = false });
+des.engraving({ coord = { 35,15 }, type = "engrave", text = "Путешествуйте по уровню с помощью '" .. tut_key("travel") .. "'", degrade = false });
 
 --
 
@@ -253,7 +253,7 @@ des.trap({ type = "magic portal", coord = { 27,14 }, seen = true });
 
 --
 
-des.engraving({ coord = { 48,1 }, type = "burn", text = "Используй '" .. tut_key("eat") .. "', чтобы съесть съедобное", degrade = false });
+des.engraving({ coord = { 48,1 }, type = "burn", text = "Используйте '" .. tut_key("eat") .. "', чтобы съесть съедобное", degrade = false });
 
 des.object({ coord = { 50,3 }, id = "яблоко", buc = "not-cursed"  });
 des.object({ coord = { 50,3 }, id = "шоколадный батончик", buc = "not-cursed"  });
@@ -264,11 +264,11 @@ des.object({ coord = { 50,3 }, id = "труп", montype = "лишайник", buc = "not-cur
 
 des.door({ coord = { 46,11 }, state = "closed" });
 
-des.engraving({ coord = { 43,11 }, type = "burn", text = "Используй '" .. tut_key("twoweapon") .. "', чтобы использовать два оружия сразу", degrade = false });
+des.engraving({ coord = { 43,11 }, type = "burn", text = "Используйте '" .. tut_key("twoweapon") .. "', чтобы использовать два оружия сразу", degrade = false });
 des.object({ coord = { 43,13 }, id = "нож", buc = "uncursed" });
 des.object({ coord = { 43,14 }, id = "кинжал", buc = "blessed" });
 
-des.engraving({ coord = { 43,16 }, type = "burn", text = "Быстро меняй оружие с помощью '" .. tut_key("swap") .. "'", degrade = false });
+des.engraving({ coord = { 43,16 }, type = "burn", text = "Быстро меняйте оружие с помощью '" .. tut_key("swap") .. "'", degrade = false });
 
 des.door({ coord = { 40,15 }, state = "random" });
 
@@ -276,16 +276,16 @@ des.door({ coord = { 40,15 }, state = "random" });
 
 des.object({ coord = { 48,7 }, id = "кольцо левитация", buc = "not-cursed" });
 
-des.engraving({ coord = { 48,10 }, type = "burn", text = "Надевай украшения с помощью '" .. tut_key("puton") .. "'", degrade = false });
+des.engraving({ coord = { 48,10 }, type = "burn", text = "Надевайте украшения с помощью '" .. tut_key("puton") .. "'", degrade = false });
 
-des.engraving({ coord = { 48,16 }, type = "burn", text = "Снимай украшения с помощью '" .. tut_key("remove") .. "'", degrade = false });
+des.engraving({ coord = { 48,16 }, type = "burn", text = "Снимайте украшения с помощью '" .. tut_key("remove") .. "'", degrade = false });
 
 des.door({ coord = { 50,16 }, state = "closed" });
 
 
 --
 
-des.engraving({ coord = { 58,9 }, type = "burn", text = "Используй '" .. tut_key("down") .. "', чтобы спуститься по лестнице", degrade = false });
+des.engraving({ coord = { 58,9 }, type = "burn", text = "Используйте '" .. tut_key("down") .. "', чтобы спуститься по лестнице", degrade = false });
 des.stair({ dir = "down", coord = { 58,10 } });
 
 --
@@ -301,7 +301,7 @@ des.trap({ type = "magic portal", coord = { 66,2 }, seen = true });
 
 -- squeezing through small gaps
 
-des.engraving({ coord = { 69,12 }, type = "burn", text = "Не можешь протиснуться?  Ты несёшь слишком много.", degrade = false });
+des.engraving({ coord = { 69,12 }, type = "burn", text = "Не можете протиснуться?  Вы несёте слишком много.", degrade = false });
 
 -- try to squeeze over boulders, find a trap door
 
@@ -316,17 +316,17 @@ des.engraving({ coord = { 60,2 }, type = "engrave", text = "Колдовство", degrade
 if (u.uenmax < 5) then
    -- TODO: make sure hero has enough Pw to cast the spell (5 pw) instead?
    -- TODO: ensure the first cast of this spell succeeds?
-   des.engraving({ coord = { 59,2 }, type = "engrave", text = "К сожалению, у тебя недостаточно энергии, чтобы творить заклинания.", degrade = false });
+   des.engraving({ coord = { 59,2 }, type = "engrave", text = "К сожалению, у вас недостаточно энергии, чтобы творить заклинания.", degrade = false });
 end
-des.engraving({ coord = { 57,2 }, type = "engrave", text = "Подними книгу заклинаний с помощью '" .. tut_key("pickup") .. "'", degrade = false });
+des.engraving({ coord = { 57,2 }, type = "engrave", text = "Поднимите книгу заклинаний с помощью '" .. tut_key("pickup") .. "'", degrade = false });
 des.object({ coord = { 57,2 }, id = "книга заклинаний: свет", buc = "blessed" });
-des.engraving({ coord = { 55,2 }, type = "engrave", text = "Прочитай книгу заклинаний с помощью '" .. tut_key("read") .. "'", degrade = false });
-des.engraving({ coord = { 53,2 }, type = "engrave", text = "Используй '" .. tut_key("cast") .. "', чтобы сотворить заклинание", degrade = false });
+des.engraving({ coord = { 55,2 }, type = "engrave", text = "Прочитайте книгу заклинаний с помощью '" .. tut_key("read") .. "'", degrade = false });
+des.engraving({ coord = { 53,2 }, type = "engrave", text = "Используйте '" .. tut_key("cast") .. "', чтобы сотворить заклинание", degrade = false });
 des.region(selection.area(53,01, 59, 3), "unlit");
 
 --
 
-des.engraving({ coord = { 72,2 }, type = "engrave", text = "Ты \"отпиваешь\" зелья с помощью '" .. tut_key("quaff") .. "'", degrade = false });
+des.engraving({ coord = { 72,2 }, type = "engrave", text = "Вы \"отпиваете\" зелья с помощью '" .. tut_key("quaff") .. "'", degrade = false });
 des.object({ coord = { 72,2 }, id = "зелье обнаружение предметов", buc = "blessed" });
 
 
