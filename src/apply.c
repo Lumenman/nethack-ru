@@ -143,15 +143,15 @@ use_towel(struct obj *obj)
                 const char *what;
 
                 what = (ublindf->otyp == LENSES)
-                           ? "lenses"
-                           : (obj->otyp == ublindf->otyp) ? "other towel"
-                                                          : "blindfold";
+                           ? "линзы"
+                           : (obj->otyp == ublindf->otyp) ? "другое полотенце"
+                                                          : "повязку";
                 if (ublindf->cursed) {
-                    You("поправляете свою %s %s.", what,
+                    You("сдвигаете %s %s.", what,
                         rn2(2) ? "набок" : "криво");
                 } else {
                     struct obj *saved_ublindf = ublindf;
-                    You("сдвигаете свою %s.", what);
+                    You("снимаете %s.", what);
                     Blindf_off(ublindf);
                     dropx(saved_ublindf);
                 }
@@ -598,14 +598,14 @@ magic_whistled(struct obj *obj)
                 mnam = y_monnam(mtmp);
                 if (oseen) {
                     if (++shift == 1)
-                        Sprintf(shiftbuf, "%s shifts location", mnam);
+                        Sprintf(shiftbuf, "%s меняет место", mnam);
                 } else {
                     if (++appear == 1)
-                        Sprintf(appearbuf, "%s appears", mnam);
+                        Sprintf(appearbuf, "%s появляется", mnam);
                 }
             } else if (oseen) {
                 if (++disappear == 1)
-                    Sprintf(disappearbuf, "%s disappears", mnam);
+                    Sprintf(disappearbuf, "%s исчезает", mnam);
             }
         }
     }
@@ -637,19 +637,18 @@ magic_whistled(struct obj *obj)
     } else {
         /* could use array of cardinal number names like wishcmdassist() but
            extra precision above 3 or 4 seems pedantic; not used for 0 or 1 */
-#define HowMany(n) (((n) < 2) ? "sqrt(-1)"          \
-                    : ((n) == 2) ? "two"            \
-                      : ((n) == 3) ? "three"        \
-                        : ((n) == 4) ? "four"       \
-                          : ((n) <= 7) ? "several"  \
-                            : "many")
+#define HowMany(n) (((n) < 2) ? "sqrt(-1) существ"          \
+                    : ((n) == 2) ? "два существа"            \
+                      : ((n) == 3) ? "три существа"        \
+                        : ((n) == 4) ? "четыре существа"       \
+                          : ((n) <= 7) ? "несколько существ"  \
+                            : "много существ")
         /* magic whistle is already discovered so rloc() message(s)
            were suppressed above; if any discernible relocation occurred,
            construct a message now and issue it below */
         if (shift > 0) {
             if (shift > 1)
-                Sprintf(shiftbuf, "%s creatures shift locations",
-                        HowMany(shift));
+                Sprintf(shiftbuf, "%s меняют места", HowMany(shift));
             copynchars(buf, upstart(shiftbuf), (int) sizeof buf - 1);
         }
         if (appear > 0) {
@@ -657,10 +656,8 @@ magic_whistled(struct obj *obj)
                 /* shift==0: N creatures appear;
                    shift==1: Foo shifts location and N other creatures appear;
                    shift >1: M creatures shift locations and N others appear */
-                Sprintf(appearbuf, "%s %s appear", HowMany(appear),
-                        (shift == 0) ? "creatures"
-                        : (shift == 1) ? "other creatures"
-                          : "others");
+                Sprintf(appearbuf, "%s%s появляются",
+                        (shift == 0) ? "" : "ещё ", HowMany(appear));
             if (shift == 0)
                 copynchars(buf, upstart(appearbuf), (int) sizeof buf - 1);
             else
@@ -669,19 +666,18 @@ magic_whistled(struct obj *obj)
                             so "shifters, appearers" if disappear != 0
                             with ", and disappearers" yet to be appended,
                             or "shifters and appearers" otherwise */
-                         disappear ? "," : " and", appearbuf);
+                         disappear ? "," : " и", appearbuf);
         }
         if (disappear > 0) {
             if (disappear > 1)
-                Sprintf(disappearbuf, "%s %s disappear", HowMany(disappear),
-                        (shift == 0 && appear == 0) ? "creatures"
-                        : (shift < 2 && appear < 2) ? "other creatures"
-                          : "others");
+                Sprintf(disappearbuf, "%s%s исчезают",
+                        (shift == 0 && appear == 0) ? "" : "ещё ",
+                        HowMany(disappear));
             if (shift + appear == 0)
                 copynchars(buf, upstart(disappearbuf), (int) sizeof buf - 1);
             else
-                Snprintf(eos(buf), sizeof buf - strlen(buf), "%s and %s",
-                         (shift && appear) ? "," : "", disappearbuf);
+                Snprintf(eos(buf), sizeof buf - strlen(buf), " и %s",
+                         disappearbuf);
         }
     }
     if (*buf)
@@ -1081,20 +1077,20 @@ use_mirror(struct obj *obj)
     }
     if (u.uswallow) {
         if (useeit)
-            You("видишь отражение %s %s.", mhis(u.ustuck),
+            You("видите отражение %s %s.", mhis(u.ustuck),
                 mbodypart_case(u.ustuck, STOMACH, BP_GEN));
         return ECMD_TIME;
     }
     if (Underwater) {
         if (useeit)
             You("%s.",
-                Hallucination ? "даёшь рыбе шанс поправить макияж"
-                              : "видишь отражение мутной воды");
+                Hallucination ? "даёте рыбе шанс поправить макияж"
+                              : "видите отражение мутной воды");
         return ECMD_TIME;
     }
     if (u.dz) {
         if (useeit)
-            You("видишь отражение %s.",
+            You("видите отражение %s.",
                 (u.dz > 0) ? surface(u.ux, u.uy) : ceiling(u.ux, u.uy));
         return ECMD_TIME;
     }
@@ -1127,9 +1123,8 @@ use_mirror(struct obj *obj)
         /* infravision doesn't produce an image in the mirror */
     } else if ((how_seen & SEENMON) == MONSEEN_INFRAVIS) {
         if (vis) /* (redundant) */
-            pline("%s в темноте.",
-                  monverbself(mtmp, Monnam(mtmp), "are",
-                              "too far away to see"));
+            pline("%s слишком далеко, чтобы разглядеть себя в темноте.",
+                  Monnam(mtmp));
         /* some monsters do special things */
     } else if (mlet == S_VAMPIRE || mlet == S_GHOST || is_vampshifter(mtmp)) {
         if (vis)
@@ -1159,9 +1154,7 @@ use_mirror(struct obj *obj)
         if (vis) {
             char buf[BUFSZ]; /* "She" or "He" */
 
-            pline("%s в твоём %s.", /* "<mon> admires self in your mirror " */
-                  monverbself(mtmp, Monnam(mtmp), "admire", (char *) 0),
-                  mirror);
+            pline("%s любуется собой в вашем %s.", Monnam(mtmp), mirror);
             pline("%s берёт его!", upstart(strcpy(buf, mhe(mtmp))));
         } else
             pline("Оно крадёт вашу %s!", mirror);
@@ -1326,7 +1319,7 @@ use_candelabrum(struct obj *obj)
     const char *s = (obj->spe != 1) ? "свечи" : "свеча";
 
     if (obj->lamplit) {
-        You("гасишь %s.", s);
+        You("гасите %s.", s);
         end_burn(obj, TRUE);
         return;
     }
@@ -1349,22 +1342,23 @@ use_candelabrum(struct obj *obj)
     }
     if (u.uswallow || obj->cursed) {
         if (!Blind)
-            pline("%s %s Мгновение, затем %s.", s, vtense(s, "flicker"),
-                      vtense(s, "die"));
+            pline("%s мгновение мерца%s, затем гасн%s.",
+                  (obj->spe != 1) ? "Свечи" : "Свеча",
+                  (obj->spe != 1) ? "ют" : "ет", (obj->spe != 1) ? "ут" : "ет");
         return;
     }
     if (obj->spe < 7) {
-        There("%s только %d %s в %s.", vtense(s, "are"), obj->spe, s,
-              the(xname(obj)));
+        pline("В %s всего %d %s.", obj_case(obj, BP_PREP), obj->spe, s);
         if (!Blind)
-            pline("%s.  %s тускло.", obj->spe == 1 ? "Он горит" : "Они горят",
-                  Tobjnam(obj, "shine"));
+            pline("%s.  %s светится тускло.",
+                  obj->spe == 1 ? "Она горит" : "Они горят",
+                  Tobjnam(obj, (char *) 0));
     } else {
         pline("%s: %s горят%s", The(xname(obj)), s,
               (Blind ? "." : " ярко!"));
     }
     if (!invocation_pos(u.ux, u.uy) || On_stairs(u.ux, u.uy)) {
-        pline("%s %s Стремительно расходуются!", s, vtense(s, "are"));
+        pline("%s стремительно расходу%s!", (obj->spe != 1) ? "Свечи" : "Свеча", (obj->spe != 1) ? "ются" : "ется");
         /* this used to be obj->age /= 2, rounding down; an age of
            1 would yield 0, confusing begin_burn() and producing an
            unlightable, unrefillable candelabrum; round up instead */
@@ -1438,13 +1432,13 @@ use_candle(struct obj **optr)
         if (was_lamplit)
             end_burn(obj, TRUE);
 
-        You("прикрепляешь %ld%s %s к %s.", obj->quan, !otmp->spe ? "" : " more", s,
+        You("прикрепляете %s%ld %s к %s.", !otmp->spe ? "" : "ещё ", obj->quan, s,
             the(xname(otmp)));
         if (!otmp->spe || otmp->age > obj->age)
             otmp->age = obj->age;
         otmp->spe += (int) obj->quan;
         if (otmp->lamplit && !was_lamplit)
-            pline("НОвые %s магически %s!", s, vtense(s, "ignite"));
+            pline("Новые %s магически загораются!", s);
         else if (!otmp->lamplit && was_lamplit)
             pline("%s.", (obj->quan > 1L) ? "Они гаснут" : "Оно гаснет");
         if (obj->unpaid) {
@@ -1452,8 +1446,8 @@ use_candle(struct obj **optr)
                                = shop_keeper(*in_rooms(u.ux, u.uy, SHOPBASE));
 
             SetVoice(shkp, 0, 80, 0);
-            verbalize("Ты %s %s, ты купил %s!",
-                      otmp->lamplit ? "жжёшь" : "используешь",
+            verbalize("Вы %s %s, вы купили %s!",
+                      otmp->lamplit ? "жжёте" : "используете",
                       (obj->quan > 1L) ? "их" : "его",
                       (obj->quan > 1L) ? "их" : "его");
         }
@@ -1508,7 +1502,7 @@ snuff_lit(struct obj *obj)
             || obj->otyp == BRASS_LANTERN || obj->otyp == POT_OIL) {
             (void) get_obj_location(obj, &x, &y, 0);
             if (obj->where == OBJ_MINVENT ? cansee(x, y) : !Blind)
-                pline("%s %s гаснет!", Yname2(obj), otense(obj, "go"));
+                pline("%s гаснет!", Yname2(obj));
             end_burn(obj, TRUE);
             return TRUE;
         }
@@ -1603,10 +1597,8 @@ catch_lit(struct obj *obj)
         if (obj->where == OBJ_INVENT || cansee(x, y)) {
             if (obj->where == OBJ_FLOOR && cansee(x, y))
                 set_msg_xy(x, y);
-            pline("%s %s %s", Yname2(obj),
-                  /* "catches light!" or "feels warm." */
-                  otense(obj, Blind ? "feel" : "catch"),
-                  Blind ? "warm." : "light!");
+            pline("%s %s", Yname2(obj),
+                  Blind ? "становится тёплым на ощупь." : "загорается!");
         }
         if (obj->otyp == POT_OIL)
             makeknown(obj->otyp);
@@ -1648,7 +1640,7 @@ use_lamp(struct obj *obj)
         if (lamp) /* lamp or lantern */
             pline("%s%s теперь погашен.", Shk_Your(buf, obj), lamp);
         else
-            You("гасишь %s.", yname(obj));
+            You("гасите %s.", yname(obj));
         end_burn(obj, TRUE);
         return;
     }
@@ -1677,8 +1669,8 @@ use_lamp(struct obj *obj)
                       fingers_or_gloves(TRUE, BP_ACC));
             make_glib((int) (Glib & TIMEOUT) + d(2, 10));
         } else if (!Blind) {
-            pline("%s мгновение, затем %s.", Tobjnam(obj, "flicker"),
-                  otense(obj, "die"));
+            pline("%s мерцает мгновение, затем гаснет.",
+                  Tobjnam(obj, (char *) 0));
         } else {
             pline("%s", nothing_seems_to_happen);
         }
@@ -1687,8 +1679,8 @@ use_lamp(struct obj *obj)
             check_unpaid(obj);
             pline("%s%s теперь зажжён.", Shk_Your(buf, obj), lamp);
         } else { /* candle(s) */
-            pline("Пламя %s %s%s", obj_case(obj, BP_GEN),
-                  otense(obj, "burn"), Blind ? "." : " ярко!");
+            pline("Пламя %s горит%s", obj_case(obj, BP_GEN),
+                  Blind ? "." : " ярко!");
             if (obj->unpaid && costly_spot(u.ux, u.uy)
                 && obj->age == 20L * (long) objects[obj->otyp].oc_cost) {
                 const char *ithem = (obj->quan > 1L) ? "их" : "его";
@@ -1696,7 +1688,7 @@ use_lamp(struct obj *obj)
                                = shop_keeper(*in_rooms(u.ux, u.uy, SHOPBASE));
 
                 SetVoice(shkp, 0, 80, 0);
-                verbalize("Ты жжёшь %s, ты купил %s!", ithem, ithem);
+                verbalize("Вы жжёте %s, вы купили %s!", ithem, ithem);
                 bill_dummy_object(obj);
             }
         }
@@ -1761,7 +1753,7 @@ light_cocktail(struct obj **optr)
     if (split1off) {
         obj_extract_self(obj); /* free from inv */
         obj->nomerge = 1;
-        obj = hold_another_object(obj, "Ты роняешь %s!", doname(obj),
+        obj = hold_another_object(obj, "Вы роняете %s!", doname(obj),
                                   (const char *) 0);
         if (obj)
             obj->nomerge = 0;
@@ -1792,7 +1784,7 @@ dorub(void)
     struct obj *obj;
 
     if (nohands(gy.youmonst.data)) {
-        You("не можешь тереть что-либо без рук.");
+        You("не можете ничего тереть без рук.");
         return ECMD_OK;
     }
     obj = getobj("потереть", rub_ok, GETOBJ_NOFLAGS);
@@ -2282,7 +2274,7 @@ use_unicorn_horn(struct obj **optr)
             break;
         case 2:
             if (!Confusion)
-                You("внезапно чувствуешь %s.",
+                You("внезапно чувствуете %s.",
                     Hallucination ? "странное" : "замешательство");
             make_confused((HConfusion & TIMEOUT) + lcount, TRUE);
             break;
@@ -2569,12 +2561,12 @@ use_figurine(struct obj **optr)
     if (!figurine_location_checks(obj, &cc, FALSE))
         return ECMD_TIME;
     You("%s, и она%s превращается.",
-        (u.dx || u.dy) ? "ставишь фигурку рядом с собой"
+        (u.dx || u.dy) ? "ставите фигурку рядом с собой"
                        : (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)
                           || is_pool(cc.x, cc.y))
-                             ? "отпускаешь фигурку"
-                             : (u.dz < 0 ? "подбрасываешь фигурку в воздух"
-                                         : "ставишь фигурку на землю"),
+                             ? "отпускаете фигурку"
+                             : (u.dz < 0 ? "подбрасываете фигурку в воздух"
+                                         : "ставите фигурку на землю"),
         Blind ? "предположительно " : "");
     (void) make_familiar(obj, cc.x, cc.y, FALSE);
     (void) stop_timer(FIG_TRANSFORM, obj_to_any(obj));
@@ -2611,7 +2603,7 @@ use_grease(struct obj *obj)
     struct obj *otmp;
 
     if (Glib) {
-        pline("%s из твоих %s.", Tobjnam(obj, "slip"),
+        pline("%s выскальзывает из ваших %s.", Tobjnam(obj, (char *) 0),
               fingers_or_gloves(FALSE, BP_GEN));
         dropx(obj);
         return ECMD_TIME;
@@ -2623,7 +2615,7 @@ use_grease(struct obj *obj)
         if ((obj->cursed || Fumbling) && !rn2(2)) {
             consume_obj_charge(obj, TRUE);
 
-            pline("%s из твоих %s.", Tobjnam(obj, "slip"),
+            pline("%s выскальзывает из ваших %s.", Tobjnam(obj, (char *) 0),
                   fingers_or_gloves(FALSE, BP_GEN));
             dropx(obj);
             return ECMD_TIME;
@@ -2637,16 +2629,16 @@ use_grease(struct obj *obj)
 
         oldglib = (int) (Glib & TIMEOUT);
         if (otmp != &hands_obj) {
-            You("покрываешь %s толстым слоем смазки.", yname(otmp));
+            You("покрываете %s толстым слоем смазки.", yname(otmp));
             otmp->greased = 1;
             if (obj->cursed && !nohands(gy.youmonst.data)) {
                 make_glib(oldglib + rn1(6, 10)); /* + 10..15 */
-                pline("Часть смазки попадает на твои %s.",
+                pline("Часть смазки попадает на ваши %s.",
                       fingers_or_gloves(TRUE, BP_ACC));
             }
         } else {
             make_glib(oldglib + rn1(11, 5)); /* + 5..15 */
-            You("покрываешь свои %s смазкой.", fingers_or_gloves(TRUE, BP_ACC));
+            You("покрываете свои %s смазкой.", fingers_or_gloves(TRUE, BP_ACC));
         }
     } else {
         if (obj->known)
@@ -2697,7 +2689,7 @@ use_stone(struct obj *tstone)
         observe_object(tstone);
     known = (tstone->otyp == TOUCHSTONE && tstone->dknown
               && objects[TOUCHSTONE].oc_name_known);
-    Sprintf(stonebuf, "rub on the stone%s", plur(tstone->quan));
+    Strcpy(stonebuf, (tstone->quan > 1L) ? "потереть о камни" : "потереть о камень");
     /* when the touchstone is fully known, don't bother listing extra
        junk as likely candidates for rubbing */
     if ((obj = getobj(stonebuf, known ? touchstone_ok : any_obj_ok,
@@ -2802,9 +2794,9 @@ use_stone(struct obj *tstone)
         break; /* default oclass */
     }
 
-    Sprintf(stonebuf, "stone%s", plur(tstone->quan));
+    Strcpy(stonebuf, (tstone->quan > 1L) ? "камнях" : "камне");
     if (do_scratch)
-        You("оставляешь %s%sцарапины на %s.",
+        You("оставляете %s%sцарапины на %s.",
             streak_color ? streak_color : (const char *) "",
             streak_color ? " " : "", stonebuf);
     else if (streak_color)
@@ -2986,7 +2978,7 @@ use_whip(struct obj *obj)
         rx = u.ux + u.dx;
         ry = u.uy + u.dy;
         if (!isok(rx, ry)) {
-            You("промахиваешься.");
+            You("промахиваетесь.");
             return res;
         }
         mtmp = m_at(rx, ry);
@@ -3014,11 +3006,11 @@ use_whip(struct obj *obj)
         There("is слишком большое сопротивление, чтобы щёлкнуть хлыстом.");
 
     } else if (u.dz < 0) {
-        You("смахиваешь жука с %s.", ceiling(u.ux, u.uy));
+        You("смахиваете жука с %s.", ceiling(u.ux, u.uy));
 
     } else if (!u.dz && (IS_WATERWALL(levl[rx][ry].typ)
                          || levl[rx][ry].typ == LAVAWALL)) {
-        You("вызываешь небольшой всплеск.");
+        You("поднимаете небольшой всплеск.");
         if (levl[rx][ry].typ == LAVAWALL)
             (void) fire_damage(uwep, FALSE, rx, ry);
         return ECMD_TIME;
@@ -3027,14 +3019,14 @@ use_whip(struct obj *obj)
 
         /* Sometimes you hit your steed by mistake */
         if (u.usteed && !rn2(proficient + 2)) {
-            You("хлестаешь %s!", mon_nam(u.usteed));
+            You("хлещете %s!", mon_nam(u.usteed));
             kick_steed();
             return ECMD_TIME;
         }
         if (is_pool_or_lava(u.ux, u.uy)
             || IS_WATERWALL(levl[rx][ry].typ)
             || levl[rx][ry].typ == LAVAWALL) {
-            You("вызываешь небольшой всплеск.");
+            You("поднимаете небольшой всплеск.");
             if (is_lava(u.ux, u.uy))
                 (void) fire_damage(uwep, FALSE, u.ux, u.uy);
             return ECMD_TIME;
@@ -3052,7 +3044,7 @@ use_whip(struct obj *obj)
                 return ECMD_TIME;
             }
             if (otmp && proficient) {
-                You("обматываешь хлыст вокруг %s на %s.",
+                You("обматываете хлыст вокруг %s на %s.",
                     an(singular(otmp, xname)), surface(u.ux, u.uy));
                 if (rnl(6) || pickup_object(otmp, 1L, TRUE) < 1)
                     pline1(msg_slipsfree);
@@ -3062,13 +3054,13 @@ use_whip(struct obj *obj)
         dam = rnd(2) + dbon() + obj->spe;
         if (dam <= 0)
             dam = 1;
-        You("ударяешь себя по %s хлыстом.", body_part_case(FOOT, BP_PREP));
+        You("ударяете себя хлыстом по %s.", body_part_case(FOOT, BP_DAT));
         Sprintf(buf, "убил%s себя собственным хлыстом", flags.female ? "а" : "");
         losehp(Maybe_Half_Phys(dam), buf, NO_KILLER_PREFIX);
         return ECMD_TIME;
 
     } else if ((Fumbling || Glib) && !rn2(5)) {
-        pline("Хлыст выскальзывает из твоих %s.", body_part_case(HAND, BP_GEN));
+        pline("Хлыст выскальзывает из ваших %s.", body_part_case(HAND, BP_GEN));
         dropx(obj);
 
     } else if (u.utrap && u.utraptype == TT_PIT) {
@@ -3111,10 +3103,10 @@ use_whip(struct obj *obj)
 
             cc.x = rx;
             cc.y = ry;
-            You("обматываешь хлыст вокруг %s.", wrapped_what);
+            You("обматываете хлыст вокруг %s.", wrapped_what);
             if (proficient && rn2(proficient + 2)) {
                 if (!mtmp || enexto(&cc, rx, ry, gy.youmonst.data)) {
-                    You("вытаскиваешь себя из ямы!");
+                    You("вытаскиваете себя из ямы!");
                     reset_utrap(TRUE); /* [was after teleds(); do this before
                                         * in case it has no alternative other
                                         * than to put hero in another trap] */
@@ -3141,9 +3133,9 @@ use_whip(struct obj *obj)
                blind or formerly hidden monster is also invisible) */
             spotitnow = canspotmon(mtmp);
             if (spotitnow || !glyph_is_invisible(levl[rx][ry].glyph)) {
-                pline("Там есть %s, которого ты %s.",
-                      !spotitnow ? "нечто" : Amonnam(mtmp),
-                      !Blind ? "не смог увидеть" : "не заметил");
+                pline("Там %s, которого вы %s.",
+                      !spotitnow ? "нечто" : a_monnam(mtmp),
+                      !Blind ? "не смогли увидеть" : "не заметили");
                 if (!spotitnow)
                     map_invisible(rx, ry);
                 else
@@ -3168,7 +3160,7 @@ use_whip(struct obj *obj)
             } else
                 mon_hand = 0; /* lint suppression */
 
-            You("обматываешь хлыст вокруг %s.", yname(otmp));
+            You("обматываете хлыст вокруг %s.", yname(otmp));
             if (gotit && mwelded(otmp)) {
                 pline("%s к %s %s%c",
                       (otmp->quan == 1L) ? "Он горит" : "Они горят", mhis(mtmp),
@@ -3184,7 +3176,7 @@ use_whip(struct obj *obj)
                 switch (rn2(proficient + 1)) {
                 case 2:
                     /* to floor near you */
-                    You("вытаскиваешь %s к %s!", yname(otmp),
+                    You("подтягиваете %s к себе на %s!", yname(otmp),
                         surface(u.ux, u.uy));
                     place_object(otmp, u.ux, u.uy);
                     stackobj(otmp);
@@ -3202,7 +3194,7 @@ use_whip(struct obj *obj)
                         hitu = thitu(hitvalu, Maybe_Half_Phys(dam),
                                      &otmp, (char *) 0);
                         if (hitu) {
-                            pline("%s Бьёт тебя, когда ты пытаешься схватить его!",
+                            pline("%s бьёт вас, когда вы пытаетесь схватить его!",
                                       the(onambuf));
                         }
                         place_object(otmp, u.ux, u.uy);
@@ -3211,7 +3203,7 @@ use_whip(struct obj *obj)
                     }
 #endif /* 0 */
                     /* right into your inventory */
-                    You("выхватываешь %s!", yname(otmp));
+                    You("выхватываете %s!", yname(otmp));
                     if (otmp->otyp == CORPSE
                         && touch_petrifies(&mons[otmp->corpsenm]) && !uarmg
                         && !Stone_resistance
@@ -3232,12 +3224,12 @@ use_whip(struct obj *obj)
                         /* life-saved; free the corpse again */
                         obj_extract_self(otmp);
                     }
-                    (void) hold_another_object(otmp, "Ты роняешь %s!",
+                    (void) hold_another_object(otmp, "Вы роняете %s!",
                                                doname(otmp), (const char *) 0);
                     break;
                 default:
                     /* to floor beneath mon */
-                    You("вырываешь %s из %s %s!", the(onambuf),
+                    You("вырываете %s из %s %s!", the(onambuf),
                         mhis(mtmp), mon_hand);
                     obj_no_longer_held(otmp);
                     place_object(otmp, mtmp->mx, mtmp->my);
@@ -3255,7 +3247,7 @@ use_whip(struct obj *obj)
                 stumble_onto_mimic(mtmp);
                 do_snap = FALSE;
             } else {
-                You("щелкаешь хлыстом в сторону %s.", mon_nam(mtmp));
+                You("щёлкаете хлыстом в сторону %s.", mon_nam(mtmp));
             }
             if (proficient && force_attack(mtmp, FALSE))
                 return ECMD_TIME;
@@ -3267,7 +3259,7 @@ use_whip(struct obj *obj)
 
     } else if (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)) {
         /* it must be air -- water checked above */
-        You("щелкаешь хлыстом в воздухе.");
+        You("щёлкаете хлыстом в воздухе.");
 
     } else {
         pline1(msg_snap);
@@ -3277,9 +3269,9 @@ use_whip(struct obj *obj)
 
 static const char
     not_enough_room[] = "Здесь недостаточно места, чтобы использовать это.",
-    where_to_hit[] = "Куда ты хочешь ударить?",
-    cant_see_spot[] = "не попадёшь ни во что, если не видишь это место.",
-    cant_reach[] = "не можешь дотянуться до этого места отсюда.";
+    where_to_hit[] = "Куда вы хотите ударить?",
+    cant_see_spot[] = "не попадёте ни во что, если не видите это место.",
+    cant_reach[] = "не можете дотянуться до этого места отсюда.";
 
 #define glyph_is_poleable(G) \
     (glyph_is_monster(G) || glyph_is_invisible(G) || glyph_is_statue(G))
@@ -3430,7 +3422,7 @@ snickersnee_used_dist_attk(struct obj *obj)
 int
 use_pole(struct obj *obj, boolean autohit)
 {
-    const char thump[] = "Бум!  Твой удар безвредно отскакивает от %s.";
+    const char thump[] = "Бум!  Ваш удар безвредно отскакивает от %s.";
     int res = ECMD_OK, max_range, min_range, glyph;
     coord cc;
     struct monst *mtmp;
@@ -3552,7 +3544,7 @@ use_pole(struct obj *obj, boolean autohit)
                    || IS_FURNITURE(levl[gb.bhitpos.x][gb.bhitpos.y].typ)) {
             /* similar to 'F'orcefight with a melee weapon; we know that
                the spot can be seen or we wouldn't have gotten this far */
-            You("бесполезно атакуешь %s.",
+            You("бесполезно атакуете %s.",
                 (levl[gb.bhitpos.x][gb.bhitpos.y].typ == STONE
                  || levl[gb.bhitpos.x][gb.bhitpos.y].typ == SCORR)
                 ? "камень"
@@ -3560,7 +3552,7 @@ use_pole(struct obj *obj, boolean autohit)
                   ? the(defsyms[glyph_to_cmap(glyph)].explanation)
                   : (const char *) "неизвестное препятствие");
         } else {
-            You("промахиваешься; там некого бить.");
+            You("промахиваетесь: там некого бить.");
         }
     }
     u_wipe_engr(2); /* same as for melee or throwing */
@@ -3581,10 +3573,10 @@ use_cream_pie(struct obj *obj)
         obj = splitobj(obj, 1L);
     }
     if (Hallucination)
-        You("устраиваешь себе кремовую маску.");
+        You("делаете себе кремовую маску.");
     else
-        You("окунаешь своё %s в %s%s.", body_part_case(FACE, BP_ACC),
-              several ? "one of " : "",
+        You("окунаете своё %s в %s%s.", body_part_case(FACE, BP_ACC),
+              several ? "один из " : "",
               several ? makeplural(the(xname(obj))) : the(xname(obj)));
     if (can_blnd((struct monst *) 0, &gy.youmonst, AT_WEAP, obj)) {
         int blindinc = rnd(25);
@@ -3592,7 +3584,7 @@ use_cream_pie(struct obj *obj)
         u.ucreamed += blindinc;
         make_blinded(BlindedTimeout + (long) blindinc, FALSE);
         if (!Blind || (Blind && wasblind))
-            pline("По всему твоему %s %sлипкая дрянь.",
+            pline("По всему вашему %s %sлипкая дрянь.",
                   wascreamed ? "ещё " : "", body_part_case(FACE, BP_DAT));
         else /* Blind  && !wasblind */
             You_cant("видеть сквозь липкую дрянь на своём %s.",
@@ -3644,7 +3636,7 @@ use_royal_jelly(struct obj **optr)
         return ECMD_CANCEL;
     }
 
-    You("размазываешь королевское желе по всему %s.", yname(eobj));
+    You("размазываете королевское желе по %s.", yname(eobj));
     if (eobj->otyp != EGG) {
         pline1(nothing_happens);
         goto useup_jelly;
@@ -3656,7 +3648,7 @@ use_royal_jelly(struct obj **optr)
 
     if (obj->cursed) {
         if (eobj->timed || eobj->corpsenm != oldcorpsenm)
-            pline("%s %s слабо.", xname(eobj), otense(eobj, "quiver"));
+            pline("%s слабо подрагивает.", upstart(xname(eobj)));
         else
             pline("%s", nothing_seems_to_happen);
         kill_egg(eobj);
@@ -3675,7 +3667,7 @@ use_royal_jelly(struct obj **optr)
 
     if ((eobj->timed && !was_timed) || eobj->spe == 2
         || eobj->corpsenm != oldcorpsenm)
-        pline("%s %s недолго.", xname(eobj), otense(eobj, "quiver"));
+        pline("%s недолго подрагивает.", upstart(xname(eobj)));
     else
         pline("%s", nothing_seems_to_happen);
 
@@ -3821,7 +3813,7 @@ use_grapple(struct obj *obj)
         break;
     case 1: /* Object */
         if ((otmp = svl.level.objects[cc.x][cc.y]) != 0) {
-            You("вытаскиваешь объект с %s!", surface(cc.x, cc.y));
+            You("подцепляете предмет с %s!", surface(cc.x, cc.y));
             (void) pickup_object(otmp, 1L, FALSE);
             /* If pickup fails, leave it alone */
             newsym(cc.x, cc.y);
@@ -3840,7 +3832,7 @@ use_grapple(struct obj *obj)
             (void) attack_checks(mtmp, uwep);
             flags.confirm = save_confirm;
             check_caitiff(mtmp); /* despite fact there's no damage */
-            You("подтягиваешь %s!", mon_nam(mtmp));
+            You("подтягиваете %s!", mon_nam(mtmp));
             mtmp->mundetected = 0;
             rloc_to(mtmp, cc.x, cc.y);
             return ECMD_TIME;
@@ -3859,14 +3851,14 @@ use_grapple(struct obj *obj)
         if (IS_AIR(levl[cc.x][cc.y].typ) || is_pool(cc.x, cc.y))
             pline("Крюк прорезает %s.", surface(cc.x, cc.y));
         else {
-            You("тебя тянет рывком к %s!", surface(cc.x, cc.y));
+            pline("Вас рывком тянет к %s!", surface(cc.x, cc.y));
             hurtle(sgn(cc.x - u.ux), sgn(cc.y - u.uy), 1, FALSE);
             spoteffects(TRUE);
         }
         return ECMD_TIME;
     default: /* Yourself (oops!) */
         if (P_SKILL(typ) <= P_BASIC) {
-            You("зацепляешь себя!");
+            You("цепляете крюком себя!");
             losehp(Maybe_Half_Phys(rn1(10, 10)), "крюка",
                    KILLED_BY);
             return ECMD_TIME;
@@ -3938,11 +3930,11 @@ do_break_wand(struct obj *obj)
     }
     if (!paranoid_query(ParanoidBreakwand,
                         safe_qbuf(confirm,
-                                  "Ты действительно хочешь сломать ",
-                                  "?", obj, yname, ysimple_name, "the wand")))
+                                  "Вы действительно хотите сломать ",
+                                  "?", obj, yname, ysimple_name, "жезл")))
         return ECMD_OK;
-    pline("Подняв %s высоко над твоей %s, ты %s его пополам!", yname(obj),
-          body_part_case(HEAD, BP_INS), is_fragile ? "ломаешь" : "ломаешь");
+    pline("Подняв %s высоко над %s, вы %s его пополам!", yname(obj),
+          body_part_case(HEAD, BP_INS), is_fragile ? "переламываете" : "ломаете");
 
     /* [ALI] Do this first so that wand is removed from bill. Otherwise,
      * the freeinv() below also hides it from setpaid() which causes problems.
@@ -4013,7 +4005,7 @@ do_break_wand(struct obj *obj)
     case WAN_STRIKING:
         /* we want this before the explosion instead of at the very end */
         Soundeffect(se_wall_of_force, 65);
-        pline("Стена силы обрушивается вокруг тебя!");
+        pline("Стена силы обрушивается вокруг вас!");
         dmg = d(1 + obj->spe, 6); /* normally 2d12 */
         FALLTHROUGH;
         /*FALLTHRU*/
@@ -4222,7 +4214,7 @@ doapply(void)
     int res = ECMD_TIME;
 
     if (nohands(gy.youmonst.data)) {
-        You("не можешь использовать или применять инструменты в текущем облике.");
+        You("не можете использовать инструменты в этом облике.");
         return ECMD_OK;
     }
     if (check_capacity((char *) 0))
@@ -4255,8 +4247,8 @@ doapply(void)
             Blindf_on(obj);
         } else {
             You("уже %s.",
-                (ublindf->otyp == TOWEL) ? "накрыт полотенцем"
-                : (ublindf->otyp == BLINDFOLD) ? "носишь повязку"
+                (ublindf->otyp == TOWEL) ? "накрыты полотенцем"
+                : (ublindf->otyp == BLINDFOLD) ? "носите повязку"
                   : "в очках");
         }
         break;
@@ -4320,7 +4312,7 @@ doapply(void)
             /* sometimes the blessing will be worn off */
             if (!rn2(49)) {
                 if (!Blind) {
-                    pline("%s %s.", Yobjnam2(obj, "glow"), hcolor("brown"));
+                    pline("%s светится %s.", Yobjnam2(obj, (char *) 0), hcolor("коричневым"));
                     set_bknown(obj, 1);
                 }
                 unbless(obj);
@@ -4478,11 +4470,11 @@ staticfn int
 flip_through_book(struct obj *obj)
 {
     if (Underwater) {
-        You("не хочешь намочить страницы ещё сильнее?");
+        pline("Хотите намочить страницы ещё сильнее?");
         return ECMD_OK;
     }
 
-    You("пролистываешь страницы %s.", thesimpleoname(obj));
+    You("пролистываете страницы %s.", obj_case(obj, BP_GEN));
 
     if (obj->otyp == SPE_BOOK_OF_THE_DEAD) {
         if (!Deaf) {
@@ -4507,7 +4499,7 @@ flip_through_book(struct obj *obj)
                             : "в ней ничего не написано");
         makeknown(obj->otyp);
     } else if (Hallucination) {
-        You("наслаждаешься ожившими инициалами.");
+        You("любуетесь ожившими буквицами.");
     } else if (obj->otyp == SPE_NOVEL) {
         pline("Похоже, её может быть интересно почитать.");
     } else {
@@ -4534,13 +4526,13 @@ flip_coin(struct obj *obj)
     struct obj *otmp = obj;
     boolean lose_coin = FALSE;
 
-    You("подбрасываешь %s.", an(singular(obj, xname)));
+    You("подбрасываете %s.", an(singular(obj, xname)));
     if (Underwater) {
         pline("Она укатывается прочь.");
         lose_coin = TRUE;
     } else if (Glib || Fumbling
                || (ACURR(A_DEX) < 10 && !rn2(ACURR(A_DEX)))) {
-        pline("Она выскальзывает из твоих %s.",
+        pline("Она выскальзывает из ваших %s.",
               fingers_or_gloves(FALSE, BP_GEN));
         lose_coin = TRUE;
     }

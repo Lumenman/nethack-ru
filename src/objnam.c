@@ -2220,7 +2220,9 @@ aobjnam(struct obj *otmp, const char *verb)
         Sprintf(prefix, "%ld ", otmp->quan);
         bp = strprepend(bp, prefix);
     }
-    if (verb) {
+    /* RU: English verbs left at call sites are dropped; the translated
+       message already carries the Russian verb */
+    if (verb && (*verb & 0x80)) {
         Strcat(bp, " ");
         Strcat(bp, otense(otmp, verb));
     }
@@ -2261,7 +2263,7 @@ Tobjnam(struct obj *otmp, const char *verb)
 {
     char *bp = The(xname(otmp));
 
-    if (verb) {
+    if (verb && (*verb & 0x80)) { /* RU: see aobjnam() */
         Strcat(bp, " ");
         Strcat(bp, otense(otmp, verb));
     }

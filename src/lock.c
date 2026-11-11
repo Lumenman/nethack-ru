@@ -94,7 +94,7 @@ picklock(void)
     }
 
     if (gx.xlock.usedtime++ >= 50 || nohands(gy.youmonst.data)) {
-        You("прекращаешь попытку %s.", lock_action());
+        You("прекращаете попытку %s.", lock_action());
         exercise(A_DEX, TRUE); /* even if you don't succeed */
         return ((gx.xlock.usedtime = 0));
     }
@@ -114,7 +114,7 @@ picklock(void)
                 You("обнаруживаете ловушку!");
             gx.xlock.box->tknown = 1;
         }
-        if (y_n("’очешь попробовать обезвредить еЄ?") == 'y') {
+        if (y_n("ѕопробовать обезвредить еЄ?") == 'y') {
             const char *what;
             boolean alreadyunlocked;
 
@@ -129,17 +129,17 @@ picklock(void)
                 what = (gx.xlock.box->otyp == CHEST) ? "сундук" : "€щик";
                 alreadyunlocked = !gx.xlock.box->olocked;
             }
-            You("успешно обезвреживаешь ловушку. %s всЄ ещЄ %s.",
+            You("успешно обезвреживаете ловушку.  %s всЄ ещЄ %s.",
                 what, alreadyunlocked ? "не на замке" : "на замке");
             exercise(A_WIS, TRUE);
         } else {
-            You("прекращаешь %s.", lock_action());
+            You("прекращаете %s.", lock_action());
             exercise(A_WIS, FALSE);
         }
         return ((gx.xlock.usedtime = 0));
     }
 
-    You("успешно завершаешь %s.", lock_action());
+    You("успешно завершаете %s.", lock_action());
     if (gx.xlock.door) {
         if (gx.xlock.door->doormask & D_TRAPPED) {
             b_trapped("door", FINGER);
@@ -235,7 +235,7 @@ forcelock(void)
             /* for a +0 weapon, probability that it survives an unsuccessful
              * attempt to force the lock is (.992)^50 = .67
              */
-            pline("%s %s сломалс€!", (uwep->quan > 1L) ? "ќдин из твоих" : "“вой",
+            pline("%s %s сломалс€!", (uwep->quan > 1L) ? "ќдин из ваших" : "¬аш",
                   xname(uwep));
             useup(uwep);
             You("отказываетесь от попытки взломать замок.");
@@ -382,7 +382,7 @@ pick_lock(
 
     /* check whether we're resuming an interrupted previous attempt */
     if (gx.xlock.usedtime && picktyp == gx.xlock.picktyp) {
-        static char no_longer[] = "  сожалению, ты больше не можешь %s %s.";
+        static char no_longer[] = "  сожалению, вы больше не можете %s %s.";
 
         if (nohands(gy.youmonst.data)) {
             const char *what = (picktyp == LOCK_PICK) ? "отмычку" : "ключ";
@@ -399,7 +399,7 @@ pick_lock(
         } else {
             const char *action = lock_action();
 
-            You("возобновл€ешь попытку %s.", action);
+            You("возобновл€ете попытку %s.", action);
             gx.xlock.magic_key = is_magic_key(&gy.youmonst, pick);
             set_occupation(picklock, action, 0);
             return PICKLOCK_DID_SOMETHING;
@@ -407,7 +407,7 @@ pick_lock(
     }
 
     if (nohands(gy.youmonst.data)) {
-        You_cant("держать %s Ч у теб€ нет рук!", doname(pick));
+        You_cant("держать %s Ч у вас нет рук!", doname(pick));
         return PICKLOCK_DID_NOTHING;
     } else if (u.uswallow) {
         You_cant("%sотпереть %s.", (picktyp == CREDIT_CARD) ? "" : "запереть или ",
@@ -589,9 +589,9 @@ pick_lock(
                 res = PICKLOCK_LEARNED_SOMETHING;
 
             if (is_drawbridge_wall(cc.x, cc.y) >= 0)
-                You("%s замка на подъЄмном мосту.", Blind ? "не чувствуешь" : "не видишь");
+                You("%s замка на подъЄмном мосту.", Blind ? "не чувствуете" : "не видите");
             else
-                You("%s двери.", Blind ? "не чувствуешь" : "не видишь");
+                You("%s двери.", Blind ? "не чувствуете" : "не видите");
             return res;
         }
         switch (door->doormask) {
@@ -737,9 +737,9 @@ doforce(void)
                 continue;
 
             if (picktyp)
-                You("всовываешь %s в щель и поддеваешь.", yname(uwep));
+                You("всовываете %s в щель и поддеваете.", yname(uwep));
             else
-                You("начинаешь бить по нему с помощью %s.", yname(uwep));
+                You("начинаете бить по нему: в ход идЄт %s.", yname(uwep));
             gx.xlock.box = otmp;
             gx.xlock.chance = objects[uwep->otyp].oc_wldam * 2;
             gx.xlock.picktyp = picktyp;
@@ -786,7 +786,7 @@ doopen_indir(coordxy x, coordxy y)
     int res = ECMD_OK;
 
     if (nohands(gy.youmonst.data)) {
-        You_cant("открыть что-либо Ч у теб€ нет рук!");
+        You_cant("ничего открыть Ч у вас нет рук!");
         return ECMD_OK;
     }
 
@@ -847,7 +847,7 @@ doopen_indir(coordxy x, coordxy y)
         else if (container_at(cc.x, cc.y, TRUE))
             pline("“ам что-то, что можно подобрать.");
         else
-            You("%s двери.", Blind ? "не чувствуешь" : "не видишь");
+            You("%s двери.", Blind ? "не чувствуете" : "не видите");
         return res;
     }
 
@@ -961,7 +961,7 @@ doclose(void)
     int res = ECMD_OK;
 
     if (nohands(gy.youmonst.data)) {
-        You_cant("закрыть что-либо Ч у теб€ нет рук!");
+        You_cant("ничего закрыть Ч у вас нет рук!");
         return ECMD_OK;
     }
 
@@ -1011,7 +1011,7 @@ doclose(void)
             There("нет очевидного способа закрыть подъЄмный мост.");
         else {
  nodoor:
-            You("%s двери.", Blind ? "не чувствуешь" : "не видишь");
+            You("%s двери.", Blind ? "не чувствуете" : "не видите");
         }
         return res;
     }
@@ -1279,7 +1279,7 @@ chest_shatter_msg(struct obj *otmp)
     long save_HBlinded, save_BBlinded;
 
     if (otmp->oclass == POTION_CLASS) {
-        You("%s, как %s разбиваетс€.", Blind ? "слышишь" : "видишь", an(bottlename()));
+        You("%s, как %s разбиваетс€.", Blind ? "слышите" : "видите", an(bottlename()));
         if (!breathless(gy.youmonst.data) || haseyes(gy.youmonst.data))
             potionbreathe(otmp);
         return;
