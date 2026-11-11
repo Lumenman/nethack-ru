@@ -448,6 +448,10 @@ look_at_monster(
                         ? (fem ? "мирная " : "мирный ")
                         : "",
                 name);
+        /* RU: original name, for looking the monster up elsewhere */
+        if (accurate && mon_en_name(mtmp->data, Mgender(mtmp)))
+            Snprintf(eos(buf), BUFSZ - strlen(buf), " [%s]",
+                     mon_en_name(mtmp->data, Mgender(mtmp)));
     }
     if (u.ustuck == mtmp) {
         if (u.uswallow || iflags.save_uswallow) /* monster detection */
@@ -903,7 +907,9 @@ checkfile(
      * user_typed_name and picked name.
      */
     if (pm != (struct permonst *) 0 && !user_typed_name)
-        dbase_str = strcpy(newstr, pm->pmnames[NEUTRAL]);
+        dbase_str = strcpy(newstr, mon_en_name(pm, NEUTRAL) /* RU */
+                                       ? mon_en_name(pm, NEUTRAL)
+                                       : pm->pmnames[NEUTRAL]);
     else
         dbase_str = strcpy(newstr, inp);
     (void) lcase(dbase_str);
@@ -917,7 +923,7 @@ checkfile(
             dbase_str = lb + 1;
         } else if (*dbase_str & 0x80) {
             /* a typed Russian object name: look up its English name */
-            int i;
+            int i, mnum, mgend = NEUTRAL;
 
             for (i = 0; i < NUM_OBJECTS; i++)
                 if (OBJ_NAME(objects[i]) && obj_en_name(i)
@@ -926,6 +932,13 @@ checkfile(
                     dbase_str = lcase(newstr);
                     break;
                 }
+            /* ... or a typed Russian monster name */
+            if (i == NUM_OBJECTS
+                && (mnum = name_to_mon(dbase_str, &mgend)) >= LOW_PM
+                && mon_en_name(&mons[mnum], NEUTRAL)) {
+                Strcpy(newstr, mon_en_name(&mons[mnum], NEUTRAL));
+                dbase_str = lcase(newstr);
+            }
         }
     }
 

@@ -1084,6 +1084,29 @@ name_to_monplus(
     return mntmp;
 }
 
+#include "monnames_en.h"
+
+/* RU: original English name of a monster type for the given gender
+   (MALE, FEMALE or NEUTRAL), or Null; shown next to the Russian name */
+const char *
+mon_en_name(const struct permonst *ptr, int gender)
+{
+    int k, pm;
+
+    if (!ptr || ptr < &mons[LOW_PM] || ptr >= &mons[NUMMONS])
+        return (const char *) 0;
+    pm = monsndx(ptr);
+    for (k = 0; k < SIZE(mon_en_names); k++)
+        if (mon_en_names[k].pm == pm) {
+            if (gender == MALE && mon_en_names[k].m)
+                return mon_en_names[k].m;
+            if (gender == FEMALE && mon_en_names[k].f)
+                return mon_en_names[k].f;
+            return mon_en_names[k].n;
+        }
+    return (const char *) 0;
+}
+
 /* monster class from user input; used for genocide and controlled polymorph;
    returns 0 rather than MAXMCLASSES if no match is found */
 int

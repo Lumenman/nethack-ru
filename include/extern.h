@@ -2211,6 +2211,7 @@ extern void objects_globals_init(void);
 extern void maybereleaseobuf(char *) NONNULLARG1;
 extern char *obj_typename(int);
 extern const char *obj_en_name(int);
+extern const char *mon_en_name(const struct permonst *, int);
 extern boolean obj_en_known(struct obj *);
 extern char *simple_typename(int);
 extern char *safe_typename(int);
