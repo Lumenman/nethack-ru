@@ -300,6 +300,9 @@ static int optfn_##a(int, int, boolean, char *, char *);
     NHOPTB(eight_bit_tty, Advanced, 0, opt_in, set_in_game,
                 Off, Yes, No, No, NoAlias, &iflags.wc_eight_bit_input,
            Term_False, "send 8-bit characters directly to terminal")
+    NHOPTB(english_names, Advanced, 0, opt_in, set_in_game,
+           Off, Yes, No, No, NoAlias, &iflags.english_names, Term_False,
+           "show original English names of known items in inventory")
     NHOPTB(extmenu, Advanced, 0, opt_in, set_in_game,
            Off, Yes, No, No, NoAlias, &iflags.extmenu, Term_False,
            "use menu for getting extended commands")

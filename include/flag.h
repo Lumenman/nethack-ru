@@ -329,6 +329,8 @@ struct instance_flags {
     boolean altmeta;        /* Alt+c sends ESC c rather than M-c */
 #endif
     boolean autodescribe;     /* autodescribe mode in getpos() */
+    boolean english_names;    /* RU: show [original English names] in
+                               * inventory; not saved with the game */
     boolean cbreak;           /* in cbreak mode, rogue format */
     boolean deferred_X;       /* deferred entry into explore mode */
     boolean defer_decor;      /* terrain change message vs slipping on ice */

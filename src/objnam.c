@@ -4065,6 +4065,7 @@ ru_is_objname(const char *str)
 
 #include "objnames_en.h"
 #include "objgen_ru.h"
+#include "artinames_en.h"
 
 /* RU: original English name of an object type, as upstream xname() spells
    it for an identified item ("long sword", "wand of fire"), or Null;
@@ -4096,6 +4097,34 @@ obj_en_name(int otyp)
         Snprintf(buf, sizeof buf, "%s of %s", cls, obj_en_names[k].en);
     else
         Strcpy(buf, obj_en_names[k].en);
+    return buf;
+}
+
+/* RU: English name to show for this particular object, or Null:
+   its artifact name once that is visible, else its type name once the
+   type is known */
+const char *
+obj_en_display(struct obj *obj)
+{
+    if (obj->oartifact && obj->dknown) {
+        const char *a = artifact_en_name(obj->oartifact);
+
+        if (a)
+            return a;
+    }
+    return obj_en_known(obj) ? obj_en_name(obj->otyp) : (const char *) 0;
+}
+
+/* RU: inventory helper: append " [English name]" to doname() output 'buf'
+   (an obuf of BUFSZ) when the english_names option is on */
+char *
+append_en_name(char *buf, struct obj *obj)
+{
+    const char *en;
+
+    if (iflags.english_names && (en = obj_en_display(obj)) != 0
+        && strlen(buf) + strlen(en) + 4 < BUFSZ)
+        Sprintf(eos(buf), " [%s]", en);
     return buf;
 }
 
@@ -4184,6 +4213,27 @@ ru_wish_english(char *bp, size_t bpsz)
                          pl ? "s" : "", ru);
             else
                 Strcpy(repl, ru);
+        }
+    }
+    /* artifacts: "Excalibur", "the Orb of Fate" -> Russian artifact name */
+    for (k = 1; k < SIZE(arti_en_names); k++) {
+        const char *en = arti_en_names[k];
+        char *p;
+        size_t len;
+
+        for (pl = 0; pl < 2; pl++) { /* with and without leading "The " */
+            if (!*en || (pl && strncmpi(en, "The ", 4)))
+                continue;
+            Strcpy(pat, pl ? en + 4 : en);
+            len = strlen(pat);
+            if (len <= bestlen || !(p = strstri(bp, pat)))
+                continue;
+            if ((p != bp && p[-1] != ' ') || (p[len] && p[len] != ' '))
+                continue;
+            if (pl && p - bp >= 4 && !strncmpi(p - 4, "the ", 4))
+                p -= 4, len += 4; /* swallow the user's own "the " */
+            best = p, bestlen = len;
+            Strcpy(repl, artiname(k));
         }
     }
     if (!best)

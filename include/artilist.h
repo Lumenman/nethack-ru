@@ -111,7 +111,7 @@ static NEARDATA struct artifact artilist[] = {
       A_NEUTRAL, PM_VALKYRIE, NON_PM,
       0, 8, 4000L, NO_COLOR, MJOLLNIR),
 
-    A("секaч", BATTLE_AXE, SPFX_RESTR, 0, 0, PHYS(3, 6), NO_DFNS, NO_CARY,
+    A("Секач", BATTLE_AXE, SPFX_RESTR, 0, 0, PHYS(3, 6), NO_DFNS, NO_CARY,
       0, A_NEUTRAL, PM_BARBARIAN, NON_PM,
       0, 8, 1500L, NO_COLOR, CLEAVER),
 

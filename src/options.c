@@ -8787,6 +8787,7 @@ opt_dispname(const char *nam)
         { "debug_overwrite_stairs", "отладка лестниц" },
         { "dropped_nopick", "подбирать выброшенное" },
         { "eight_bit_tty", "восьмибитный ввод" },
+        { "english_names", "английские названия" },
         { "extmenu", "расширенное меню" },
         { "female", "женский род" },
         { "fireassist", "помощь при стрельбе" },

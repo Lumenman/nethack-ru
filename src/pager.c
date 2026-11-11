@@ -391,9 +391,9 @@ look_at_object(
                                                        : doname_vague_quan)
                      : obj_descr[STRANGE_OBJECT].oc_name);
         /* RU: original name, for looking the item up elsewhere */
-        if (obj_en_known(otmp) && obj_en_name(otmp->otyp))
+        if (obj_en_display(otmp))
             Snprintf(eos(buf), BUFSZ - strlen(buf), " [%s]",
-                     obj_en_name(otmp->otyp));
+                     obj_en_display(otmp));
         if (fakeobj) {
             otmp->where = OBJ_FREE; /* object_from_map set it to OBJ_FLOOR */
             dealloc_obj(otmp), otmp = NULL; /* has no contents */

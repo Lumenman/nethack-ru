@@ -3332,6 +3332,7 @@ display_pickinv(
                 tmpglyph = obj_to_glyph(otmp, rn2_on_display_rng);
                 map_glyphinfo(0, 0, tmpglyph, 0U, &tmpglyphinfo);
                 formattedobj = doname(otmp);
+                append_en_name(formattedobj, otmp);
                 add_menu(win, &tmpglyphinfo, &any, ilet,
                          wizid ? def_oc_syms[(int) otmp->oclass].sym : 0,
                          ATR_NONE, clr, formattedobj, MENU_ITEMFLAGS_NONE);
@@ -3509,7 +3510,8 @@ display_used_invlets(char avoidlet)
                     tmpglyph = obj_to_glyph(otmp, rn2_on_display_rng);
                     map_glyphinfo(0, 0, tmpglyph, 0U, &tmpglyphinfo);
                     add_menu(win, &tmpglyphinfo, &any, ilet, 0,
-                             ATR_NONE, clr, doname(otmp),
+                             ATR_NONE, clr,
+                             append_en_name(doname(otmp), otmp),
                              MENU_ITEMFLAGS_NONE);
                 }
             }

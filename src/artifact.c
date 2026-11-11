@@ -155,6 +155,18 @@ artiname(int artinum)
     return artilist[artinum].name;
 }
 
+#include "artinames_en.h"
+
+/* RU: original English name of an artifact ("Excalibur"), or Null */
+const char *
+artifact_en_name(int artinum)
+{
+    if (artinum <= 0 || artinum >= SIZE(arti_en_names)
+        || !*arti_en_names[artinum])
+        return (const char *) 0;
+    return arti_en_names[artinum];
+}
+
 /*
    Make an artifact.  If a specific alignment is specified, then an object of
    the appropriate alignment is created from scratch, or 0 is returned if
@@ -948,7 +960,7 @@ touch_artifact(struct obj *obj, struct monst *mon)
 
         if (!yours)
             return 0;
-        You("%s обрушивает на вас всю свою силу!", xname(obj));
+        pline("%s обрушивает на вас всю свою силу!", upstart(xname(obj)));
         touch_blasted = TRUE;
         dmg = d((Antimagic ? 2 : 4), (self_willed ? 10 : 4));
         /* add half (maybe quarter) of the usual silver damage bonus */
@@ -1165,8 +1177,11 @@ disp_artifact_discoveries(
         if (!strcmp(algnstr, "непричастный"))
             algnstr = "без выравнивания";
 
-        Sprintf(buf, "  %s [%s %s]", artiname(m),
-                algnstr, simple_typename(otyp));
+        Sprintf(buf, "  %s [%s %s]%s%s%s", artiname(m),
+                algnstr, simple_typename(otyp),
+                artifact_en_name(m) ? " (" : "",
+                artifact_en_name(m) ? artifact_en_name(m) : "",
+                artifact_en_name(m) ? ")" : "");
         putstr(tmpwin, 0, buf);
     }
     return i;
