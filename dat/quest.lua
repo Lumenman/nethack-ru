@@ -413,463 +413,464 @@ questtext = {
    },
    Bar = {
       assignquest = {
-         synopsis = "[\"Find %n, defeat %ni, and return %o to us.\"]",
+         synopsis = "[\"Найди Тота Амона, одолей его и верни нам Сердце Ахримана.\"]",
          output = "text",
-         text = [["The world is in great need of your assistance, %p.
+         text = [["Миру очень нужна твоя помощь, %p.
 
-"About six months ago, I learned that a mysterious sorcerer, known
-as %n, had begun to gather a large group of cutthroats and brigands
-about %ni.
+"Около полугода назад я узнал, что таинственный колдун по имени
+Тот Амон начал собирать вокруг себя большую шайку головорезов
+и разбойников.
 
-"At about the same time, these people you once rode with `liberated' a
-potent magical talisman, %o, from a Turanian caravan.
+"Примерно тогда же те, с кем ты когда-то скакал%e бок о бок,
+«освободили» у туранского каравана могущественный магический
+талисман — Сердце Ахримана.
 
-"%nC and %nj Black Horde swept down upon %i and defeated
-the people there, driving them out into the desert.  He has taken
-%o, and seeks to bend it to %nj will.  I detected the
-subtle changes in the currents of fate, and joined these people.
-Then I sent forth a summons for you.
+"Тот Амон и его Чёрная Орда обрушились на Оазис Дуали, разбили
+живших там людей и прогнали их в пустыню.  Он завладел Сердцем
+Ахримана и пытается подчинить его своей воле.  Я уловил едва
+заметные перемены в течениях судьбы и присоединился к этим людям.
+А затем послал за тобой.
 
-"If %n can bend %o to %nj will, he will become
-almost indestructible.  He will then be able to enslave the minds of
-men across the world.  You are the only hope.  The gods smile upon you,
-and with %d behind you, you alone can defeat %n.
+"Если Тот Амон сумеет подчинить Сердце Ахримана своей воле, он
+станет почти неуязвим.  Тогда он сможет поработить разум людей
+по всему миру.  Ты — единственная надежда.  Боги благосклонны
+к тебе, и с поддержкой %d1 лишь тебе под силу одолеть Тота Амона.
 
-"You must go to %i.  From there, you can track down
-%n, defeat %ni, and return %o to us.  Only
-then will the world be safe."]],
+"Отправляйся в Оазис Дуали.  Оттуда ты сможешь выследить Тота
+Амона, одолеть его и вернуть нам Сердце Ахримана.  Лишь тогда
+мир будет в безопасности."]],
       },
       badalign = {
-         synopsis = "[\"You have wandered from the path of the %a.  Come back when you have atoned.\"]",
+         synopsis = "[\"Ты сбил%y с истинного пути.  Возвращайся, когда искупишь вину.\"]",
          output = "text",
-         text = [["%pC!  You have wandered from the path of the %a!
-If you attempt to overcome %n in this state, he will surely
-enslave your soul.  Your only hope, and ours, lies in your purification.
-Go forth, and return when you feel ready."]],
+         text = [["%pC!  Ты сбил%y с истинного пути!
+Если в таком состоянии ты попытаешься одолеть Тота Амона, он
+непременно поработит твою душу.  Единственная надежда — твоя и
+наша — в твоём очищении.  Ступай и возвращайся, когда будешь
+готов%e."]],
       },
       badlevel = {
-         synopsis = "[\"You are too inexperienced.  Come back when you are %Ra.\"]",
+         synopsis = "[\"Тебе не хватает опыта.  Возвращайся, когда станешь «%R».\"]",
          output = "text",
-         text = [["%p, I fear that you are as yet too inexperienced to face
-%n.  Only %Ra with the help of %d could ever hope to
-defeat %ni."]],
+         text = [["%p, боюсь, тебе пока не хватает опыта, чтобы выступить против
+Тота Амона.  Лишь тот, кто достиг звания «%R», с помощью %d1
+может надеяться одолеть его."]],
       },
       discourage = {
-         "\"My pets will dine on your carcass tonight!\"",
-         "\"You are a sorry excuse for %ra.\"",
-         "\"Run while you can, %c.  My next spell will be your last.\"",
-         "\"I shall use your very skin to bind my next grimoire.\"",
-         "\"%d cannot protect you now.  Here, you die.\"",
-         "\"Your %a nature makes you weak.  You cannot defeat me.\"",
-         "\"Come, %c.  I shall kill you, then unleash the horde on your tribe.\"",
-         "\"Once you are dead, my horde shall finish off %l, and your tribe.\"",
-         "\"Fight, %c, or are you afraid of the mighty %n?\"",
-         "\"You have failed, %c.  Now, my victory is complete.\"",
+         "\"Сегодня вечером мои питомцы поужинают твоей тушей!\"",
+         "\"Жалкое же из тебя подобие «%r».\"",
+         "\"Беги, пока можешь, %c.  Моё следующее заклинание станет для тебя последним.\"",
+         "\"Твоей кожей я оберну свой следующий гримуар.\"",
+         "\"Теперь %d тебя не защитит.  Здесь ты и умрёшь.\"",
+         "\"Твой %a нрав ослабляет тебя.  Тебе меня не одолеть.\"",
+         "\"Иди сюда, %c.  Я убью тебя, а затем спущу орду на твоё племя.\"",
+         "\"Когда ты умрёшь, моя орда прикончит Пелия и всё твоё племя.\"",
+         "\"Сражайся, %c!  Или ты боишься могучего Тота Амона?\"",
+         "\"Ты проиграл%e, %c.  Теперь моя победа полна.\"",
       },
       encourage = {
-         "\"%nC is strong in the dark arts, but not immune to cold steel.\"",
-         "\"Remember that %n is a great sorcerer.  He lived in the time of Atlantis.\"",
-         "\"If you fail, %p, I will not be able to protect these people long.\"",
-         "\"To enter %i, you must be very stealthy.  The horde will be on guard.\"",
-         "\"Call upon %d in your time of need.\"",
-         "\"May %d protect you, and guide your steps.\"",
-         "\"If you can lay hands upon %o, carry it for good fortune.\"",
-         "\"I cannot stand against %ns sorcery.  But %d will help you.\"",
-         "\"Do not fear %n.  I know you can defeat %ni.\"",
-         "\"You have a great road to travel, %p, but only after you defeat %n.\"",
+         "\"Тот Амон силён в тёмных искусствах, но и он не защищён от холодной стали.\"",
+         "\"Помни: Тот Амон — великий колдун.  Он жил ещё во времена Атлантиды.\"",
+         "\"Если ты потерпишь неудачу, %p, я не смогу долго защищать этих людей.\"",
+         "\"Чтобы проникнуть в Оазис Дуали, тебе придётся действовать очень скрытно.  Орда будет начеку.\"",
+         "\"В час нужды проси помощи у %d1.\"",
+         "\"Да хранит тебя %d и да направит твои шаги.\"",
+         "\"Если сумеешь завладеть Сердцем Ахримана, носи его с собой — оно приносит удачу.\"",
+         "\"Мне не выстоять против колдовства Тота Амона.  Но %d тебе поможет.\"",
+         "\"Не бойся Тота Амона.  Я знаю, ты сможешь его одолеть.\"",
+         "\"Тебя ждёт великий путь, %p, — но лишь после того, как ты одолеешь Тота Амона.\"",
       },
       firsttime = {
-         synopsis = "[You reach the vicinity of %H, but sense evil magic nearby.]",
+         synopsis = "[Ты добрал%y до Лагеря племени Дуали, но чуешь рядом злую магию.]",
          output = "text",
-         text = [[Warily you scan your surroundings, all of your senses alert for signs
-of possible danger.  Off in the distance, you can %x the familiar shapes
-of %H.
+         text = [[Ты настороженно оглядываешься, все чувства обострены в ожидании
+возможной опасности.  Вдали ты %x знакомые очертания Лагеря
+племени Дуали.
 
-But why, you think, should %l be there?
+Но с чего бы, думаешь ты, Пелию быть там?
 
-Suddenly, the hairs on your neck stand on end as you detect the aura of
-evil magic in the air.
+Внезапно волосы у тебя на затылке встают дыбом: ты ощущаешь
+в воздухе ауру злой магии.
 
-Without thought, you ready your weapon, and mutter under your breath:
+Не раздумывая, ты берёшься за оружие и бормочешь себе под нос:
 
-    "By %d, there will be blood spilt today."]],
+    "Во имя %d1, сегодня прольётся кровь."]],
       },
       goal_first = {
-         synopsis = "[This is surely the lair of %n.]",
+         synopsis = "[Это, несомненно, логово Тота Амона.]",
          output = "text",
-         text = [[The hairs on the nape of your neck lift as you sense an energy in the
-very air around you.  You fight down a primordial panic that seeks to
-make you turn and run.  This is surely the lair of %n.]],
+         text = [[Волосы у тебя на затылке поднимаются: ты чувствуешь, как сам воздух
+вокруг напоён энергией.  Ты подавляешь первобытный страх, что
+велит развернуться и бежать.  Это, несомненно, логово Тота Амона.]],
       },
       goal_next = {
-         text = "Yet again you feel the air around you heavy with malevolent magical energy.",
+         text = "Ты вновь чувствуешь, как воздух вокруг тяжелеет от злобной магической энергии.",
       },
       gotit = {
-         synopsis = "[You feel the power of %o flowing through your hands.]",
+         synopsis = "[Ты чувствуешь, как сила Сердца Ахримана струится по твоим рукам.]",
          output = "text",
-         text = [[As you pick up %o, you feel the power of it
-flowing through your hands.  It seems to be in two or more places
-at once, even though you are holding it.]],
+         text = [[Взяв Сердце Ахримана, ты чувствуешь, как его сила струится
+по твоим рукам.  Кажется, будто оно находится сразу в двух местах,
+а то и больше, хотя ты держишь его в руках.]],
       },
       guardtalk_after = {
-         "\"The battles here have been good -- our enemies' blood soaks the soil!\"",
-         "\"Remember that glory is crushing your enemies beneath your feet!\"",
-         "\"Times will be good again, now that the horde is vanquished.\"",
-         "\"You have brought our clan much honor in defeating %n.\"",
-         "\"You will be a worthy successor to %l.\"",
+         "\"Славные тут были битвы — кровь наших врагов пропитала землю!\"",
+         "\"Помни: слава — это когда враги повержены у твоих ног!\"",
+         "\"Теперь, когда орда разбита, снова настанут хорошие времена.\"",
+         "\"Победа над Тотом Амоном принесла нашему клану великую честь.\"",
+         "\"Ты станешь достойной сменой Пелию.\"",
       },
       guardtalk_before = {
-         "\"The battles here have been good -- our enemies' blood soaks the soil!\"",
-         "\"Remember that glory is crushing your enemies beneath your feet!\"",
-         "\"There has been little treasure to loot, since the horde arrived.\"",
-         "\"The horde is mighty in numbers, but they have little courage.\"",
-         "\"%lC is a strange one, but he has helped defend us.\"",
+         "\"Славные тут были битвы — кровь наших врагов пропитала землю!\"",
+         "\"Помни: слава — это когда враги повержены у твоих ног!\"",
+         "\"С тех пор как пришла орда, и пограбить-то толком нечего.\"",
+         "\"Орда многочисленна, но храбрости ей недостаёт.\"",
+         "\"Пелий — человек странный, но он помог нам обороняться.\"",
       },
       hasamulet = {
-         synopsis = "[\"Take the Amulet to the altar of %d on the Astral Plane and offer it.\"]",
+         synopsis = "[\"Отнеси Амулет к алтарю %d1 на Астральном Плане и принеси его в жертву.\"]",
          output = "text",
-         text = [["This is wondrous, %p.  I feared that you could not possibly
-succeed in your quest, but here you are in possession of the Amulet
-of Yendor!
+         text = [["Это чудо, %p.  Я боялся, что тебе ни за что не преуспеть
+в своём походе, — а ты здесь, и в руках у тебя Амулет Йендора!
 
-"I have studied the texts of the magi constantly since you left.  In
-the Book of Skelos, I found this:
+"С тех пор как ты нас покинул%e, я не переставая изучал тексты магов.
+В Книге Скелоса я нашёл вот что:
 
-    %d will cause a child to be sent into the world.  This child is to
-    be made strong by trial of battle and magic, for %d has willed it so.
-    It is said that the child of %d will recover the Amulet of Yendor
-    that was stolen from the Creator at the beginning of time.
+    %dC пошлёт в мир дитя.  Дитя это закалится в испытаниях
+    битвой и магией, ибо такова воля %d1.  Сказано, что дитя
+    %d1 вернёт Амулет Йендора, похищенный у Творца
+    в начале времён.
 
-"As you now possess the amulet, %p, I suspect that the Book
-speaks of you.
+"Раз Амулет теперь у тебя, %p, полагаю, Книга говорит о тебе.
 
-    The child of %d will take the Amulet, and travel to the Astral
-    Plane, where the Great Temple of %d is to be found.  The Amulet
-    will be sacrificed to %d, there on %dJ altar.  Then the child will
-    stand by %d as champion of all %cP for eternity.
+    Дитя %d1 возьмёт Амулет и отправится на Астральный
+    План, где стоит Великий Храм %d1.  Там, на алтаре %d1,
+    Амулет будет принесён в жертву.  И тогда дитя встанет
+    подле %d1 как защитник всех варваров во веки веков.
 
-"This is all I know, %p.  I hope it will help you."]],
+"Это всё, что я знаю, %p.  Надеюсь, это тебе поможет."]],
       },
       killed_nemesis = {
-         synopsis = "[%nC curses you, but you feel the overpowering aura of magic fading.]",
+         synopsis = "[Тот Амон проклинает тебя, но ты чувствуешь, как подавляющая аура магии слабеет.]",
          output = "text",
-         text = [[%nC falls to the ground, and utters a last curse at you.  Then %nj
-body fades slowly, seemingly dispersing into the air around you.  You
-slowly become aware that the overpowering aura of magic in the air has
-begun to fade.]],
+         text = [[Тот Амон падает наземь и выкрикивает тебе последнее проклятие.
+Затем его тело медленно тает, словно растворяясь в воздухе вокруг.
+Постепенно ты понимаешь, что подавляющая аура магии в воздухе
+начала слабеть.]],
       },
       leader_first = {
-         synopsis = "[\"At last you have returned.  There is a great quest you must undertake.\"]",
+         synopsis = "[\"Наконец-то ты вернул%y.  Тебе предстоит великий поход.\"]",
          output = "text",
-         text = [["Ah, %p.  You have returned at last.  The world is in dire
-need of your help.  There is a great quest you must undertake.
+         text = [["А, %p.  Наконец-то ты вернул%y.  Мир отчаянно нуждается
+в твоей помощи.  Тебе предстоит великий поход.
 
-"But first, I must see if you are ready to take on such a challenge."]],
+"Но сперва я должен проверить, готов%e ли ты к такому испытанию."]],
       },
       leader_last = {
-         synopsis = "[\"You have betrayed %d; soon %n will destroy us.  Begone!\"]",
+         synopsis = "[\"Ты предал%e богов; скоро Тот Амон уничтожит нас.  Прочь!\"]",
          output = "text",
-         text = [["Pah!  You have betrayed the gods, %p.  You will never attain
-the glory which you aspire to.  Your failure to follow the true path has
-closed this future to you.
+         text = [["Тьфу!  Ты предал%e богов, %p.  Тебе никогда не достичь
+славы, к которой ты стремишься.  Ты свернул%e с истинного пути —
+и это будущее для тебя закрыто.
 
-"I will protect these people as best I can, but soon %n will overcome
-me and destroy all who once called you %s.  Now begone!"]],
+"Я буду защищать этих людей, как сумею, но вскоре Тот Амон одолеет
+меня и уничтожит всех, для кого ты был%e словно %s.  А теперь прочь!"]],
       },
       leader_next = {
-         text = "\"%p, you are back.  Are you ready now for the challenge?\"",
+         text = "\"%p, ты вернул%y.  Теперь ты готов%e к испытанию?\"",
       },
       leader_other = {
-         text = "\"Again, you stand before me, %p.  Surely you have prepared yourself.\"",
+         text = "\"Ты снова стоишь передо мной, %p.  Уж теперь-то ты подготовил%y.\"",
       },
       locate_first = {
-         synopsis = "[You have located %i.]",
+         synopsis = "[Ты отыскал%e Оазис Дуали.]",
          output = "text",
-         text = [[The scent of water comes to you in the desert breeze.  You know that
-you have located %i.]],
+         text = [[Пустынный ветерок доносит до тебя запах воды.  Ты понимаешь,
+что отыскал%e Оазис Дуали.]],
       },
       locate_next = {
-         text = "Yet again you have a chance to infiltrate %i.",
+         text = "У тебя снова появилась возможность проникнуть в Оазис Дуали.",
       },
       nemesis_first = {
-         synopsis = "[%nC boasts that %nh has slain many.  \"Prepare to die, %c.\"]",
+         synopsis = "[Тот Амон хвалится, что убил многих.  \"Готовься к смерти, %c.\"]",
          output = "text",
-         text = [["So.  This is what that second rate sorcerer %l sends to do %lj bidding.
-I have slain many before you.  You shall give me little sport.
+         text = [["Так.  Вот кого посылает выполнять свои поручения этот
+второсортный колдунишка Пелий.  До тебя я убил многих.
+Ты не доставишь мне особой забавы.
 
-"Prepare to die, %c."]],
+"Готовься к смерти, %c."]],
       },
       nemesis_next = {
-         text = "\"I have wasted too much time on you already.  Now, you shall die.\"",
+         text = "\"Я и так потратил на тебя слишком много времени.  Теперь ты умрёшь.\"",
       },
       nemesis_other = {
-         text = "\"You return yet again, %c!  Are you prepared for death now?\"",
+         text = "\"Ты опять вернул%y, %c!  Ну что, теперь ты готов%e к смерти?\"",
       },
       nemesis_wantsit = {
-         text = [["I shall have %o back, you pitiful excuse for %ca.
-And your life as well."]],
+         text = [["Я верну себе Сердце Ахримана, жалкое подобие варвара.
+А заодно заберу и твою жизнь."]],
       },
       nexttime = {
-         text = [[Once again, you near %H.  You know that %l
-will be waiting.]],
+         text = [[Ты снова приближаешься к Лагерю племени Дуали.  Ты знаешь,
+что Пелий будет ждать.]],
       },
       offeredit = {
-         synopsis = "[%lC tells you to guard %o, and to return when you have triumphed.]",
+         synopsis = "[Пелий велит тебе хранить Сердце Ахримана и вернуться, когда победишь.]",
          output = "text",
-         text = [[When %l sees %o, he smiles, and says:
+         text = [[Увидев Сердце Ахримана, Пелий улыбается и говорит:
 
-    Well done, %p.  You have saved the world from certain doom.
-    What, now, should be done with %o?
+    Отличная работа, %p.  Ты избавил%e мир от неминуемой гибели.
+    Что же теперь делать с Сердцем Ахримана?
 
-    These people, brave as they are, cannot hope to guard it from
-    other sorcerers who will detect it, as surely as %n did.
+    Эти люди, при всей их храбрости, не смогут уберечь его
+    от других колдунов, которые учуют его, — так же верно,
+    как учуял Тот Амон.
 
-    Take %o with you, %p.  It will guard you in
-    your adventures, and you can best guard it.  You embark on a
-    quest far greater than you realize.
+    Возьми Сердце Ахримана с собой, %p.  Оно будет хранить
+    тебя в странствиях, а ты лучше всех сумеешь уберечь его.
+    Тебе предстоит поход куда более великий, чем ты думаешь.
 
-    Remember me, %p, and return when you have triumphed.  I
-    will tell you then of what you must do.  You will understand when the
-    time comes.]],
+    Помни меня, %p, и возвращайся, когда победишь.  Тогда
+    я расскажу тебе, что тебе предстоит сделать.  Ты всё поймёшь,
+    когда придёт время.]],
       },
       offeredit2 = {
-         synopsis = "[\"You keep %o.  Return to %Z to search for the Amulet.\"]",
+         synopsis = "[\"Сердце Ахримана остаётся у тебя.  Возвращайся в %Z искать Амулет.\"]",
          output = "text",
-         text = [[%l gazes reverently at %o, then back at you.
+         text = [[Пелий с благоговением смотрит на Сердце Ахримана, затем снова на тебя.
 
-"You are its keeper now, and the time has come to resume your search
-for the Amulet.  %Z await your return through the
-magic portal which brought you here."]],
+"Теперь ты его хранитель, и пришло время продолжить поиски
+Амулета.  %Z ждут твоего возвращения через
+волшебный портал, что привёл тебя сюда."]],
       },
       othertime = {
-         text = [[Again, and you think possibly for the last time, you approach
-%H.]],
+         text = [[Ты снова — и, как тебе кажется, в последний раз — приближаешься
+к Лагерю племени Дуали.]],
       },
       posthanks = {
-         text = "\"Tell us, %p, have you fared well on your great quest?\"",
+         text = "\"Расскажи нам, %p, удачно ли проходит твой великий поход?\"",
       },
    },
    Cav = {
       assignquest = {
-         synopsis = "[Find and defeat %n, recover %o, and return with it.]",
+         synopsis = "[Найди и одолей Хроматического дракона, отбери Скипетр Мощи и возвращайся с ним.]",
          output = "text",
-         text = [["You are indeed ready now, %p.  I shall tell you a tale of
-great suffering among your people:
+         text = [["Да, теперь ты действительно готов%e, %p.  Я поведаю тебе
+о великих страданиях твоего народа:
 
-"Shortly after you left on your vision quest, the caves were invaded by
-the creatures sent against us by %n.
+"Вскоре после того, как ты отправил%y в поиски видения, в пещеры
+вторглись твари, которых наслал на нас Хроматический дракон.
 
-"She, herself, could not attack us due to her great size, but her minions
-have harassed us ever since.  In the first attacks, many died, and the
-minions of %n managed to steal %o.
-They took it to %i and there, none of our
-%g warriors have been able to go.
+"Сама она из-за своих огромных размеров напасть на нас не может,
+но её прислужники с тех пор не дают нам покоя.  В первых набегах
+многие погибли, а прислужникам дракона удалось похитить Скипетр
+Мощи.  Они унесли его в Логово Дракона, и туда не смог пробраться
+ни один из наших воинов-неандертальцев.
 
-"You must find %i, and within it wrest
-%o from %n.  She guards it as
-jealously as she guards all treasures she attains.  But with it,
-we can make our caves safe once more.
+"Тебе нужно отыскать Логово Дракона и там вырвать Скипетр Мощи
+у Хроматического дракона.  Она стережёт его так же ревниво, как
+и все сокровища, что ей достаются.  Но со Скипетром мы снова
+сможем сделать наши пещеры безопасными.
 
-"Please, %p, recover %o for us, and return it here."]],
+"Прошу тебя, %p, отбери для нас Скипетр Мощи и принеси его сюда."]],
       },
       badalign = {
-         synopsis = "[\"You no longer follow the path of the %a.  Go, and purify yourself.\"]",
+         synopsis = "[\"Ты больше не следуешь истинному пути.  Ступай и очистись.\"]",
          output = "text",
-         text = [["%pC!  You have deviated from my teachings.  You no longer follow
-the path of the %a as you should.  I banish you from these caves, to
-go forth and purify yourself.  Then, you might be able to accomplish this
-quest."]],
+         text = [["%pC!  Ты отступил%e от моих учений.  Ты больше не следуешь
+истинному пути, как подобает.  Я изгоняю тебя из этих пещер:
+ступай и очистись.  Тогда, быть может, тебе удастся исполнить
+это задание."]],
       },
       badlevel = {
-         synopsis = "[\"%rA is too inexperienced.  Come back when you have progressed.\"]",
+         synopsis = "[\"Тому, кто всего лишь «%r», не хватает опыта.  Возвращайся, когда наберёшься его.\"]",
          output = "text",
-         text = [["Alas, %p, you are as yet too inexperienced to embark upon such
-a difficult quest as that I propose to give you.
+         text = [["Увы, %p, тебе пока недостаёт опыта, чтобы взяться за столь
+трудное задание, какое я хочу тебе поручить.
 
-"%rA could not possibly survive the rigors demanded to find
-%i, never mind to confront %n herself.
+"Тому, кто всего лишь «%r», ни за что не пережить тягот пути
+к Логову Дракона, не говоря уже о схватке с самим Хроматическим
+драконом.
 
-"Adventure some more, and you will learn the skills you will require.
-%d decrees it."]],
+"Постранствуй ещё, и ты обретёшь нужные навыки.
+Такова воля %d1."]],
       },
       discourage = {
-         "\"You are weak, %c.  No challenge for the Mother of all Dragons.\"",
-         "\"I grow hungry, %r.  You look like a nice appetizer!\"",
-         "\"Join me for lunch?  You're the main course, %c.\"",
-         "\"With %o, I am invincible!  You cannot succeed.\"",
-         "\"Your mentor, %l has failed.  You are nothing to fear.\"",
-         "\"You shall die here, %c.  %rA cannot hope to defeat me.\"",
-         "\"You, a mere %r challenge the might of %n?  Hah!\"",
-         "\"I am the Mother of all Dragons!  You cannot hope to defeat me.\"",
-         "\"My claws are sharp now.  I shall rip you to shreds!\"",
-         "\"%d has deserted you, %c.  This is my domain.\"",
+         "\"Ты слаб%e, %c.  Матери всех драконов ты не соперник.\"",
+         "\"Я проголодалась, %r.  Ты сойдёшь за славную закуску!\"",
+         "\"Пообедаешь со мной?  Ты — главное блюдо, %c.\"",
+         "\"Со Скипетром Мощи я непобедима!  Тебе не преуспеть.\"",
+         "\"Твой наставник, шаман Карнов, потерпел неудачу.  Тебя мне бояться нечего.\"",
+         "\"Здесь ты и умрёшь, %c.  Тому, кто всего лишь «%r», меня не одолеть.\"",
+         "\"Ты, всего лишь «%r», бросаешь вызов могуществу Хроматического дракона?  Ха!\"",
+         "\"Я — Мать всех драконов!  Тебе меня не одолеть.\"",
+         "\"Мои когти остры.  Я разорву тебя в клочья!\"",
+         "\"%dC покинул%E тебя, %c.  Здесь мои владения.\"",
       },
       encourage = {
-         "\"%nC is immune to her own breath weapons. You should use magic upon her that she does not use herself.\"",
-         "\"When you encounter %n, call upon %d for assistance.\"",
-         "\"There will be nowhere to hide inside %ns inner sanctum.\"",
-         "\"Your best chance with %n will be to keep moving.\"",
-         "\"Do not be distracted by the great treasures in %ns lair. Concentrate on %o.\"",
-         "\"%oC is the only object that %n truly fears.\"",
-         "\"Do not be fooled by %ns size.  She is fast, and it is rumored that she uses magic.\"",
-         "\"I would send a party of %gP with you, but we will need all of our strength to defend ourselves.\"",
-         "\"Remember, be %a at all times.  This is your strength.\"",
-         "\"If only we had an amulet of reflection, this would not have happened.\"",
+         "\"Хроматический дракон неуязвим для собственного дыхания.  Используй против неё магию, которой она сама не владеет.\"",
+         "\"Когда встретишь Хроматического дракона, проси помощи у %d1.\"",
+         "\"Во внутреннем святилище Хроматического дракона негде будет укрыться.\"",
+         "\"Лучший твой шанс против Хроматического дракона — всё время двигаться.\"",
+         "\"Не отвлекайся на огромные сокровища в логове дракона.  Думай только о Скипетре Мощи.\"",
+         "\"Скипетр Мощи — единственное, чего Хроматический дракон по-настоящему боится.\"",
+         "\"Не обманывайся размерами Хроматического дракона.  Она быстра, и поговаривают, что владеет магией.\"",
+         "\"Я бы послал с тобой отряд неандертальцев, но нам понадобятся все силы, чтобы защищаться.\"",
+         "\"Помни: всегда храни верность своему пути.  В этом твоя сила.\"",
+         "\"Будь у нас амулет отражения, этого бы не случилось.\"",
       },
       firsttime = {
-         synopsis = "[You arrive back at %H, but something is wrong here.]",
+         synopsis = "[Ты вернул%y в Пещеры Предков, но здесь что-то не так.]",
          output = "text",
-         text = [[You descend through a barely familiar stairwell that you remember
-%l showing you when you embarked upon your vision quest.
+         text = [[Ты спускаешься по смутно знакомой лестнице — той самой, что
+показал тебе шаман Карнов, когда ты отправлял%y в поиски видения.
 
-You arrive back at %H, but something seems
-wrong here.  The usual smoke and glowing light of the fires of the
-outer caves are absent, and an uneasy quiet fills the damp air.]],
+Ты снова в Пещерах Предков, но здесь что-то не так.  Нет
+привычного дыма и отсветов костров во внешних пещерах, а сырой
+воздух наполнен тревожной тишиной.]],
       },
       goal_first = {
-         synopsis = "[You enter a large cavern.  %nC is present.]",
+         synopsis = "[Ты входишь в огромную пещеру.  Здесь Хроматический дракон.]",
          output = "text",
-         text = [[You find yourself in a large cavern, with neatly polished walls, that
-nevertheless show signs of being scorched by fire.
+         text = [[Ты оказываешься в огромной пещере с гладко отполированными стенами,
+на которых тем не менее видны следы огня.
 
-Bones litter the floor, and there are objects scattered everywhere.
-The air is close with the stench of sulphurous fumes.
+Пол усеян костями, повсюду разбросаны предметы.
+Воздух удушлив от смрада серных испарений.
 
-%nC is clearly visible, but %nh seems to be asleep.]],
+Хроматический дракон хорошо виден, но, похоже, спит.]],
       },
       goal_next = {
-         text = "Once again, you find yourself in the lair of %n.",
+         text = "Ты снова в логове Хроматического дракона.",
       },
       gotit = {
-         synopsis = "[%oC fills you with a feeling of power.]",
+         synopsis = "[Скипетр Мощи наполняет тебя ощущением силы.]",
          output = "text",
-         text = [[As you pick up %o it seems heavy at first, but as you
-hold it strength flows into your arms.
+         text = [[Скипетр Мощи поначалу кажется тяжёлым, но стоит тебе взять
+его в руки, как сила вливается в твои мышцы.
 
-You suddenly feel full of power, as if nothing could possibly stand
-in your path.]],
+Внезапно тебя переполняет мощь — кажется, ничто на свете
+не сможет встать у тебя на пути.]],
       },
       guardtalk_after = {
-         "\"The rains have returned and the land grows lush again.\"",
-         "\"Peace has returned, give thanks to %d!\"",
-         "\"Welcome back!  Did you find %o?\"",
-         "\"So, %p, tell us the story of your fight with %n.\"",
-         "\"%lC grows old.  Perhaps you will guide us after he ascends.\"",
+         "\"Дожди вернулись, и земля снова зеленеет.\"",
+         "\"Мир вернулся по милости %d1!\"",
+         "\"С возвращением!  Скипетр Мощи у тебя?\"",
+         "\"Ну, %p, расскажи нам о битве с Хроматическим драконом.\"",
+         "\"Шаман Карнов стареет.  Может, после его вознесения нас поведёшь ты.\"",
       },
       guardtalk_before = {
-         "\"We have not been able to gather as much food since the Giants sealed off our access to the outer world.\"",
-         "\"Since %n sent her minions, we have been constantly fighting.\"",
-         "\"I have heard your vision quest was successful.  Is this so?\"",
-         "\"So, tell me, %p, how have you fared?\"",
-         "\"%lC grows old.  We know not who will guide us after he ascends.\"",
+         "\"С тех пор как Великаны отрезали нам путь во внешний мир, еды стало не добыть.\"",
+         "\"С тех пор как Хроматический дракон наслал своих прислужников, мы сражаемся без передышки.\"",
+         "\"Я слышал, твои поиски видения увенчались успехом.  Это правда?\"",
+         "\"Ну, расскажи, %p, как твои дела?\"",
+         "\"Шаман Карнов стареет.  Не знаем, кто поведёт нас после его вознесения.\"",
       },
       hasamulet = {
-         synopsis = "[\"Take the Amulet to the altar of %d on the Astral Plane and offer it.\"]",
+         synopsis = "[\"Отнеси Амулет к алтарю %d1 на Астральном Плане и принеси его в жертву.\"]",
          output = "text",
-         text = [["You have been successful, I see, %p.
+         text = [["Вижу, ты преуспел%e, %p.
 
-"Now that the Amulet of Yendor is yours, here is what you must do:
+"Теперь, когда Амулет Йендора у тебя, вот что тебе предстоит сделать:
 
-"Journey upwards to the open air.  The Amulet you carry will then
-take you into the Astral Planes, where the Great Temple of %d
-casts its influence throughout our world.
+"Поднимайся наверх, под открытое небо.  Амулет, который ты несёшь,
+перенесёт тебя на Астральные Планы, где Великий Храм %d1
+простирает своё влияние на весь наш мир.
 
-"Sacrifice the Amulet on the altar.  Thus shall %d become supreme!"]],
+"Принеси Амулет в жертву на алтаре.  И да возвысится %d надо всеми!"]],
       },
       killed_nemesis = {
-         text = [[%nC sinks to the ground, her heads flailing about.
-As she dies, a cloud of noxious fumes billows about her.]],
+         text = [[Хроматический дракон оседает на землю, мотая головами.
+Умирая, она окутывается клубами ядовитых испарений.]],
       },
       leader_first = {
-         synopsis = "[\"You have returned.  We are in dire need of your help.\"]",
+         synopsis = "[\"Ты вернул%y.  Нам отчаянно нужна твоя помощь.\"]",
          output = "text",
-         text = [["You have returned from your vision quest, %p.  Thank %d.
+         text = [["Ты вернул%y из поисков видения, %p.  Милостью %d1 ты цел%e.
 
-"We are in dire need of your help, my %S.
+"Нам отчаянно нужна твоя помощь, дитя моё.
 
-"But first, I must see if you are yet capable of the quest I would
-ask you to undertake."]],
+"Но сперва я должен проверить, по силам ли тебе задание,
+которое я хочу тебе поручить."]],
       },
       leader_last = {
-         synopsis = "[\"You have betrayed the %L.  Begone!\"]",
+         synopsis = "[\"Ты предал%e Закон.  Прочь!\"]",
          output = "text",
-         text = [["%pC!  You have sealed our fate.  You seem unable to reform yourself,
-so I must select another to take your place.
+         text = [["%pC!  Ты решил%e нашу участь.  Похоже, исправиться ты не в силах,
+и мне придётся избрать другого на твоё место.
 
-"Begone from %H!  You have betrayed us by choosing
-the path of the %C over the true path of the %L.
+"Прочь из Пещер Предков!  Ты предал%e нас, избрав путь Хаоса
+вместо истинного пути Закона.
 
-"You no longer live in our eyes."]],
+"Для нас ты больше не существуешь."]],
       },
       leader_next = {
-         text = "\"Again, you return to us, %p.  Let me see if you are ready now.\"",
+         text = "\"Ты снова вернул%y к нам, %p.  Посмотрим, готов%e ли ты теперь.\"",
       },
       leader_other = {
-         text = "\"Ah, %p.  Are you finally ready?\"",
+         text = "\"А, %p.  Наконец-то ты готов%e?\"",
       },
       locate_first = {
-         synopsis = "[You %x many large claw marks, smell carrion, and notice bones.]",
+         synopsis = "[Ты %x множество огромных следов когтей, чуешь запах падали и замечаешь кости.]",
          output = "text",
-         text = [[You %x many large claw marks on the ground.  The tunnels ahead
-of you are larger than most of those in any cave complex you have
-ever been in before.
+         text = [[Ты %x на земле множество огромных следов когтей.  Туннели
+впереди больше, чем в любых пещерах, где тебе доводилось бывать.
 
-Your nose detects the smell of carrion from within, and bones litter
-the sides of the tunnels.]],
+Изнутри тянет запахом падали, а вдоль стен туннелей валяются кости.]],
       },
       locate_next = {
-         text = "Once again, you approach %i.",
+         text = "Ты снова приближаешься к Логову Дракона.",
       },
       nemesis_first = {
-         synopsis = "[%nC threatens to eat you.]",
+         synopsis = "[Хроматический дракон грозится тебя съесть.]",
          output = "text",
-         text = [["So, follower of %l, you seek to invade the lair of
-%n.  Only my meals are allowed down here.  Prepare
-to be eaten!"]],
+         text = [["Так, последователь шамана Карнова, ты вздумал%e вторгнуться
+в логово Хроматического дракона.  Сюда дозволено попадать лишь
+моей еде.  Готовься: я тебя съем!"]],
       },
       nemesis_next = {
-         text = [["So, again you face me, %c.  No one has ever before escaped me.
-Now I shall kill you."]],
+         text = [["Итак, ты снова передо мной, %c.  Ещё никому не удавалось от меня уйти.
+Теперь я тебя убью."]],
       },
       nemesis_other = {
-         text = "\"You are getting annoying, %c.  Prepare to die.\"",
+         text = "\"Ты начинаешь мне надоедать, %c.  Готовься к смерти.\"",
       },
       nemesis_wantsit = {
-         text = "\"I'll have %o from you, %c.  You shall die.\"",
+         text = "\"Я заберу у тебя Скипетр Мощи, %c.  Ты умрёшь.\"",
       },
       nexttime = {
-         text = "Once again, you arrive back at %H.",
+         text = "Ты снова в Пещерах Предков.",
       },
       offeredit = {
-         synopsis = "[\"Take %o with you.  It will help in your quest for the Amulet of Yendor.\"]",
+         synopsis = "[\"Возьми Скипетр Мощи с собой.  Он поможет тебе в поисках Амулета Йендора.\"]",
          output = "text",
-         text = [[%lC glimpses %o in your possession.
-He smiles and says:
+         text = [[Шаман Карнов замечает у тебя Скипетр Мощи.
+Он улыбается и говорит:
 
-    You have done it!  We are saved.  But I fear that %o
-    will always be a target for %C forces who will want it for their
-    own.
+    Ты сделал%e это!  Мы спасены.  Но боюсь, Скипетр Мощи
+    всегда будет мишенью для сил Хаоса, которые захотят
+    завладеть им.
 
-    To prevent further trouble, I would like you, %p,
-    to take %o away with you.  It will help you as you
-    quest for the Amulet of Yendor.]],
+    Чтобы избежать новых бед, я прошу тебя, %p,
+    унести Скипетр Мощи с собой.  Он поможет тебе
+    в поисках Амулета Йендора.]],
       },
       offeredit2 = {
-         synopsis = "[\"You are the keeper of %o now.  Return to %Z to search for the Amulet.]",
+         synopsis = "[\"Теперь ты хранитель Скипетра Мощи.  Возвращайся в %Z искать Амулет.\"]",
          output = "text",
-         text = [[%l grasps %o proudly for a moment, then looks at you.
+         text = [[Шаман Карнов на миг гордо сжимает Скипетр Мощи, затем смотрит на тебя.
 
-"You are its keeper now, and the time has come to resume your search
-for the Amulet.  %Z await your return through the
-magic portal which brought you here."]],
+"Теперь ты его хранитель, и пришло время продолжить поиски
+Амулета.  %Z ждут твоего возвращения через
+волшебный портал, что привёл тебя сюда."]],
       },
       othertime = {
-         text = [[For some reason, you think that this may be the last time you will
-enter %H.]],
+         text = [[Почему-то тебе кажется, что ты в последний раз входишь
+в Пещеры Предков.]],
       },
       posthanks = {
-         text = [["%pC!  Welcome back.
-How goes your quest to recover the Amulet for %d?"]],
+         text = [["%pC!  С возвращением.
+Как идут твои поиски Амулета для %d1?"]],
       },
    },
    Hea = {
