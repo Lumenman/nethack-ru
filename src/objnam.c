@@ -4049,6 +4049,82 @@ ru_name_to_mon(const char *str, int *gend)
     return NON_PM;
 }
 
+/* is 'str' exactly the (Russian) name of some object type? */
+staticfn boolean
+ru_is_objname(const char *str)
+{
+    int i;
+
+    if (!str || !(*str & 0x80))
+        return FALSE;
+    for (i = 0; i < NUM_OBJECTS; i++)
+        if (OBJ_NAME(objects[i]) && !strcmpi(str, OBJ_NAME(objects[i])))
+            return TRUE;
+    return FALSE;
+}
+
+#include "objnames_en.h"
+
+/* RU: accept English object names in wishes ("long sword", "2 daggers",
+   "wand of fire", "potions of water") by replacing the English name with
+   the Russian one; English modifiers ("blessed +2") are left for the
+   parser, which understands them natively.  Wands, potions, scrolls,
+   rings and spellbooks have bare names upstream ("fire"), so they only
+   match after their class word, which is kept. */
+staticfn void
+ru_wish_english(char *bp, size_t bpsz)
+{
+    static const struct {
+        char oclass;
+        const char *word;
+    } clsw[] = {
+        { WAND_CLASS, "wand" },     { POTION_CLASS, "potion" },
+        { SCROLL_CLASS, "scroll" }, { RING_CLASS, "ring" },
+        { SPBOOK_CLASS, "spellbook" },
+    };
+    char pat[BUFSZ], repl[BUFSZ], tmp[BUFSZ];
+    char *best = 0;
+    size_t bestlen = 0;
+    int k, j, pl;
+
+    for (k = 0; k < SIZE(obj_en_names); k++) {
+        int otyp = obj_en_names[k].otyp;
+        const char *en = obj_en_names[k].en, *ru = OBJ_NAME(objects[otyp]),
+                   *cls = 0;
+
+        if (!ru || !*en)
+            continue;
+        for (j = 0; j < SIZE(clsw); j++)
+            if (objects[otyp].oc_class == clsw[j].oclass)
+                cls = clsw[j].word;
+        for (pl = 0; pl < 2; pl++) {
+            char *p;
+            size_t len;
+
+            if (cls)
+                Snprintf(pat, sizeof pat, "%s%s of %s", cls, pl ? "s" : "", en);
+            else
+                Strcpy(pat, pl ? makeplural(en) : en);
+            len = strlen(pat);
+            if (len <= bestlen || !(p = strstri(bp, pat)))
+                continue;
+            if ((p != bp && p[-1] != ' ') || (p[len] && p[len] != ' '))
+                continue; /* not on word boundaries */
+            best = p, bestlen = len;
+            if (cls)
+                Snprintf(repl, sizeof repl, "%s%s of %s", cls,
+                         pl ? "s" : "", ru);
+            else
+                Strcpy(repl, ru);
+        }
+    }
+    if (!best)
+        return;
+    Snprintf(tmp, sizeof tmp, "%.*s%s%s", (int) (best - bp), bp, repl,
+             best + bestlen);
+    copynchars(bp, tmp, (int) bpsz - 1);
+}
+
 /* Translate a Russian wish phrase into the English tokens that
    readobjnam()'s parser already understands.  Object names are copied
    through unchanged; they're matched separately against objects[]. */
@@ -4329,6 +4405,10 @@ ru_wish_normalize(char *dst, const char *src, size_t dstsz)
     for (;;) {
         int matched = 0;
 
+        /* stop once the rest is a whole object name, so names that begin
+           with a modifier-like word ("комок маточного молочка") survive */
+        if (ru_is_objname(p))
+            break;
         for (i = 0; ru_mods[i][0]; i++) {
             size_t l = strlen(ru_mods[i][0]), e = strlen(ru_mods[i][1]);
 
@@ -5515,6 +5595,7 @@ readobjnam(char *bp, struct obj *no_wish)
     if (!strcmpi(bp, "nothing") || !strcmpi(bp, "nil")
         || !strcmpi(bp, "none"))
         return no_wish;
+    ru_wish_english(bp, BUFSZ); /* RU: English object names */
     /* save the [nearly] unmodified choice string */
     Strcpy(d.fruitbuf, bp);
 
