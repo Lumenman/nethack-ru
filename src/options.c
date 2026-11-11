@@ -147,60 +147,60 @@ static const struct paranoia_opts {
        if any entry or alias beginning with 'n' gets added, aside from "none",
        the parsing to accept "nofoo" to mean "!foo" will need fixing */
     { PARANOID_CONFIRM, "Confirm", 1, "Paranoia", 2,
-      "for \"yes\" confirmations, require \"no\" to reject" },
+      "при подтверждении \"yes\" отказ — только \"no\"" },
     { PARANOID_QUIT, "quit", 1, "explore", 2,
-      "yes vs y to quit or to enter explore mode" },
+      "yes вместо y для выхода или режима исследования" },
     { PARANOID_DIE, "die", 1, "death", 2,
-      "yes vs y to die (explore mode or debug mode)" },
+      "yes вместо y, чтобы умереть (исследование/отладка)" },
     { PARANOID_BONES, "bones", 1, 0, 0,
-      "yes vs y to save bones data when dying in debug mode" },
+      "yes вместо y для сохранения костей при смерти в отладке" },
     { PARANOID_HIT, "attack", 1, "hit", 1,
-      "yes vs y to attack a peaceful monster" },
+      "yes вместо y для атаки мирного монстра" },
     { PARANOID_BREAKWAND, "wand-break", 2, "break-wand", 2,
-      "yes vs y to break a wand via (a)pply" },
+      "yes вместо y, чтобы сломать жезл через (a)pply" },
     { PARANOID_EATING, "eat", 1, "continue", 4,
-      "yes vs y to continue eating after first bite when satiated" },
+      "yes вместо y, чтобы есть дальше, когда сыты" },
     { PARANOID_WERECHANGE, "Were-change", 2, (const char *) 0, 0,
-      "yes vs y to change form when lycanthropy is controllable" },
+      "yes вместо y для смены облика при контролируемой ликантропии" },
     /* extra y/n questions rather than changing y/n to yes/n[o];
        they switch to yes/no if paranoid:confirm is also set */
     { PARANOID_PRAY, "pray", 1, 0, 0,
-      "y required to pray (supersedes old \"prayconfirm\" option)" },
+      "y для молитвы (заменяет старую опцию \"prayconfirm\")" },
     { PARANOID_TRAP, "trap", 1, "move-trap", 1,
-      "y required to enter known trap unless considered harmless" },
+      "y для входа в известную ловушку, если она не безвредна" },
     { PARANOID_AUTOALL, "Autoall", 2, "autoselect-all", 2,
-      "y required to pick filter choice 'A' for menustyle:Full" },
+      "y для выбора фильтра 'A' при menustyle:Full" },
     /* not a yes/n[o] vs y/n change nor a y/n addition */
     { PARANOID_SWIM, "swim", 1, 0, 0,
-      "'m' prefix necessary to deliberately walk into lava or water" },
+      "префикс 'm', чтобы нарочно войти в лаву или воду" },
     { PARANOID_REMOVE, "Remove", 1, "Takeoff", 1,
       /* normally when there is only 1 candidate it's chosen automatically */
-      "always pick from inventory for Remove and Takeoff" },
+      "всегда выбирать из инвентаря для Remove и Takeoff" },
     /* for config file parsing; interactive menu skips these */
     { 0, "none", 4, 0, 0, 0 }, /* require full word match */
     { ~0, "all", 3, 0, 0, 0 }, /* ditto */
 };
 
 static NEARDATA const char *menutype[][3] = { /* 'menustyle' settings */
-    { "traditional",  "[prompt for object class(es), then",
-                      " ask y/n for each item in those classes]" },
-    { "combination",  "[prompt for object class(es), then",
-                      " use menu for items in those classes]" },
-    { "full",         "[use menu to choose class(es), then",
-                      " use another menu for items in those]" },
-    { "partial",      "[skip class filtering; always",
-                      " use menu of all available items]" }
+    { "traditional",  "[спросить класс(ы) предметов, затем",
+                      " y/n для каждого предмета этих классов]" },
+    { "combination",  "[спросить класс(ы) предметов, затем",
+                      " меню для предметов этих классов]" },
+    { "full",         "[выбрать класс(ы) в меню, затем",
+                      " ещё одно меню для их предметов]" },
+    { "partial",      "[без фильтра по классам; всегда",
+                      " меню всех доступных предметов]" }
 };
 #if PREV_MSGS /* tty supports all four settings, curses just final two */
 static NEARDATA const char *msgwind[][3] = { /* 'msg_window' settings */
-    { "single",       "[show one old message at a time,",
-                      " most recent first]" },
-    { "combination",  "[for consecutive ^P requests, use",
-                      " 'single' for first two, then 'full']" },
-    { "full",         "[show all available messages,",
-                      " oldest first and most recent last]" },
-    { "reversed",     "[show all available messages,",
-                      " most recent first]" }
+    { "single",       "[показывать по одному старому сообщению,",
+                      " сначала самые новые]" },
+    { "combination",  "[для повторных ^P: первые два раза",
+                      " как 'single', затем 'full']" },
+    { "full",         "[показать все доступные сообщения,",
+                      " от самых старых к новым]" },
+    { "reversed",     "[показать все доступные сообщения,",
+                      " сначала самые новые]" }
 };
 #endif
 /* autounlock settings */
@@ -223,20 +223,20 @@ static NEARDATA const char *sortltype[] = {
 /* second column is an alias for the first; third is brief explanation;
    entries 5 and 6 are 1|4 and 2|4 (tty only) */
 static NEARDATA const char *perminv_modes[][3] = {
-  /*0*/ { "none",      "off",        "no permanent inventory window" },
-  /*1*/ { "all" ,      "on",         "all inventory except for gold" },
-  /*2*/ { "full",      "gold",       "full inventory including gold" },
+  /*0*/ { "none",      "off",        "без постоянного окна инвентаря" },
+  /*1*/ { "all" ,      "on",         "весь инвентарь, кроме золота" },
+  /*2*/ { "full",      "gold",       "весь инвентарь, включая золото" },
   /*3*/ { NULL,        NULL,         NULL },
   /*4*/ { NULL,        NULL,         NULL },
 #ifdef TTY_PERM_INVENT
-  /*5*/ { "on+grid",   "all+grid",   "all except gold, plus unused letters" },
-  /*6*/ { "gold+grid", "full+grid",  "full inventory, plus unused letters" },
+  /*5*/ { "on+grid",   "all+grid",   "всё, кроме золота, и свободные буквы" },
+  /*6*/ { "gold+grid", "full+grid",  "весь инвентарь и свободные буквы" },
 #else
   /*5*/ { NULL,        NULL,         NULL },
   /*6*/ { NULL,        NULL,         NULL },
 #endif
   /*7*/ { NULL,        NULL,         NULL },
-  /*8*/ { "in-use",    "inuse-only", "subset: items currently in use" },
+  /*8*/ { "in-use",    "inuse-only", "часть: предметы, сейчас в использовании" },
 };
 
 struct objsymopt {
@@ -271,12 +271,12 @@ struct objsymopt {
  *        b [ Hawaiian shirt         b [ Hawaiian shirt
  */
 static const struct objsymopt objsymvals[] = {
-    { 0, "none",         "don't show object symbols in menus" },
-    { 1, "headers",      "show object symbols in menu header lines" },
-    { 2, "entries",      "show object symbols in individual menu entries" },
-    { 3, "both",         "show object symbols in headers and menu entries" },
-    { 4, "conditional",  "show objsyms in entries if no headers are shown" },
-    { 5, "one-or-other", "show objsyms in header, in entries if no header" },
+    { 0, "none",         "не показывать символы предметов в меню" },
+    { 1, "headers",      "символы предметов в заголовках меню" },
+    { 2, "entries",      "символы предметов в каждой строке меню" },
+    { 3, "both",         "символы в заголовках и в строках меню" },
+    { 4, "conditional",  "символы в строках, если заголовков нет" },
+    { 5, "one-or-other", "символы в заголовке, без заголовка — в строках" },
 };
 
 /*
@@ -312,28 +312,28 @@ typedef struct {
 } menu_cmd_t;
 
 static const menu_cmd_t default_menu_cmd_info[] = {
-    { "menu_next_page",     MENU_NEXT_PAGE,     "Go to next page" },
-    { "menu_previous_page", MENU_PREVIOUS_PAGE, "Go to previous page" },
-    { "menu_first_page",    MENU_FIRST_PAGE,    "Go to first page" },
-    { "menu_last_page",     MENU_LAST_PAGE,     "Go to last page" },
+    { "menu_next_page",     MENU_NEXT_PAGE,     "Следующая страница" },
+    { "menu_previous_page", MENU_PREVIOUS_PAGE, "Предыдущая страница" },
+    { "menu_first_page",    MENU_FIRST_PAGE,    "Первая страница" },
+    { "menu_last_page",     MENU_LAST_PAGE,     "Последняя страница" },
     { "menu_select_all",    MENU_SELECT_ALL,
-                            "Select all items in entire menu" },
+                            "Выбрать все пункты меню" },
     { "menu_invert_all",    MENU_INVERT_ALL,
-                            "Invert selection for all items" },
+                            "Обратить выбор всех пунктов" },
     { "menu_deselect_all",  MENU_UNSELECT_ALL,
-                            "Unselect all items in entire menu" },
+                            "Снять выбор со всех пунктов меню" },
     { "menu_select_page",   MENU_SELECT_PAGE,
-                            "Select all items on current page" },
+                            "Выбрать все пункты на странице" },
     { "menu_invert_page",   MENU_INVERT_PAGE,
-                            "Invert current page's selections" },
+                            "Обратить выбор на странице" },
     { "menu_deselect_page", MENU_UNSELECT_PAGE,
-                            "Unselect all items on current page" },
+                            "Снять выбор на странице" },
     { "menu_search",        MENU_SEARCH,
-                            "Search and invert matching items" },
+                            "Найти и обратить выбор совпадающих" },
     { "menu_shift_right",   MENU_SHIFT_RIGHT,
-                            "Pan current page to right (perm_invent only)" },
+                            "Сдвинуть страницу вправо (только perm_invent)" },
     { "menu_shift_left",    MENU_SHIFT_LEFT,
-                            "Pan current page to left (perm_invent only)" },
+                            "Сдвинуть страницу влево (только perm_invent)" },
     { (char *) 0, '\0', (char *) 0 }
 };
 
@@ -520,7 +520,7 @@ parseoptions(
             retval = FALSE;
     }
     if (strlen(opts) > BUFSZ / 2) {
-        config_error_add("Option too long, max length is %i characters",
+        config_error_add("Слишком длинная опция, максимум %i символов",
                          (BUFSZ / 2));
         return FALSE;
     }
@@ -533,7 +533,7 @@ parseoptions(
         *op = '\0';
 
     if (!*opts) {
-        config_error_add("Empty statement");
+        config_error_add("Пустая инструкция");
         return FALSE;
     }
     negated = FALSE;
@@ -583,7 +583,7 @@ parseoptions(
         if (got_match) {
             if (!allopt[i].pfx && optlen < allopt[i].minmatch) {
                 config_error_add(
-             "Ambiguous option %s, %d characters are needed to differentiate",
+             "Неоднозначная опция %s, для различения нужно %d символов",
                                  opts, allopt[i].minmatch);
                 break;
             }
@@ -677,7 +677,7 @@ parseoptions(
         Snprintf(pfxbuf, sizeof pfxbuf, "%s", opts);
         if ((pfxp = strchr(pfxbuf, ':')) != 0)
             *pfxp = '\0';
-        config_error_add("bad option suffix variation '%s'", pfxbuf);
+        config_error_add("неверный вариант суффикса опции '%s'", pfxbuf);
         return FALSE;
     }
     if (got_match && optresult == optn_err)
@@ -686,7 +686,7 @@ parseoptions(
         return retval;
 
     /* out of valid options */
-    config_error_add("Unknown option '%s'", opts);
+    config_error_add("Неизвестная опция '%s'", opts);
     return FALSE;
 }
 
@@ -1127,7 +1127,7 @@ optfn_autounlock(
                 }
             }
             if (!matched) {
-                config_error_add("Invalid value for \"%s\": \"%s\"",
+                config_error_add("Неверное значение для \"%s\": \"%s\"",
                                  allopt[optidx].name, op);
                 return optn_silenterr;
             }
@@ -1135,7 +1135,7 @@ optfn_autounlock(
         }
         if (negated && newflags != 0) {
             config_error_add(
-                     "Invalid value combination for \"%s\": 'none' with some",
+                     "Неверное сочетание значений для \"%s\": 'none' вместе с другими значениями",
                              allopt[optidx].name);
             return optn_silenterr;
         }
@@ -1197,13 +1197,13 @@ optfn_boulder(
         else if (opts[0] >= '1' && opts[0] < WARNCOUNT + '0')
             clash = 2;
         if (opts[0] < ' ') {
-            config_error_add("boulder symbol cannot be a control character");
+            config_error_add("символ валуна не может быть управляющим");
             return optn_ok;
         } else if (clash) {
             /* symbol chosen matches a used monster or warning
                symbol which is not good - reject it */
-            config_error_add("Badoption - boulder symbol '%s' would conflict "
-                             "with a %s symbol",
+            config_error_add("Неверная опция: символ валуна '%s' совпал бы "
+                             "с символом %s",
                              visctrl(opts[0]),
                              (clash == 1) ? "monster" : "warning");
         } else {
@@ -1227,7 +1227,7 @@ optfn_boulder(
         }
         return optn_ok;
 #else
-        config_error_add("'%s' no longer supported; use S_boulder:c instead",
+        config_error_add("'%s' больше не поддерживается; используйте S_boulder:c",
                          allopt[optidx].name);
         return optn_err;
 #endif
@@ -1320,8 +1320,8 @@ optfn_crash_urlmax(
             int temp = atoi(op);
 
             if (temp < 75){
-                config_error_add("Invalid value %d for crash_urlmax. "
-                                 " Minimum value is 75.", temp);
+                config_error_add("Неверное значение %d для crash_urlmax. "
+                                 " Минимум — 75.", temp);
                 return optn_err;
             }
             gc.crash_urlmax = temp;
@@ -1370,14 +1370,14 @@ optfn_cursesgraphics(
                     switch_symbols(TRUE);
             }
             if (badflag) {
-                config_error_add("Failure to load symbol set %s.",
+                config_error_add("Не удалось загрузить набор символов %s.",
                                  allopt[optidx].name);
                 return optn_err;
             }
         }
         return optn_ok;
 #else
-        config_error_add("'%s' no longer supported; use 'symset:%s' instead",
+        config_error_add("'%s' больше не поддерживается; используйте 'symset:%s'",
                          allopt[optidx].name, allopt[optidx].name);
         return optn_err;
 #endif
@@ -1419,14 +1419,14 @@ optfn_DECgraphics(
                     switch_symbols(TRUE);
             }
             if (badflag) {
-                config_error_add("Failure to load symbol set %s.",
+                config_error_add("Не удалось загрузить набор символов %s.",
                                  allopt[optidx].name);
                 return optn_err;
             }
         }
         return optn_ok;
 #else
-        config_error_add("'%s' no longer supported; use 'symset:%s' instead",
+        config_error_add("'%s' больше не поддерживается; используйте 'symset:%s'",
                          allopt[optidx].name, allopt[optidx].name);
         return optn_err;
 #endif
@@ -1739,7 +1739,7 @@ optfn_fruit(
 
                 if (!forig && fnum >= 100) {
                     config_error_add(
-                        "Doing that so many times isn't very fruitful.");
+                        "Столько раз подряд — толку не будет.");
                     return optn_ok;
                 }
             }
@@ -1867,7 +1867,7 @@ optfn_hilite_status(
             clear_status_hilites();
             return optn_ok;
         } else if (op == empty_optstr) {
-            config_error_add("Value is mandatory for hilite_status");
+            config_error_add("Для hilite_status нужно значение");
             return optn_err;
         }
         if (!parse_status_hl1(op, go.opt_from_file))
@@ -1876,7 +1876,7 @@ optfn_hilite_status(
 #else
         nhUse(negated);
         nhUse(op);
-        config_error_add("'%s' is not supported", allopt[optidx].name);
+        config_error_add("'%s' не поддерживается", allopt[optidx].name);
         return optn_err;
 #endif
     }
@@ -1937,7 +1937,7 @@ optfn_IBMgraphics(
                 }
             }
             if (badflag) {
-                config_error_add("Failure to load symbol set %s.", sym_name);
+                config_error_add("Не удалось загрузить набор символов %s.", sym_name);
                 return optn_err;
             } else {
                 switch_symbols(TRUE);
@@ -1947,7 +1947,7 @@ optfn_IBMgraphics(
         }
         return optn_ok;
 #else
-        config_error_add("'%s' no longer supported; use 'symset:%s' instead",
+        config_error_add("'%s' больше не поддерживается; используйте 'symset:%s'",
                          allopt[optidx].name, allopt[optidx].name);
         return optn_err;
 #endif
@@ -2621,10 +2621,10 @@ optfn_number_pad(
     }
     if (req == get_val || req == get_cnf_val) {
         static const char *const numpadmodes[] = {
-            "0=off", "1=on", "2=on, MSDOS compatible",
-            "3=on, phone-style layout",
-            "4=on, phone layout, MSDOS compatible",
-            "-1=off, y & z swapped", /*[5]*/
+            "0=off", "1=on", "2=вкл., совместимо с MSDOS",
+            "3=вкл., раскладка как у телефона",
+            "4=вкл., телефонная, совместимо с MSDOS",
+            "-1=выкл., y и z переставлены", /*[5]*/
         };
         int indx = gc.Cmd.num_pad
                        ? (gc.Cmd.phone_layout ? (gc.Cmd.pcHack_compat ? 4 : 3)
@@ -2712,7 +2712,7 @@ optfn_palette(
              *  palette (adjust an RGB color in palette (color/R-G-B)
              */
             if (!alternative_palette(op)) {
-                config_error_add("Error in palette parameter '%s'", op);
+                config_error_add("Ошибка в параметре палитры '%s'", op);
                 return optn_err;
             }
             if (!go.opt_initial)
@@ -2865,7 +2865,7 @@ optfn_paranoid_confirmation(
                    bad; back when prayconfirm was in active use, tacking on
                    an explicit value to a boolean option wasn't supported */
                 config_error_add(
-           "deprecated %sprayconfirm option takes no parameters (found '%s')",
+           "устаревшая опция %sprayconfirm не принимает параметров (найдено '%s')",
                                  opt_negated ? "!" : "", op);
                 return optn_silenterr;
             }
@@ -2875,7 +2875,7 @@ optfn_paranoid_confirmation(
                that isn't supported [not important since this is considered
                temporary until 'prayconfirm' gets removed altogether] */
             config_error_add(
-                 "%sprayconfirm option is deprecated; switching to %s:%cpray",
+                 "опция %sprayconfirm устарела; переключаемся на %s:%cpray",
                              opt_negated ? "!" : "",
                              allopt[optidx].name,
                              opt_negated ? '-' : '+');
@@ -2899,13 +2899,13 @@ optfn_paranoid_confirmation(
                 flags.paranoia_bits = 0;
                 return optn_ok;
             } else {
-                config_error_add("!%s does not accept a value",
+                config_error_add("!%s не принимает значения",
                                  allopt[optidx].name);
                 return optn_silenterr;
             }
         } else if (!*op) {
             /* "paranoid_confirm" without any arguments is disallowed */
-            config_error_add("%s requires a value; use 'none' to cancel all",
+            config_error_add("%s требует значения; 'none' отменяет всё",
                              allopt[optidx].name);
             return optn_silenterr;
         }
@@ -3082,7 +3082,7 @@ optfn_perminv_mode(
                     if (strstri(pi0, "+grid") && !WINDOWPORT(tty)) {
                         i &= ~InvSparse;
                         config_error_add(
-                          "%s: unavailable perm_invent mode '%s', using '%s'",
+                          "%s: режим perm_invent '%s' недоступен, используется '%s'",
                                          allopt[optidx].name, pi0,
                                          perminv_modes[i][0]);
                     }
@@ -3122,11 +3122,11 @@ optfn_perminv_mode(
             /* perminv_mode is set but isn't useful because perm_invent is
                Off; say so after squeezing out enough for it to barely fit */
             if (iflags.perminv_mode == InvOptInUse)
-                (void) strsubst(opts, " currently", "");
+                (void) strsubst(opts, " сейчас", "");
             else
-                (void) strsubst(opts, " inventory", " invent");
-            Strcat(opts, (((iflags.perminv_mode & InvSparse) != 0) ? " (Off)"
-                          : " ('perm_invent' is Off)"));
+                (void) strsubst(opts, " инвентарь", " инв.");
+            Strcat(opts, (((iflags.perminv_mode & InvSparse) != 0) ? " (выкл.)"
+                          : " ('perm_invent' выкл.)"));
         }
     } else if (req == get_cnf_val) {
         Sprintf(opts, "%s", perminv_modes[iflags.perminv_mode][0]);
@@ -3226,7 +3226,7 @@ optfn_pettype(
                 gp.preferred_pet = '\0';
                 break;
             default:
-                config_error_add("Unrecognized pet type '%s'.", op);
+                config_error_add("Неизвестный тип питомца '%s'.", op);
                 return optn_err;
                 break;
             }
@@ -3490,7 +3490,7 @@ optfn_playmode(
         } else if (!strncmpi(op, "debug", 5) || !strncmpi(op, "wizard", 6)) {
             wizard = TRUE, discover = FALSE;
         } else {
-            config_error_add("Invalid value for \"%s\":%s",
+            config_error_add("Неверное значение для \"%s\":%s",
                              allopt[optidx].name, op);
             return optn_err;
         }
@@ -3558,7 +3558,7 @@ optfn_roguesymset(
             if (!read_sym_file(ROGUESET)) {
                 clear_symsetentry(ROGUESET, TRUE);
                 config_error_add(
-                    "Unable to load symbol set \"%s\" from \"%s\"", op,
+                    "Не удалось загрузить набор символов \"%s\" из \"%s\"", op,
                     SYMBOLS);
                 return optn_err;
             } else {
@@ -3649,7 +3649,7 @@ optfn_runmode(
                 return optn_err;
             }
         } else {
-            config_error_add("Value is mandatory for %s",
+            config_error_add("Для %s нужно значение",
                              allopt[optidx].name);
             return optn_err;
         }
@@ -3719,7 +3719,7 @@ optfn_scores(
             case '-':
                 if (digit(*(op + 1))) {
                     config_error_add(
-                       "Values for %s:top and %s:around must not be negative",
+                       "Значения %s:top и %s:around не могут быть отрицательными",
                                      allopt[optidx].name,
                                      allopt[optidx].name);
                     return optn_silenterr;
@@ -4001,8 +4001,8 @@ optfn_sortvanquished(
         (void) set_vanq_order(TRUE); /* insight.c */
         pline("'%s' %s \"%s: %s\".", optname,
               (flags.vanq_sortmode == prev_sortmode)
-                 ? "not changed, still"
-                 : "changed to",
+                 ? "не изменено, по-прежнему"
+                 : "изменено на",
               vanqorders[flags.vanq_sortmode][0],
               vanqorders[flags.vanq_sortmode][1]);
     }
@@ -4037,16 +4037,16 @@ optfn_statushilites(
 #else
         nhUse(negated);
         nhUse(op);
-        config_error_add("'%s' is not supported", allopt[optidx].name);
+        config_error_add("'%s' не поддерживается", allopt[optidx].name);
         return optn_err;
 #endif
     }
     if (req == get_val) {
 #ifdef STATUS_HILITES
         if (!iflags.hilite_delta)
-            Strcpy(opts, "0 (off: don't highlight status fields)");
+            Strcpy(opts, "0 (выкл.: не подсвечивать поля статуса)");
         else
-            Sprintf(opts, "%ld (on: highlight status for %ld turns)",
+            Sprintf(opts, "%ld (вкл.: подсветка статуса на %ld ходов)",
                     iflags.hilite_delta, iflags.hilite_delta);
 #else
         Strcpy(opts, "unsupported");
@@ -4086,7 +4086,7 @@ optfn_statuslines(
             itmp = atoi(op);
         }
         if (itmp < 2 || itmp > 3) {
-            config_error_add("'%s:%s' is invalid; must be 2 or 3",
+            config_error_add("'%s:%s' неверно; должно быть 2 или 3",
                              allopt[optidx].name, op);
             retval = optn_silenterr;
         } else {
@@ -4180,7 +4180,7 @@ optfn_symset(
             if (!read_sym_file(PRIMARYSET)) {
                 clear_symsetentry(PRIMARYSET, TRUE);
                 config_error_add(
-                    "Unable to load symbol set \"%s\" from \"%s\"", op,
+                    "Не удалось загрузить набор символов \"%s\" из \"%s\"", op,
                     SYMBOLS);
                 return optn_err;
             } else {
@@ -4188,7 +4188,7 @@ optfn_symset(
 #ifndef ENHANCED_SYMBOLS
                     if (gs.symset[PRIMARYSET].handling == H_UTF8) {
                         config_error_add(
-                                   "Unavailable symset handler \"%s\" for %s",
+                                   "Обработчик набора символов \"%s\" недоступен для %s",
                                          known_handling[H_UTF8], op);
                         load_symset("default", PRIMARYSET);
                     }
@@ -4207,7 +4207,7 @@ optfn_symset(
                 gs.symset[PRIMARYSET].name ? gs.symset[PRIMARYSET].name
                                           : "default");
         if (gc.currentgraphics == PRIMARYSET && gs.symset[PRIMARYSET].name)
-            Strcat(opts, ", active");
+            Strcat(opts, ", активен");
         if (gs.symset[PRIMARYSET].handling) {
             Sprintf(eos(opts), ", handler=%s",
                     known_handling[gs.symset[PRIMARYSET].handling]);
@@ -4255,7 +4255,7 @@ optfn_term_cols(
             /* just checks atol() sanity, not logical window size sanity
              */
             if (ltmp <= 0L || ltmp >= (long) LARGEST_INT) {
-                config_error_add("Invalid %s: %ld", allopt[optidx].name,
+                config_error_add("Неверное значение %s: %ld", allopt[optidx].name,
                                  ltmp);
                 retval = optn_err;
             } else {
@@ -4296,7 +4296,7 @@ optfn_term_rows(
             /* just checks atol() sanity, not logical window size sanity
              */
             if (ltmp <= 0L || ltmp >= (long) LARGEST_INT) {
-                config_error_add("Invalid %s: %ld", allopt[optidx].name,
+                config_error_add("Неверное значение %s: %ld", allopt[optidx].name,
                                  ltmp);
                 retval = optn_err;
             } else {
@@ -4496,14 +4496,14 @@ optfn_versinfo(
         }
         op = string_for_opt(opts, FALSE);
         if (op == empty_optstr) {
-            config_error_add("'%s' requires a value; defaulting to %d",
+            config_error_add("'%s' требует значения; используется %d",
                              optname, dflt);
             return optn_silenterr;
         }
         val = atoi(op);
         if (!val || (val & ~7) != 0) {
-            config_error_add("'%s' must be one of 1, 2, 4, or"
-                             " the sum of two or all three of those",
+            config_error_add("'%s' должно быть 1, 2, 4 или"
+                             " суммой двух или всех трёх",
                              optname);
             return optn_silenterr;
         }
@@ -4512,7 +4512,7 @@ optfn_versinfo(
         /* return handler_versinfo(); */
         (void) handler_versinfo();
         pline("'%s' %s %u.", optname,
-              (flags.versinfo == vi) ? "not changed, still" : "changed to",
+              (flags.versinfo == vi) ? "не изменено, по-прежнему" : "changed to",
               flags.versinfo);
     } else if (req == get_val) {
         char vbuf[QBUFSZ];
@@ -4550,7 +4550,7 @@ optfn_videocolors(
             return optn_err;
         }
         if (!assign_videocolors(opts)) {
-            config_error_add("Unknown error handling '%s'",
+            config_error_add("Неизвестная обработка ошибок '%s'",
                              allopt[optidx].name);
             return optn_err;
         }
@@ -4585,7 +4585,7 @@ optfn_videoshades(
             return optn_err;
         }
         if (!assign_videoshades(opts)) {
-            config_error_add("Unknown error handling '%s'",
+            config_error_add("Неизвестная обработка ошибок '%s'",
                              allopt[optidx].name);
             return optn_err;
         }
@@ -4658,7 +4658,7 @@ optfn_video(
             return optn_err;
         }
         if (!assign_video(opts)) {
-            config_error_add("Unknown error handling '%s'",
+            config_error_add("Неизвестная обработка ошибок '%s'",
                              allopt[optidx].name);
             return optn_err;
         }
@@ -4821,7 +4821,7 @@ optfn_windowborders(
                 itmp = atoi(op);
 
             if (itmp < 0 || itmp > 4) {
-                config_error_add("Invalid %s (should be within 0 to 4): %s",
+                config_error_add("Неверное значение %s (должно быть от 0 до 4): %s",
                                  allopt[optidx].name, opts);
                 retval = optn_silenterr;
             } else {
@@ -4836,9 +4836,9 @@ optfn_windowborders(
                 : (iflags.wc2_windowborders == 1) ? "1=on"
                   : (iflags.wc2_windowborders == 2) ? "2=auto"
                     : (iflags.wc2_windowborders == 3)
-                      ? "3=on, except off for perm_invent"
+                      ? "3=вкл., кроме perm_invent"
                       : (iflags.wc2_windowborders == 4)
-                        ? "4=auto, except off for perm_invent"
+                        ? "4=авто, кроме perm_invent"
                         : defopt);
         return optn_ok;
     }
@@ -4911,7 +4911,7 @@ optfn_windowcolors(
          */
         if ((op = string_for_opt(opts, FALSE)) != empty_optstr) {
             if (!wc_set_window_colors(op)) {
-                config_error_add("Could not set %s '%s'", allopt[optidx].name,
+                config_error_add("Не удалось установить %s '%s'", allopt[optidx].name,
                                  op);
                 return optn_err;
             }
@@ -5010,12 +5010,12 @@ pfxfn_cond_(
             opt_set_in_config[pfx_cond_] = TRUE;
             break;
         case 3:
-            config_error_add("Ambiguous condition option %s", opts);
+            config_error_add("Неоднозначная опция состояния %s", opts);
             break;
         case 1:
         case 2:
         default:
-            config_error_add("Unknown condition option %s (%d)", opts, reslt);
+            config_error_add("Неизвестная опция состояния %s (%d)", opts, reslt);
             break;
         }
         if (reslt != 0)
@@ -5215,7 +5215,7 @@ optfn_boolean(
         if (op != empty_optstr) {
             if (negated) {
                 config_error_add(
-                           "Negated boolean '%s' should not have a parameter",
+                           "У отрицаемой логической опции '%s' не должно быть параметра",
                                  allopt[optidx].name);
                 return optn_silenterr;
             }
@@ -5232,7 +5232,7 @@ optfn_boolean(
                        || (digit(*op) && atoi(op) == 0)) {
                 negated = TRUE;
             } else if (!allopt[optidx].valok) {
-                config_error_add("'%s' is not valid for a boolean", opts);
+                config_error_add("'%s' — неверное значение для логической опции", opts);
                 return optn_silenterr;
             }
         }
@@ -5279,7 +5279,7 @@ optfn_boolean(
         if (nosexchange) {
             /* can't arbitrarily change sex after game has started;
                magic (amulet or polymorph) is required for that */
-            config_error_add("'%s' is not anatomically possible.", opts);
+            config_error_add("'%s' анатомически невозможно.", opts);
             return optn_silenterr;
         }
 
@@ -5336,7 +5336,7 @@ optfn_boolean(
         case opt_armorstatus:
             if (!wc2_supported(allopt[optidx].name)) {
                 /* not actually an error */
-                config_error_add("'%s' is not supported.",
+                config_error_add("'%s' не поддерживается.",
                                  allopt[optidx].name);
                 return optn_ok;
             }
@@ -5703,7 +5703,7 @@ handler_disclose(void)
                  0, ATR_NONE, clr, buf, MENU_ITEMFLAGS_NONE);
         disc_cat[i] = 0;
     }
-    end_menu(tmpwin, "Change which disclosure options categories:");
+    end_menu(tmpwin, "Какие категории раскрытия изменить:");
     pick_cnt = select_menu(tmpwin, PICK_ANY, &disclosure_pick);
     if (pick_cnt > 0) {
         for (pick_idx = 0; pick_idx < pick_cnt; ++pick_idx) {
@@ -5718,7 +5718,7 @@ handler_disclose(void)
     for (i = 0; i < NUM_DISCLOSURE_OPTIONS; i++) {
         if (disc_cat[i]) {
             c = flags.end_disclose[i];
-            Sprintf(buf, "Disclosure options for %s:",
+            Sprintf(buf, "Раскрытие для %s:",
                     disclosure_names[i]);
             tmpwin = create_nhwindow(NHW_MENU);
             start_menu(tmpwin, MENU_BEHAVE_STANDARD);
@@ -5727,40 +5727,40 @@ handler_disclose(void)
             any.a_char = DISCLOSE_NO_WITHOUT_PROMPT;
             add_menu(tmpwin, &nul_glyphinfo, &any, 0,
                      any.a_char, ATR_NONE, clr,
-                     "Never disclose, without prompting",
+                     "Никогда не показывать, не спрашивая",
                      (c == any.a_char) ? MENU_ITEMFLAGS_SELECTED
                                        : MENU_ITEMFLAGS_NONE);
             any.a_char = DISCLOSE_YES_WITHOUT_PROMPT;
             add_menu(tmpwin, &nul_glyphinfo, &any, 0,
                      any.a_char, ATR_NONE, clr,
-                     "Always disclose, without prompting",
+                     "Всегда показывать, не спрашивая",
                      (c == any.a_char) ? MENU_ITEMFLAGS_SELECTED
                                        : MENU_ITEMFLAGS_NONE);
             if (*disclosure_names[i] == 'v' || *disclosure_names[i] == 'g') {
                 any.a_char = DISCLOSE_SPECIAL_WITHOUT_PROMPT; /* '#' */
                 add_menu(tmpwin, &nul_glyphinfo, &any, 0,
                          any.a_char, ATR_NONE, clr,
-                         "Always disclose, pick sort order from menu",
+                         "Всегда показывать, порядок выбрать в меню",
                          (c == any.a_char) ? MENU_ITEMFLAGS_SELECTED
                                            : MENU_ITEMFLAGS_NONE);
             }
             any.a_char = DISCLOSE_PROMPT_DEFAULT_NO;
             add_menu(tmpwin, &nul_glyphinfo, &any, 0,
                      any.a_char, ATR_NONE, clr,
-                     "Prompt, with default answer of \"No\"",
+                     "Спрашивать, по умолчанию \"Нет\"",
                      (c == any.a_char) ? MENU_ITEMFLAGS_SELECTED
                                        : MENU_ITEMFLAGS_NONE);
             any.a_char = DISCLOSE_PROMPT_DEFAULT_YES;
             add_menu(tmpwin, &nul_glyphinfo, &any, 0,
                      any.a_char, ATR_NONE, clr,
-                     "Prompt, with default answer of \"Yes\"",
+                     "Спрашивать, по умолчанию \"Да\"",
                      (c == any.a_char) ? MENU_ITEMFLAGS_SELECTED
                                        : MENU_ITEMFLAGS_NONE);
             if (*disclosure_names[i] == 'v' || *disclosure_names[i] == 'g') {
                 any.a_char = DISCLOSE_PROMPT_DEFAULT_SPECIAL; /* '?' */
                 add_menu(tmpwin, &nul_glyphinfo, &any, 0,
                          any.a_char, ATR_NONE, clr,
-                "Prompt, with default answer of \"Ask\" to request sort menu",
+                "Спрашивать, по умолчанию \"Ask\" — меню сортировки",
                          (c == any.a_char) ? MENU_ITEMFLAGS_SELECTED
                                            : MENU_ITEMFLAGS_NONE);
             }
@@ -5782,7 +5782,7 @@ staticfn int
 handler_menu_headings(void)
 {
     boolean gotca = query_color_attr(&iflags.menu_headings,
-                                     "How to highlight menu headings:");
+                                     "Как выделять заголовки меню:");
 
     if (gotca) {
         /* header highlighting affects persistent inventory display */
@@ -5816,7 +5816,7 @@ handler_menu_objsyms(void)
                  (j == iflags.menuobjsyms) ? MENU_ITEMFLAGS_SELECTED
                                            : MENU_ITEMFLAGS_NONE);
     }
-    end_menu(tmpwin, "Set object symbols in menus to what?");
+    end_menu(tmpwin, "Как показывать символы предметов в меню?");
     n = select_menu(tmpwin, PICK_ONE, &picklist);
     if (n > 0) {
         i = picklist[0].item.a_int - 1;
@@ -5991,7 +5991,7 @@ handler_paranoid_confirmation(void)
                      ? MENU_ITEMFLAGS_SELECTED
                      : MENU_ITEMFLAGS_NONE);
     }
-    end_menu(tmpwin, "Actions requiring extra confirmation:");
+    end_menu(tmpwin, "Действия с дополнительным подтверждением:");
     i = select_menu(tmpwin, PICK_ANY, &paranoia_picks);
     if (i >= 0) {
         /* player didn't cancel; we reset all the paranoia options
@@ -6047,7 +6047,7 @@ handler_perminv_mode(void)
                  buf, (i == old_pi) ? MENU_ITEMFLAGS_SELECTED
                                     : MENU_ITEMFLAGS_NONE);
     }
-    end_menu(tmpwin, "Choose permanent inventory mode:");
+    end_menu(tmpwin, "Выберите режим постоянного инвентаря:");
     n = select_menu(tmpwin, PICK_ONE, &pi_pick);
     destroy_nhwindow(tmpwin);
     if (n > 0) {
@@ -6237,7 +6237,7 @@ handler_whatis_coord(void)
                 ? MENU_ITEMFLAGS_SELECTED : MENU_ITEMFLAGS_NONE);
     any.a_char = GPCOORDS_SCREEN;
     add_menu(tmpwin, &nul_glyphinfo, &any, GPCOORDS_SCREEN,
-             0, ATR_NONE, clr, "screen [row,column]",
+             0, ATR_NONE, clr, "экран [строка,столбец]",
              (gpc == GPCOORDS_SCREEN)
                 ? MENU_ITEMFLAGS_SELECTED : MENU_ITEMFLAGS_NONE);
     any.a_char = GPCOORDS_NONE;
@@ -6349,7 +6349,7 @@ handler_autopickup_exception(void)
         /* EDIT_GETLIN:  assume user doesn't user want previous
            exception used as default input string for this one... */
         apebuf[0] = apebuf[1] = '\0';
-        getlin("What new autopickup exception pattern?", &apebuf[1]);
+        getlin("Новый шаблон исключения автоподбора?", &apebuf[1]);
         mungspaces(&apebuf[1]); /* regularize whitespace */
         if (apebuf[1] == '\033')
             return TRUE;
@@ -6373,7 +6373,7 @@ handler_autopickup_exception(void)
             ape = ga.apelist;
             any = cg.zeroany;
             add_menu_heading(tmpwin,
-                             "Always pickup '<'; never pickup '>'");
+                             "Всегда подбирать '<'; никогда не подбирать '>'");
             for (i = 0; i < numapes && ape; i++) {
                 any.a_void = (opt_idx == 1) ? 0 : ape;
                 /* length of pattern plus quotes (plus '<'/'>') is
@@ -6433,7 +6433,7 @@ handler_menu_colors(void)
 
     } else if (opt_idx == 0) { /* add new */
         mcbuf[0] = '\0';
-        getlin("What new menucolor pattern?", mcbuf);
+        getlin("Новый шаблон цвета меню?", mcbuf);
         if (*mcbuf == '\033')
             goto menucolors_done;
         if (*mcbuf
@@ -6481,7 +6481,7 @@ handler_menu_colors(void)
                      ATR_NONE, clr, mcbuf, MENU_ITEMFLAGS_NONE);
             tmp = tmp->next;
         }
-        Sprintf(mcbuf, "%s menu colors",
+        Sprintf(mcbuf, "Цвета меню: %s",
                 (opt_idx == 1) ? "Список" : "Какие убрать");
         end_menu(tmpwin, mcbuf);
         pick_cnt = select_menu(tmpwin,
@@ -6515,7 +6515,7 @@ handler_msgtype(void)
         return TRUE;
     } else if (opt_idx == 0) { /* add new */
         mtbuf[0] = '\0';
-        getlin("What new message pattern?", mtbuf);
+        getlin("Новый шаблон сообщения?", mtbuf);
         if (*mtbuf == '\033')
             return TRUE;
         if (*mtbuf
@@ -6552,7 +6552,7 @@ handler_msgtype(void)
                      ATR_NONE, clr, mtbuf, MENU_ITEMFLAGS_NONE);
             tmp = tmp->next;
         }
-        Sprintf(mtbuf, "%s message types",
+        Sprintf(mtbuf, "Типы сообщений: %s",
                 (opt_idx == 1) ? "Список" : "Какие убрать");
         end_menu(tmpwin, mtbuf);
         pick_cnt = select_menu(tmpwin,
@@ -6675,7 +6675,7 @@ string_for_opt(char *opts, boolean val_optional)
 
     if (!colon || !*++colon) {
         if (!val_optional)
-            config_error_add("Missing parameter for '%s'", opts);
+            config_error_add("Нет параметра для '%s'", opts);
         return empty_optstr;
     }
     return colon;
@@ -6694,8 +6694,8 @@ string_for_env_opt(const char *optname, char *opts, boolean val_optional)
 staticfn void
 bad_negation(const char *optname, boolean with_parameter)
 {
-    config_error_add("The %s option may not %sbe negated.", optname,
-                     with_parameter ? "both have a value and " : "");
+    config_error_add("Опцию %s нельзя %sотрицать.", optname,
+                     with_parameter ? "одновременно задавать и " : "");
 }
 
 /* go through all of the options and set the minmatch value
@@ -6801,8 +6801,8 @@ complain_about_duplicate(int optidx)
 #else /* !MACOS9 */
     buf[0] = '\0';
     if (using_alias)
-        Sprintf(buf, " (via alias: %s)", allopt[optidx].alias);
-    config_error_add("%s option specified multiple times: %s%s",
+        Sprintf(buf, " (через псевдоним: %s)", allopt[optidx].alias);
+    config_error_add("опция %s указана несколько раз: %s%s",
                      (allopt[optidx].opttyp == CompOpt) ? "compound"
                                                         : "boolean",
                      allopt[optidx].name, buf);
@@ -7134,7 +7134,7 @@ initoptions_init(void)
        early so windowtype-specific options use it as their base */
     if (gc.cmdline_windowsys) {
         nmcpy(gc.chosen_windowtype, gc.cmdline_windowsys, WINTYPELEN);
-        config_error_init(FALSE, "command line", FALSE);
+        config_error_init(FALSE, "командная строка", FALSE);
         choose_windows(gc.cmdline_windowsys);
         config_error_done();
         /*
@@ -7358,7 +7358,7 @@ initoptions_finish(void)
      * is even initialized, so check for that too.
      */
     if (iflags.hilite_delta && !wc2_supported("statushilites")) {
-        raw_printf("Status highlighting not supported for %s interface.",
+        raw_printf("Подсветка статуса не поддерживается интерфейсом %s.",
                     windowprocs.name);
         iflags.hilite_delta = 0;
     }
@@ -7480,18 +7480,18 @@ change_inv_order(char *op)
         oc_sym = def_char_to_objclass(*sp);
         /* reject bad or duplicate entries */
         if (oc_sym == MAXOCLASSES) { /* not an object class char */
-            config_error_add("Not an object class '%c'", *sp);
+            config_error_add("Не класс предметов: '%c'", *sp);
             retval = 0;
             fail = TRUE;
         } else if (!strchr(flags.inv_order, oc_sym)) {
             /* VENOM_CLASS, RANDOM_CLASS, and ILLOBJ_CLASS are excluded
                because they aren't in def_inv_order[] so don't make it
                into flags.inv_order, hence always fail this strchr() test */
-            config_error_add("Object class '%c' not allowed", *sp);
+            config_error_add("Класс предметов '%c' не разрешён", *sp);
             retval = 0;
             fail = TRUE;
         } else if (strchr(sp + 1, *sp)) {
-            config_error_add("Duplicate object class '%c'", *sp);
+            config_error_add("Повтор класса предметов '%c'", *sp);
             retval = 0;
             fail = TRUE;
         }
@@ -7566,10 +7566,10 @@ feature_alert_opts(char *op, const char *optn)
         return 0;
     if (fnv > get_current_feature_ver()) {
         if (!go.opt_initial) {
-            You_cant("disable new feature alerts for future versions.");
+            You_cant("отключить уведомления о новшествах будущих версий.");
         } else {
             config_error_add(
-                        "%s=%s Invalid reference to a future version ignored",
+                        "%s=%s: ссылка на будущую версию проигнорирована",
                              optn, op);
         }
         return 0;
@@ -7580,7 +7580,7 @@ feature_alert_opts(char *op, const char *optn)
         Sprintf(buf, "%lu.%lu.%lu", FEATURE_NOTICE_VER_MAJ,
                 FEATURE_NOTICE_VER_MIN, FEATURE_NOTICE_VER_PATCH);
         pline(
-          "Feature change alerts disabled for NetHack %s features and prior.",
+          "Уведомления о новшествах NetHack %s и более ранних отключены.",
               buf);
     }
     return 1;
@@ -7637,7 +7637,7 @@ parsebindings(char *bindings)
     for (i = 0; i < SIZE(mousebtn_names); i++)
         if (!strcmp(bindings, mousebtn_names[i])) {
             if (!bind_mousebtn(i + 1, bind)) {
-                config_error_add("Error binding mouse button %i", i + 1);
+                config_error_add("Ошибка назначения кнопки мыши %i", i + 1);
             } else {
                 return ret;
             }
@@ -7646,7 +7646,7 @@ parsebindings(char *bindings)
     /* read the key to be bound */
     key = txt2key(bindings);
     if (!key) {
-        config_error_add("Unknown key binding key '%s'", bindings);
+        config_error_add("Неизвестная клавиша в назначении '%s'", bindings);
         return FALSE;
     }
 
@@ -7658,7 +7658,7 @@ parsebindings(char *bindings)
     for (i = 0; default_menu_cmd_info[i].name; i++) {
         if (!strcmp(default_menu_cmd_info[i].name, bind)) {
             if (illegal_menu_cmd_key(key)) {
-                config_error_add("Bad menu key %s:%s", visctrl(key), bind);
+                config_error_add("Неверная клавиша меню %s:%s", visctrl(key), bind);
                 return FALSE;
             } else {
                 add_menu_cmd_alias((char) key, default_menu_cmd_info[i].cmd);
@@ -7669,7 +7669,7 @@ parsebindings(char *bindings)
 
     /* extended command? */
     if (!bind_key(key, bind, TRUE)) {
-        config_error_add("Unknown key binding command '%s'", bind);
+        config_error_add("Неизвестная команда в назначении '%s'", bind);
         return FALSE;
     }
     return ret;
@@ -7680,12 +7680,12 @@ static const struct {
     xint8 msgtyp;
     const char *descr;
 } msgtype_names[] = {
-    { "show", MSGTYP_NORMAL, "Show message normally" },
-    { "hide", MSGTYP_NOSHOW, "Hide message" },
+    { "show", MSGTYP_NORMAL, "Показывать сообщение как обычно" },
+    { "hide", MSGTYP_NOSHOW, "Скрывать сообщение" },
     { "noshow", MSGTYP_NOSHOW, NULL },
-    { "stop", MSGTYP_STOP, "Prompt for more after the message" },
+    { "stop", MSGTYP_STOP, "Ждать --Дальше-- после сообщения" },
     { "more", MSGTYP_STOP, NULL },
-    { "norep", MSGTYP_NOREP, "Do not repeat the message" }
+    { "norep", MSGTYP_NOREP, "Не повторять сообщение" }
 };
 
 staticfn const char *
@@ -7718,7 +7718,7 @@ query_msgtype(void)
                      ATR_NONE, clr,
                      msgtype_names[i].descr, MENU_ITEMFLAGS_NONE);
         }
-    end_menu(tmpwin, "How to show the message");
+    end_menu(tmpwin, "Как показывать сообщение");
     pick_cnt = select_menu(tmpwin, PICK_ONE, &picks);
     destroy_nhwindow(tmpwin);
     if (pick_cnt > 0) {
@@ -7732,7 +7732,7 @@ query_msgtype(void)
 staticfn boolean
 msgtype_add(int typ, char *pattern)
 {
-    static const char *const re_error = "MSGTYPE regex error";
+    static const char *const re_error = "ошибка регулярного выражения MSGTYPE";
     struct plinemsg_type *tmp = (struct plinemsg_type *) alloc(sizeof *tmp);
 
     tmp->msgtype = typ;
@@ -7860,9 +7860,9 @@ msgtype_parse_add(char *str)
         if (typ != -1)
             return msgtype_add(typ, pattern);
         else
-            config_error_add("Unknown message type '%s'", msgtype);
+            config_error_add("Неизвестный тип сообщения '%s'", msgtype);
     } else {
-        config_error_add("Malformed MSGTYPE");
+        config_error_add("Неверный MSGTYPE");
     }
     return FALSE;
 }
@@ -7872,7 +7872,7 @@ msgtype_parse_add(char *str)
 staticfn boolean
 test_regex_pattern(const char *str, const char *errmsg)
 {
-    static const char def_errmsg[] = "NHregex error";
+    static const char def_errmsg[] = "ошибка NHregex";
     struct nhregex *match;
     char *re_error_desc, errbuf[BUFSZ];
     boolean retval;
@@ -7947,18 +7947,18 @@ parse_role_opt(
                 op += (*op == '!') ? 1 : (op[2] != '-') ? 2 : 3;
             }
             if (!*op || *op == ' ') {
-                config_error_add("Negated nothing for '%s'", fullname);
+                config_error_add("Пустое отрицание для '%s'", fullname);
                 return FALSE;
             }
             if (!first) {
                 if ((val_negated ^ prev_negated)
                     || (negated && val_negated)) {
-                    config_error_add("Invalid mixed negation for '%s%s'",
+                    config_error_add("Неверное смешанное отрицание для '%s%s'",
                                      negated ? "!" : "", fullname);
                     return FALSE;
                 } else if (!negated && !val_negated) {
                     config_error_add(
-                    "Multiple role values only allowed when list is negated");
+                    "Несколько значений роли — только в отрицаемом списке");
                     return FALSE;
                 }
             }
@@ -7980,7 +7980,7 @@ parse_role_opt(
                 if (!preval || *preval != '!')
                     clearrolefilter(which);
                 if (!setrolefilter(op)) {
-                    config_error_add("Invalid %s '%s'", fullname, op);
+                    config_error_add("Неверное значение %s '%s'", fullname, op);
                     return FALSE;
                 }
                 saveoptstr(optidx, rolefilterstring(negbuf, which));
@@ -8040,14 +8040,14 @@ illegal_menu_cmd_key(uchar c)
 {
     if (c == 0 || c == '\r' || c == '\n' || c == '\033' || c == ' '
         || digit((char) c) || (letter((char) c) && c != '@')) {
-        config_error_add("Reserved menu command key '%s'", visctrl((char) c));
+        config_error_add("Зарезервированная клавиша меню '%s'", visctrl((char) c));
         return TRUE;
     } else { /* reject default object class symbols */
         int j;
 
         for (j = 1; j < MAXOCLASSES; j++)
             if (c == (uchar) def_oc_syms[j].sym) {
-                config_error_add("Menu command key '%s' is an object class",
+                config_error_add("Клавиша меню '%s' совпадает с классом предметов",
                                  visctrl((char) c));
                 return TRUE;
             }
@@ -9321,11 +9321,11 @@ show_menu_controls(winid win, boolean dolist)
         const char *key, *desc;
     };
     static const struct xtra_cntrls hardcoded[] = {
-        { "Return", "Accept current choice(s) and dismiss menu" },
-        { "Enter",  "Same as Return" },
-        { "Space",  "If not on last page, advance one page;" },
-        { "     ",  "when on last page, treat like Return" },
-        { "Escape", "Cancel menu without making any choice(s)" },
+        { "Return", "Принять выбор и закрыть меню" },
+        { "Enter",  "То же, что Return" },
+        { "Space",  "Если страница не последняя — следующая;" },
+        { "     ",  "на последней странице — как Return" },
+        { "Escape", "Закрыть меню без выбора" },
         { (char *) 0, (char *) 0}
     };
     static const char mc_fmt[] = "%8s     %-6s %s",
@@ -9340,7 +9340,7 @@ show_menu_controls(winid win, boolean dolist)
      * with a fixed-width font or will look dreadful.
      */
 
-    putstr(win, 0, "Menu control keys:");
+    putstr(win, 0, "Клавиши управления меню:");
     if (dolist) { /* key bindings help: '?i' */
         int i;
         char ch;
@@ -9361,58 +9361,58 @@ show_menu_controls(winid win, boolean dolist)
         arg = ""; /* no extra prefix for 'dolist' */
     } else { /* menu controls help: '?k' */
         putstr(win, 0, "");
-        Sprintf(buf, mc_altfmt, "", "Whole", "Current");
+        Sprintf(buf, mc_altfmt, "", "Всё", "Текущая");
         putstr(win, 0, buf);
-        Sprintf(buf, mc_altfmt, "", " Menu", " Page");
+        Sprintf(buf, mc_altfmt, "", " меню", " стр.");
         putstr(win, 0, buf);
-        Sprintf(buf, mc_fmt, "Select",
+        Sprintf(buf, mc_fmt, "Выбрать",
                 visctrl(get_menu_cmd_key(MENU_SELECT_ALL)),
                 visctrl(get_menu_cmd_key(MENU_SELECT_PAGE)));
         putstr(win, 0, buf);
-        Sprintf(buf, mc_fmt, "Invert",
+        Sprintf(buf, mc_fmt, "Обратить",
                 visctrl(get_menu_cmd_key(MENU_INVERT_ALL)),
                 visctrl(get_menu_cmd_key(MENU_INVERT_PAGE)));
         putstr(win, 0, buf);
-        Sprintf(buf, mc_fmt, "Deselect",
+        Sprintf(buf, mc_fmt, "Снять",
                 visctrl(get_menu_cmd_key(MENU_UNSELECT_ALL)),
                 visctrl(get_menu_cmd_key(MENU_UNSELECT_PAGE)));
         putstr(win, 0, buf);
         putstr(win, 0, "");
-        Sprintf(buf, mc_fmt, "Go to",
+        Sprintf(buf, mc_fmt, "Перейти",
                 visctrl(get_menu_cmd_key(MENU_NEXT_PAGE)),
-                "Next page");
+                "Следующая стр.");
         putstr(win, 0, buf);
         Sprintf(buf, mc_fmt, "",
                 visctrl(get_menu_cmd_key(MENU_PREVIOUS_PAGE)),
-                "Previous page");
+                "Предыдущая стр.");
         putstr(win, 0, buf);
         Sprintf(buf, mc_fmt, "",
                 visctrl(get_menu_cmd_key(MENU_FIRST_PAGE)),
-                "First page");
+                "Первая стр.");
         putstr(win, 0, buf);
         Sprintf(buf, mc_fmt, "",
                 visctrl(get_menu_cmd_key(MENU_LAST_PAGE)),
-                "Last page");
+                "Последняя стр.");
         putstr(win, 0, buf);
         if (has_menu_shift) {
-            Sprintf(buf, mc_fmt, "Pan view",
+            Sprintf(buf, mc_fmt, "Сдвиг",
                     visctrl(get_menu_cmd_key(MENU_SHIFT_RIGHT)),
-                    "Right (perm_invent only)");
+                    "Вправо (только perm_invent)");
             putstr(win, 0, buf);
             Sprintf(buf, mc_fmt, "",
                     visctrl(get_menu_cmd_key(MENU_SHIFT_LEFT)),
-                    "Left");
+                    "Влево");
             putstr(win, 0, buf);
         }
         putstr(win, 0, "");
-        Sprintf(buf, mc_fmt, "Search",
+        Sprintf(buf, mc_fmt, "Поиск",
                 visctrl(get_menu_cmd_key(MENU_SEARCH)),
-                "Exter a target string and invert all matching entries");
+                "Ввести строку и обратить выбор совпадающих");
         putstr(win, 0, buf);
         /* separator before hardcoded */
         putstr(win, 0, "");
         fmt = "%9s  %-8s %s";
-        arg = "Other "; /* prefix for first hardcoded[] entry, then reset */
+        arg = "Прочее "; /* prefix for first hardcoded[] entry, then reset */
     }
     for (xcp = hardcoded; xcp->key; ++xcp) {
         Sprintf(buf, fmt, arg, xcp->key, xcp->desc);
@@ -9508,14 +9508,14 @@ dotogglepickup(void)
     flags.pickup = !flags.pickup;
     if (flags.pickup) {
         oc_to_str(flags.pickup_types, ocl);
-        Sprintf(buf, "ON, for %s objects%s", ocl[0] ? ocl : "all",
+        Sprintf(buf, "ВКЛ. для предметов: %s%s", ocl[0] ? ocl : "все",
                 (ga.apelist)
                     ? ((count_apes() == 1)
-                           ? ", with one exception"
-                           : ", with some exceptions")
+                           ? ", с одним исключением"
+                           : ", с исключениями")
                     : "");
     } else {
-        Strcpy(buf, "OFF");
+        Strcpy(buf, "ВЫКЛ.");
     }
     pline("Автоподбор: %s.", buf);
     return ECMD_OK;
@@ -9548,8 +9548,8 @@ int
 add_autopickup_exception(const char *mapping)
 {
     static const char
-        APE_regex_error[] = "regex error in AUTOPICKUP_EXCEPTION",
-        APE_syntax_error[] = "syntax error in AUTOPICKUP_EXCEPTION";
+        APE_regex_error[] = "ошибка регулярного выражения в AUTOPICKUP_EXCEPTION",
+        APE_syntax_error[] = "синтаксическая ошибка в AUTOPICKUP_EXCEPTION";
 
     struct autopickup_exception *ape;
     char text[256], end;
@@ -10344,7 +10344,7 @@ wc_set_window_colors(char *op)
                 }
                 if (wcolors_opt[j] != 0) {
                     config_error_add(
-                       "windowcolors for %s windows specified multiple times",
+                       "windowcolors для окон %s указан несколько раз",
                                      wcnames[j]);
                 }
                 wcolors_opt[j]++;
@@ -10352,7 +10352,7 @@ wc_set_window_colors(char *op)
             }
         }
         if (j == WC_COUNT) {
-            config_error_add("windowcolors for unrecognized window type: %s",
+            config_error_add("windowcolors для неизвестного типа окна: %s",
                              wn);
         }
     }
@@ -10417,7 +10417,7 @@ enhance_menu_text(
 #if 0 /*#ifdef TTY_PERM_INVENT*/
     if (bool_p == &iflags.perm_invent && WINDOWPORT(tty)) {
         if (thisopt->setwhere == set_gameview)
-            Snprintf(eos(buf), availsz, " *terminal size is too small");
+            Snprintf(eos(buf), availsz, " *терминал слишком мал");
     }
 #else
     nhUse(availsz);
