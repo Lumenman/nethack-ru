@@ -1432,8 +1432,8 @@ spelleffects(int spell_otyp, boolean atme, boolean force)
                     if (!u.dx && !u.dy && !u.dz) {
                         if ((damage = zapyourself(pseudo, TRUE)) != 0) {
                             char buf[BUFSZ];
-                            Sprintf(buf, "%s поразили себя заклинанием",
-                                    uhim());
+                            Sprintf(buf, "поразил%s себя заклинанием",
+                                    flags.female ? "а" : "");
                             losehp(damage, buf, NO_KILLER_PREFIX);
                         }
                     } else {
@@ -1506,7 +1506,7 @@ spelleffects(int spell_otyp, boolean atme, boolean force)
                 if ((damage = zapyourself(pseudo, TRUE)) != 0) {
                     char buf[BUFSZ];
 
-                    Sprintf(buf, "%s поразили себя заклинанием", uhim());
+                    Sprintf(buf, "поразил%s себя заклинанием", flags.female ? "а" : "");
                     if (physical_damage)
                         damage = Maybe_Half_Phys(damage);
                     losehp(damage, buf, NO_KILLER_PREFIX);

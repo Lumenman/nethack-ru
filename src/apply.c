@@ -2676,7 +2676,7 @@ touchstone_ok(struct obj *obj)
 staticfn int
 use_stone(struct obj *tstone)
 {
-    static const char scritch[] = "\"scritch, scritch\"";
+    static const char scritch[] = "\"шкр€б, шкр€б\"";
     struct obj *obj;
     boolean do_scratch;
     const char *streak_color;

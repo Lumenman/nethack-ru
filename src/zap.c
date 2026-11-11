@@ -2658,8 +2658,8 @@ dozap(void)
         if ((damage = zapyourself(obj, TRUE)) != 0) {
             char buf[BUFSZ];
 
-            Sprintf(buf, "выстрелил %sв себя из %s",
-                    uhim(), killer_xname(obj));
+            Sprintf(buf, "выстрелил%s в себя (%s)",
+                    flags.female ? "а" : "", killer_xname(obj));
             losehp(Maybe_Half_Phys(damage), buf, NO_KILLER_PREFIX);
         }
     } else {
@@ -2891,7 +2891,8 @@ zapyourself(struct obj *obj, boolean ordinary)
             break;
         }
         learn_it = TRUE;
-        Sprintf(svk.killer.name, "выстрелил %sв себя из луча смерти", uhim());
+        Sprintf(svk.killer.name, "выстрелил%s в себя лучом смерти",
+                flags.female ? "а" : "");
         svk.killer.format = NO_KILLER_PREFIX;
         /* probably don't need these to be urgent; player just gave input
            without subsequent opportunity to dismiss --More-- with ESC */
@@ -3047,8 +3048,10 @@ lightdamage(
         how = (obj->oclass == SPBOOK_CLASS) ? "заклинание света"
               : (!obj->oartifact) ? ansimpleoname(obj)
                 : bare_artifactname(obj);
-        Sprintf(buf, "%s %s выстрелил в себя из %s", ordinary ? "поразили" : "взрывом",
-                uhim(), how);
+        Sprintf(buf, "%s себя: %s",
+                ordinary ? (flags.female ? "поразила" : "поразил")
+                         : (flags.female ? "взорвала" : "взорвал"),
+                how);
         /* might rehumanize(); could be fatal, but only for Unchanging */
         losehp(Maybe_Half_Phys(dmg), buf, NO_KILLER_PREFIX);
     }
@@ -4580,7 +4583,8 @@ zhitu(
             /* FIXME: "zapped by herself" is suitable for a rebound;
                "zapped at herself" would be better if player explicitly
                targeted hero */
-            Sprintf(kbuf, "%s %s сам себя (%s)", fltxt, verb, uhim());
+            Sprintf(kbuf, "%s (собственного)", fltxt);
+            nhUse(verb);
         }
         /* Half_spell_damage protection yields half-damage for wands & spells,
            including hero's own ricochets; breath attacks do full damage */

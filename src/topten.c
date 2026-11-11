@@ -971,8 +971,8 @@ outentry(int rank, struct toptenentry *t1, boolean so)
     else
         Strcat(linebuf, " ");
     if (!strncmp("escaped", t1->death, 7)) {
-        Sprintf(eos(linebuf), "сбежал%s из подземелья %s[макс. уровень %d]",
-                fem ? "а" : "",
+        Sprintf(eos(linebuf), "%s из подземелья %s[макс. уровень %d]",
+                fem ? "сбежала" : "сбежал",
                 !strncmp(" (", t1->death + 7, 2) ? t1->death + 7 + 2 : "",
                 t1->maxlvl);
         /* fixup for closing paren in "escaped... with...Amulet)[max..." */
@@ -986,7 +986,7 @@ outentry(int rank, struct toptenentry *t1, boolean so)
     } else {
         /* RU: t1->death starts with a Russian killed_by_prefix[] */
         if (!strncmp(t1->death, "quit", 4)) {
-            Sprintf(eos(linebuf), "вышел%s из игры", fem ? "а" : "");
+            Strcat(linebuf, fem ? "вышла из игры" : "вышел из игры");
             second_line = FALSE;
         } else if (!strncmp(t1->death, "умер от голода", 14)
                    || !strncmp(t1->death, "умер от истощ", 13)) {

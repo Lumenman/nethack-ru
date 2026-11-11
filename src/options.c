@@ -2621,7 +2621,7 @@ optfn_number_pad(
     }
     if (req == get_val || req == get_cnf_val) {
         static const char *const numpadmodes[] = {
-            "0=off", "1=on", "2=вкл., совместимо с MSDOS",
+            "0=выкл.", "1=вкл.", "2=вкл., совместимо с MSDOS",
             "3=вкл., раскладка как у телефона",
             "4=вкл., телефонная, совместимо с MSDOS",
             "-1=выкл., y и z переставлены", /*[5]*/

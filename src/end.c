@@ -1420,12 +1420,12 @@ really_done(int how)
         /* don't bother counting to see whether it should be plural */
     }
 
-    Sprintf(pbuf, "%s %s the %s...", Goodbye(), svp.plname,
+    Sprintf(pbuf, "%s, %s-%s...", Goodbye(), svp.plname,
             (how != ASCENDED)
                 ? (const char *) ((flags.female && gu.urole.name.f)
                     ? gu.urole.name.f
                     : gu.urole.name.m)
-                : (const char *) (flags.female ? "Demigoddess" : "Demigod"));
+                : (const char *) (flags.female ? "полубогиня" : "полубог"));
     dump_forward_putstr(endwin, 0, pbuf, done_stopprint);
     dump_forward_putstr(endwin, 0, "", done_stopprint);
 
@@ -1455,10 +1455,10 @@ really_done(int how)
 
         gv.viz_array[0][0] |= IN_SIGHT; /* need visibility for naming */
         mtmp = gm.mydogs;
-        Strcpy(pbuf, "You");
+        Strcpy(pbuf, "Вы");
         if (mtmp || Schroedingers_cat) {
             while (mtmp) {
-                Sprintf(eos(pbuf), " and %s", mon_nam(mtmp));
+                Sprintf(eos(pbuf), " и %s", mon_nam(mtmp));
                 if (mtmp->mtame)
                     u.urexp = nowrap_add(u.urexp, mtmp->mhp);
                 mtmp = mtmp->nmon;
@@ -1470,7 +1470,7 @@ really_done(int how)
 
                 mhp = d(m_lev, 8);
                 u.urexp = nowrap_add(u.urexp, mhp);
-                Strcat(eos(pbuf), " and Schroedinger's cat");
+                Strcat(eos(pbuf), " и кот Шрёдингера");
             }
             dump_forward_putstr(endwin, 0, pbuf, done_stopprint);
             pbuf[0] = '\0';
@@ -1478,8 +1478,8 @@ really_done(int how)
             Strcat(pbuf, " ");
         }
         Sprintf(eos(pbuf), "%s с %ld очками,",
-                (how == ASCENDED) ? "отправился к награде"
-                                  : "сбежал из подземелья",
+                (how == ASCENDED) ? "отправились к награде"
+                                  : "сбежали из подземелья",
                 u.urexp);
         dump_forward_putstr(endwin, 0, pbuf, done_stopprint);
 
@@ -1535,23 +1535,24 @@ really_done(int how)
             const char *where = svd.dungeons[u.uz.dnum].dname;
 
             if (Is_astralevel(&u.uz))
-                where = "The Astral Plane";
-            Sprintf(pbuf, "Вы %s в %s", ends[how], where);
+                where = "Астральный План";
+            Sprintf(pbuf, "Вы %s (%s", ends[how], where);
             if (!In_endgame(&u.uz) && !single_level_branch(&u.uz))
-                Sprintf(eos(pbuf), " on dungeon level %d",
+                Sprintf(eos(pbuf), ", уровень %d",
                         In_quest(&u.uz) ? dunlev(&u.uz) : depth(&u.uz));
         }
 
-        Sprintf(eos(pbuf), " with %ld point%s,", u.urexp, plur(u.urexp));
+        if (!(u.uz.dnum == 0 && u.uz.dlevel <= 0))
+            Strcat(pbuf, ")"); /* RU: close "(<dungeon>, уровень N" */
+        Sprintf(eos(pbuf), ", очков: %ld,", u.urexp);
         dump_forward_putstr(endwin, 0, pbuf, done_stopprint);
     }
 
-    Sprintf(pbuf, "and %ld piece%s of gold, after %ld move%s.", umoney,
-            plur(umoney), svm.moves, plur(svm.moves));
+    Sprintf(pbuf, "золота: %ld, ходов: %ld.", umoney, svm.moves);
     dump_forward_putstr(endwin, 0, pbuf, done_stopprint);
     Sprintf(pbuf,
-            "Вы были на уровне %d с максимумом %d очков здоровья%s, когда вы %s.",
-            u.ulevel, u.uhpmax, plur(u.uhpmax), ends[how]);
+            "Вы были на уровне опыта %d, максимум здоровья — %d, когда %s.",
+            u.ulevel, u.uhpmax, ends[how]);
     dump_forward_putstr(endwin, 0, pbuf, done_stopprint);
     dump_forward_putstr(endwin, 0, "", done_stopprint);
     if (!done_stopprint)
