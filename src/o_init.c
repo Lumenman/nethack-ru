@@ -662,6 +662,11 @@ disco_typename(int otyp)
 {
     char *result = obj_typename(otyp);
 
+    /* RU: original English name once the type is known */
+    if ((objects[otyp].oc_name_known || !OBJ_DESCR(objects[otyp]))
+        && obj_en_name(otyp)
+        && strlen(result) + strlen(obj_en_name(otyp)) + 4 < BUFSZ)
+        Sprintf(eos(result), " [%s]", obj_en_name(otyp));
     if (Role_if(PM_SAMURAI) && Japanese_item_name(otyp, (const char *) 0)) {
         char buf[BUFSZ];
         const char *actualn = (((otyp != MAGIC_HARP && otyp != WOODEN_HARP)
@@ -785,7 +790,7 @@ dodiscovered(void) /* free after Robert Viduya */
     sortindx = strchr(disco_order_let, flags.discosort) - disco_order_let;
 
     tmpwin = create_nhwindow(NHW_TEXT);
-    Sprintf(buf, "Discoveries, %s", disco_orders_descr[sortindx]);
+    Sprintf(buf, "Открытые предметы, %s", disco_orders_descr[sortindx]);
     putstr(tmpwin, 0, buf);
     putstr(tmpwin, 0, "");
 

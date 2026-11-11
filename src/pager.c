@@ -390,6 +390,10 @@ look_at_object(
                      ? distant_name(otmp, otmp->dknown ? doname_with_price
                                                        : doname_vague_quan)
                      : obj_descr[STRANGE_OBJECT].oc_name);
+        /* RU: original name, for looking the item up elsewhere */
+        if (obj_en_known(otmp) && obj_en_name(otmp->otyp))
+            Snprintf(eos(buf), BUFSZ - strlen(buf), " [%s]",
+                     obj_en_name(otmp->otyp));
         if (fakeobj) {
             otmp->where = OBJ_FREE; /* object_from_map set it to OBJ_FLOOR */
             dealloc_obj(otmp), otmp = NULL; /* has no contents */
@@ -903,6 +907,27 @@ checkfile(
     else
         dbase_str = strcpy(newstr, inp);
     (void) lcase(dbase_str);
+    /* RU: data.base is English; prefer the original name that lookat()
+       appends in brackets ("длинный меч [long sword]") */
+    {
+        char *lb = strrchr(dbase_str, '['), *rb;
+
+        if (lb && (rb = strchr(lb, ']')) != 0 && rb > lb + 1) {
+            *rb = '\0';
+            dbase_str = lb + 1;
+        } else if (*dbase_str & 0x80) {
+            /* a typed Russian object name: look up its English name */
+            int i;
+
+            for (i = 0; i < NUM_OBJECTS; i++)
+                if (OBJ_NAME(objects[i]) && obj_en_name(i)
+                    && !strcmpi(dbase_str, OBJ_NAME(objects[i]))) {
+                    Strcpy(newstr, obj_en_name(i));
+                    dbase_str = lcase(newstr);
+                    break;
+                }
+        }
+    }
 
     /*
      * TODO:
@@ -1706,7 +1731,7 @@ add_quoted_engraving(
 }
 
 /* also used by getpos hack in getpos.c */
-const char what_is_a_location[] = "монстра, предмет или место";
+const char what_is_a_location[] = "монстр, предмет или место";
 
 int
 do_look(int mode, coord *click_cc)
@@ -1941,10 +1966,10 @@ do_look(int mode, coord *click_cc)
         if (from_screen || clicklook) {
             if (from_screen) {
                 if (flags.verbose)
-                    pline("Пожалуйста, переместите курсор к %s.",
+                    pline("Пожалуйста, переместите курсор (%s).",
                           what_is_a_location);
                 else
-                    pline("Выберите %s.", what_is_a_location);
+                    pline("Выберите: %s.", what_is_a_location);
 
                 ans = getpos(&cc, quick, what_is_a_location);
                 if (ans < 0 || cc.x < 0)

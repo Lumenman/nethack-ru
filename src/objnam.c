@@ -4066,6 +4066,51 @@ ru_is_objname(const char *str)
 #include "objnames_en.h"
 #include "objgen_ru.h"
 
+/* RU: original English name of an object type, as upstream xname() spells
+   it for an identified item ("long sword", "wand of fire"), or Null;
+   shown next to the Russian name so that players can look items up */
+const char *
+obj_en_name(int otyp)
+{
+    static char buf[BUFSZ];
+    const char *cls = 0;
+    int k;
+
+    for (k = 0; k < SIZE(obj_en_names); k++)
+        if (obj_en_names[k].otyp == otyp)
+            break;
+    if (k == SIZE(obj_en_names))
+        return (const char *) 0;
+    switch (objects[otyp].oc_class) {
+    case WAND_CLASS: cls = "wand"; break;
+    case POTION_CLASS: cls = "potion"; break;
+    case SCROLL_CLASS: cls = (otyp == SCR_MAIL) ? 0 : "scroll"; break;
+    case RING_CLASS: cls = "ring"; break;
+    case SPBOOK_CLASS:
+        cls = (otyp == SPE_NOVEL || otyp == SPE_BOOK_OF_THE_DEAD)
+                  ? 0 : "spellbook";
+        break;
+    default: break;
+    }
+    if (cls)
+        Snprintf(buf, sizeof buf, "%s of %s", cls, obj_en_names[k].en);
+    else
+        Strcpy(buf, obj_en_names[k].en);
+    return buf;
+}
+
+/* RU: may the English name be shown for this object without telling the
+   player more than the Russian name does?  Only once its type is known */
+boolean
+obj_en_known(struct obj *obj)
+{
+    int otyp = obj->otyp;
+
+    return (boolean) (obj->dknown && otyp != STRANGE_OBJECT
+                      && (objects[otyp].oc_name_known
+                          || !OBJ_DESCR(objects[otyp])));
+}
+
 /* RU: name of an object of class 'oc' given after a class word, either in
    the nominative ("жезл огонь") or the genitive ("жезл огня"); returns the
    canonical (nominative) name or Null if there is no such object */

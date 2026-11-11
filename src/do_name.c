@@ -219,7 +219,7 @@ do_mgivenname(void)
     }
     cc.x = u.ux;
     cc.y = u.uy;
-    if (getpos(&cc, FALSE, "монстра, которого хотите назвать") < 0
+    if (getpos(&cc, FALSE, "монстр, которого хотите назвать") < 0
         || !isok(cc.x, cc.y))
         return;
     cx = cc.x, cy = cc.y;

@@ -173,7 +173,7 @@ getpos_help(boolean force, const char *goal)
     winid tmpwin = create_nhwindow(NHW_MENU);
 
     Sprintf(sbuf,
-            "Используйте '%s', '%s', '%s', '%s', чтобы переместить курсор на %s.", /* hjkl */
+            "Используйте '%s', '%s', '%s', '%s', чтобы двигать курсор (%s).", /* hjkl */
             visctrl(cmd_from_func(do_move_west)),
             visctrl(cmd_from_func(do_move_south)),
             visctrl(cmd_from_func(do_move_north)),
@@ -858,7 +858,7 @@ getpos(coord *ccp, boolean force, const char *goal)
     lock_mouse_buttons(TRUE);
     for (;;) {
         if (show_goal_msg) {
-            pline("Переместите курсор к %s:", goal);
+            pline("Переместите курсор (%s):", goal);
             curs(WIN_MAP, cx, cy);
             flush_screen(0);
             show_goal_msg = FALSE;
