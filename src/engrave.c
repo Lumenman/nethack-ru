@@ -1407,22 +1407,22 @@ engrave(void)
 
     switch (svc.context.engraving.type) {
     default:
-        finishverb = "твою странную надпись";
+        finishverb = "свою странную надпись";
         break;
     case DUST:
-        finishverb = is_ice(u.ux, u.uy) ? "писание в инее"
-                     : "писание в пыли";
+        finishverb = is_ice(u.ux, u.uy) ? "писать в инее"
+                     : "писать в пыли";
         break;
     case HEADSTONE:
     case ENGRAVE:
         finishverb = "гравировку";
         break;
     case BURN:
-        finishverb = is_ice(u.ux, u.uy) ? "вплавление твоего послания в лёд"
-                     : "выжигание твоего послания в пол";
+        finishverb = is_ice(u.ux, u.uy) ? "вплавлять послание в лёд"
+                     : "выжигать послание на полу";
         break;
     case MARK:
-        finishverb = "портит подземелье";
+        finishverb = "портить подземелье";
         break;
     case ENGR_BLOOD:
         finishverb = "царапать";
@@ -1478,7 +1478,7 @@ engrave(void)
             You("больше не можете писать.");
         } else if (!firsttime) {
             /* only print this if engraving took multiple actions */
-            You("finish %s.", finishverb);
+            You("заканчиваете %s.", finishverb);
         }
         svc.context.engraving.text[0] = '\0';
         svc.context.engraving.nextc = (char *) 0;

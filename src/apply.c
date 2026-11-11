@@ -2183,7 +2183,7 @@ use_tinning_kit(struct obj *obj)
         You("похоже, у вас кончились консервные банки.");
         return;
     }
-    if (!(corpse = floorfood("tin", 2)))
+    if (!(corpse = floorfood("законсервировать", 2)))
         return;
     if (corpse->oeaten) {
         You("не можете законсервировать %s, который частично съеден.", something);

@@ -3502,10 +3502,9 @@ xkilled(
 
         You("%s %s!",
             nonliving(mtmp->data) ? "уничтожаете" : "убиваете",
-            !(wasinside || canspotmon(mtmp)) ? "it"
-              : !mtmp->mtame ? mon_nam(mtmp)
-                : x_monnam(mtmp, namedpet ? ARTICLE_NONE : ARTICLE_THE,
-                           "poor", namedpet ? SUPPRESS_SADDLE : 0, FALSE));
+            !(wasinside || canspotmon(mtmp)) ? "его"
+              : mon_gen(mtmp, BP_ACC));
+        nhUse(namedpet);
     }
 
     if (mtmp->mtrapped && (t = t_at(x, y)) != 0 && is_pit(t->ttyp)) {

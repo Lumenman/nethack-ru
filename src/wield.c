@@ -362,7 +362,7 @@ dowield(void)
     /* May we attempt this? */
     gm.multi = 0;
     if (cantwield(gy.youmonst.data)) {
-        pline("Не говори глупостей!");
+        pline("Не говорите глупостей!");
         return ECMD_FAIL;
     }
     /* Keep going even if inventory is completely empty, since wielding '-'
@@ -467,7 +467,7 @@ doswapweapon(void)
     /* May we attempt this? */
     gm.multi = 0;
     if (cantwield(gy.youmonst.data)) {
-        pline("Не говори глупостей!");
+        pline("Не говорите глупостей!");
         return ECMD_FAIL;
     }
     if (welded(uwep)) {

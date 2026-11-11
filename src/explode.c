@@ -507,7 +507,7 @@ explode(
                 } else if (cansee(xx, yy)) {
                     if (mtmp->m_ap_type)
                         seemimic(mtmp);
-                    pline("%s попал в %s!", Monnam(mtmp), str);
+                    pline("%s попадает в %s!", Monnam(mtmp), str);
                 }
 
                 itemdmg = destroy_items(mtmp, (int) adtyp, dam);
