@@ -313,6 +313,9 @@ convert_arg(char c)
     case 'x':
         str = Blind ? "чувствуешь" : "видишь";
         break;
+    case 'X': /* RU: same for narration, which addresses the player as "вы" */
+        str = Blind ? "чувствуете" : "видите";
+        break;
     case 'e': /* RU: past-tense/short-adjective ending by hero's gender */
         str = flags.female ? "а" : "";
         break;
