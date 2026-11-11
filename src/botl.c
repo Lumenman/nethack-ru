@@ -178,38 +178,38 @@ do_statusline2(void)
      * unusual for more than one of them to apply at a time.]
      */
     if (Stoned)
-        Strcpy(nb = eos(nb), " Stone");
+        Strcpy(nb = eos(nb), " Камень");
     if (Slimed)
-        Strcpy(nb = eos(nb), " Slime");
+        Strcpy(nb = eos(nb), " Слизь");
     if (Strangled)
-        Strcpy(nb = eos(nb), " Strngl");
+        Strcpy(nb = eos(nb), " Удушье");
     if (Sick) {
         if (u.usick_type & SICK_VOMITABLE)
-            Strcpy(nb = eos(nb), " FoodPois");
+            Strcpy(nb = eos(nb), " Отравлен");
         if (u.usick_type & SICK_NONVOMITABLE)
-            Strcpy(nb = eos(nb), " TermIll");
+            Strcpy(nb = eos(nb), " Болезнь");
     }
     if (u.uhs != NOT_HUNGRY)
         Sprintf(nb = eos(nb), " %s", hu_stat[u.uhs]);
     if ((cap = near_capacity()) > UNENCUMBERED)
         Sprintf(nb = eos(nb), " %s", enc_stat_ru[cap]);
     if (Blind)
-        Strcpy(nb = eos(nb), " Blind");
+        Strcpy(nb = eos(nb), " Слеп");
     if (Deaf)
-        Strcpy(nb = eos(nb), " Deaf");
+        Strcpy(nb = eos(nb), " Глух");
     if (Stunned)
-        Strcpy(nb = eos(nb), " Stun");
+        Strcpy(nb = eos(nb), " Оглуш");
     if (Confusion)
-        Strcpy(nb = eos(nb), " Conf");
+        Strcpy(nb = eos(nb), " Смятен");
     if (Hallucination)
-        Strcpy(nb = eos(nb), " Hallu");
+        Strcpy(nb = eos(nb), " Галлюц");
     /* levitation and flying are mutually exclusive; riding is not */
     if (Levitation)
-        Strcpy(nb = eos(nb), " Lev");
+        Strcpy(nb = eos(nb), " Парит");
     if (Flying)
-        Strcpy(nb = eos(nb), " Fly");
+        Strcpy(nb = eos(nb), " Летит");
     if (u.usteed)
-        Strcpy(nb = eos(nb), " Ride");
+        Strcpy(nb = eos(nb), " Верхом");
     cln = strlen(cond);
 
     /* version on status line, with leading space */
@@ -493,17 +493,17 @@ weapon_status(char *outbuf)
     if (!uwep) {
         /* no weapon; gloves imply hands; humanoid also implies hands;
            otherwise make no assumptions */
-        res = uarmg ? "Empty-hnd" /* empty handed means "gloves only" */
-              : humanoid(gy.youmonst.data) ? "Bare-hnds" /* bare hands */
-                : "No-weapon";
+        res = uarmg ? "Пустые-руки" /* empty handed means "gloves only" */
+              : humanoid(gy.youmonst.data) ? "Голые-руки" /* bare hands */
+                : "Без-оружия";
     } else if (u.twoweap) {
         /* two-weaponing implies hands and a weapon or wep-tool
            (not other odd stuff) in each hand */
-        res = "Dual-weps";
+        res = "Два-оружия";
         /* note: dual wielding two lances doesn't produce double joust */
         if (u.usteed && (weapon_type(uwep) == P_LANCE
                          || weapon_type(uswapwep) == P_LANCE))
-            res = "Dual+joust"; /* lance behaves specially when mounted */
+            res = "Два+таран"; /* lance behaves specially when mounted */
     } else {
         /* report most weapons by their skill class (so a katana will be
            described as a long sword, for instance; mattock and hook are
@@ -513,44 +513,44 @@ weapon_status(char *outbuf)
 
         if (u.usteed && skill == P_LANCE) {
             /* lance behaves specially when hero is mounted */
-            res = "joust";
+            res = "таран";
         } else if (uwep->otyp == AKLYS) {
             /* aklys behaves specially when thrown while wielded, so
                give it a distinct name instead of skill name of "club";
                [maybe FIXME?] for the time being
                use real name even if 'obj' is undiscovered "thonged club" */
-            res = "aklys";
+            res = "аклис";
         } else if (is_sword(uwep)) {
             /* simplify short short/broad sword/long sword/two-handed sword
                (similar to messages when dropped due to slippery fingers) */
-            res = "sword";
+            res = "меч";
         } else {
             /* shorten several */
             switch (skill) {
             case P_QUARTERSTAFF:
-                res = "staff";
+                res = "посох";
                 break;
             case P_MORNING_STAR:
-                res = "mrng-star"; /* still pretty long */
+                res = "моргенштерн"; /* still pretty long */
                 break;
             case P_POLEARMS:
-                res = "pole";
+                res = "древковое";
                 break;
             case P_UNICORN_HORN:
-                res = "unihorn";
+                res = "рог";
                 break;
             default:
                 res = weapon_descr(uwep);
                 /* [should this be moved into weapon_descr()?] */
-                if (!strcmpi(res, "food") && uwep->otyp == CREAM_PIE)
-                    res = "pie";
+                if (uwep->otyp == CREAM_PIE) /* class name would be "еда" */
+                    res = "пирог";
                 break;
             }
         }
 
         if ((uwep->oclass == WEAPON_CLASS || is_weptool(uwep))
-            && bimanual(uwep) && *res != '2' && strncmpi(res, "two", 3))
-            Strcat(outbuf, "2H-");
+            && bimanual(uwep) && *res != '2' && strncmpi(res, "дву", 3))
+            Strcat(outbuf, "2Р-");
         Strcpy(p = eos(outbuf), res), res = outbuf;
         *p = highc(*p);
         /* avoid embedded spaces since its designed to appear as part
@@ -787,36 +787,70 @@ static const struct condmap condition_aliases[] = {
 /* condition names and their abbreviations are used by windowport code */
 const struct conditions_t conditions[] = {
     /* ranking, mask, identifier, txt1, txt2, txt3 */
-    { 20, BL_MASK_BAREH,     bl_bareh,     { "Bare",     "Bar",   "Bh"  } },
-    { 10, BL_MASK_BLIND,     bl_blind,     { "Blind",    "Blnd",  "Bl"  } },
-    { 20, BL_MASK_BUSY,      bl_busy,      { "Busy",     "Bsy",   "By"  } },
-    { 10, BL_MASK_CONF,      bl_conf,      { "Conf",     "Cnf",   "Cf"  } },
-    { 10, BL_MASK_DEAF,      bl_deaf,      { "Deaf",     "Def",   "Df"  } },
-    { 15, BL_MASK_ELF_IRON,  bl_elf_iron,  { "Iron",     "Irn",   "Fe"  } },
-    { 10, BL_MASK_FLY,       bl_fly,       { "Fly",      "Fly",   "Fl"  } },
-    {  6, BL_MASK_FOODPOIS,  bl_foodpois,  { "FoodPois", "Fpois", "Poi" } },
-    { 20, BL_MASK_GLOWHANDS, bl_glowhands, { "Glow",     "Glo",   "Gl"  } },
-    {  2, BL_MASK_GRAB,      bl_grab,      { "Grab",     "Grb",   "Gr"  } },
-    { 10, BL_MASK_HALLU,     bl_hallu,     { "Hallu",    "Hal",   "Hl"  } },
-    { 20, BL_MASK_HELD,      bl_held,      { "Held",     "Hld",   "Hd"  } },
-    { 20, BL_MASK_ICY,       bl_icy,       { "Icy",      "Icy",   "Ic"  } },
-    {  8, BL_MASK_INLAVA,    bl_inlava,    { "InLava",   "Lav",   "La"  } },
-    { 10, BL_MASK_LEV,       bl_lev,       { "Lev",      "Lev",   "Lv"  } },
-    { 20, BL_MASK_PARLYZ,    bl_parlyz,    { "Parlyz",   "Para",  "Par" } },
-    { 10, BL_MASK_RIDE,      bl_ride,      { "Ride",     "Rid",   "Rd"  } },
-    { 20, BL_MASK_SLEEPING,  bl_sleeping,  { "Zzz",      "Zzz",   "Zz"  } },
-    {  6, BL_MASK_SLIME,     bl_slime,     { "Slime",    "Slim",  "Slm" } },
-    { 20, BL_MASK_SLIPPERY,  bl_slippery,  { "Slip",     "Slp",   "Sl"  } },
-    {  6, BL_MASK_STONE,     bl_stone,     { "Stone",    "Ston",  "Sto" } },
-    {  4, BL_MASK_STRNGL,    bl_strngl,    { "Strngl",   "Stngl", "Str" } },
-    { 10, BL_MASK_STUN,      bl_stun,      { "Stun",     "Stun",  "St"  } },
-    { 15, BL_MASK_SUBMERGED, bl_submerged, { "Submrg",   "Subm",  "Sm"  } },
-    {  6, BL_MASK_TERMILL,   bl_termill,   { "TermIll",  "Ill",   "Ill" } },
-    { 20, BL_MASK_TETHERED,  bl_tethered,  { "Teth",     "Tth",   "Te"  } },
-    { 20, BL_MASK_TRAPPED,   bl_trapped,   { "Trap",     "Trp",   "Tr"  } },
-    { 20, BL_MASK_UNCONSC,   bl_unconsc,   { "Out",      "Out",   "KO"  } },
-    { 20, BL_MASK_WOUNDEDL,  bl_woundedl,  { "WLegs",    "Leg",   "Lg"  } },
-    { 20, BL_MASK_HOLDING,   bl_holding,   { "UHold",    "UHld",  "UHd" } },
+    { 20, BL_MASK_BAREH,      bl_bareh,     { "Голоруч", "Голр", "Гр" } },
+    { 10, BL_MASK_BLIND,      bl_blind,     { "Слеп", "Слеп", "Сл" } },
+    { 20, BL_MASK_BUSY,       bl_busy,      { "Занят", "Зан", "Зн" } },
+    { 10, BL_MASK_CONF,       bl_conf,      { "Смятен", "Смят", "См" } },
+    { 10, BL_MASK_DEAF,       bl_deaf,      { "Глух", "Глух", "Гл" } },
+    { 15, BL_MASK_ELF_IRON,   bl_elf_iron,  { "Железо", "Жел", "Fe" } },
+    { 10, BL_MASK_FLY,        bl_fly,       { "Летит", "Лет", "Лт" } },
+    {  6, BL_MASK_FOODPOIS,   bl_foodpois,  { "Отравлен", "Отрав", "Отр" } },
+    { 20, BL_MASK_GLOWHANDS,  bl_glowhands, { "Свечение", "Свеч", "Св" } },
+    {  2, BL_MASK_GRAB,       bl_grab,      { "Схвачен", "Схв", "Сх" } },
+    { 10, BL_MASK_HALLU,      bl_hallu,     { "Галлюц", "Галл", "Гал" } },
+    { 20, BL_MASK_HELD,       bl_held,      { "Держат", "Держ", "Дж" } },
+    { 20, BL_MASK_ICY,        bl_icy,       { "Лёд", "Лёд", "Лд" } },
+    {  8, BL_MASK_INLAVA,     bl_inlava,    { "ВЛаве", "Лава", "Ла" } },
+    { 10, BL_MASK_LEV,        bl_lev,       { "Парит", "Пар", "Пр" } },
+    { 20, BL_MASK_PARLYZ,     bl_parlyz,    { "Паралич", "Парал", "Пал" } },
+    { 10, BL_MASK_RIDE,       bl_ride,      { "Верхом", "Верх", "Вх" } },
+    { 20, BL_MASK_SLEEPING,   bl_sleeping,  { "Сон", "Сон", "Сн" } },
+    {  6, BL_MASK_SLIME,      bl_slime,     { "Слизь", "Слиз", "Слз" } },
+    { 20, BL_MASK_SLIPPERY,   bl_slippery,  { "Скольз", "Скл", "Ск" } },
+    {  6, BL_MASK_STONE,      bl_stone,     { "Камень", "Камн", "Кам" } },
+    {  4, BL_MASK_STRNGL,     bl_strngl,    { "Удушье", "Удуш", "Удш" } },
+    { 10, BL_MASK_STUN,       bl_stun,      { "Оглуш", "Огл", "Ог" } },
+    { 15, BL_MASK_SUBMERGED,  bl_submerged, { "ПодВодой", "ПодВ", "Пв" } },
+    {  6, BL_MASK_TERMILL,    bl_termill,   { "Болезнь", "Болзн", "Бол" } },
+    { 20, BL_MASK_TETHERED,   bl_tethered,  { "Привязан", "Прив", "Пя" } },
+    { 20, BL_MASK_TRAPPED,    bl_trapped,   { "Ловушка", "Лов", "Лв" } },
+    { 20, BL_MASK_UNCONSC,    bl_unconsc,   { "БезСозн", "Бесс", "Бс" } },
+    { 20, BL_MASK_WOUNDEDL,   bl_woundedl,  { "Ноги", "Ноги", "Нг" } },
+    { 20, BL_MASK_HOLDING,    bl_holding,   { "Удерж", "Удрж", "Уд" } },
+};
+/* RU: English names of conditions[] (same order), still accepted by the
+   hilite_status parser so existing config files keep working */
+static const char *const condition_names_en[] = {
+    "Bare",
+    "Blind",
+    "Busy",
+    "Conf",
+    "Deaf",
+    "Iron",
+    "Fly",
+    "FoodPois",
+    "Glow",
+    "Grab",
+    "Hallu",
+    "Held",
+    "Icy",
+    "InLava",
+    "Lev",
+    "Parlyz",
+    "Ride",
+    "Zzz",
+    "Slime",
+    "Slip",
+    "Stone",
+    "Strngl",
+    "Stun",
+    "Submrg",
+    "TermIll",
+    "Teth",
+    "Trap",
+    "Out",
+    "WLegs",
+    "UHold",
 };
 
 /* [perhaps these should all be opt_out with default of 'in';
@@ -858,7 +892,7 @@ struct condtests_t condtests[CONDITION_COUNT] = {
 /* condition indexing */
 int cond_idx[CONDITION_COUNT] = { 0 };
 
-static const char c_Wall[] = "Wall";
+static const char c_Wall[] = "Стена";
 /*
  *  Terrain descriptions for flags.terrainstatus; simplified from
  *  def_syms[].name and indexed by iflags.terrain_typ; should be
@@ -868,7 +902,7 @@ static const char c_Wall[] = "Wall";
  *  others can only occur when hero has the Passes_walls ability.
  */
 const char *terrain_descr[] = {
-/* 0*/ "Stone",         /* stone */
+/* 0*/ "Камень",         /* stone */
        c_Wall,          /* vwall */
        c_Wall,          /* hwall */
        c_Wall,          /* tlcorner */
@@ -880,31 +914,31 @@ const char *terrain_descr[] = {
        c_Wall,          /* tdwall */
 /*10*/ c_Wall,          /* tlwall */
        c_Wall,          /* trwall */
-       "Portcullis",    /* dbwall, closed drawbridge 'door' */
-       "Tree",
+       "Решётка",    /* dbwall, closed drawbridge 'door' */
+       "Дерево",
        c_Wall,          /* sdoor: secret door */
-       "Stone",         /* scorr: secret corridor */
-       "Pool",          /* pool or non-moat water; can be boiled away */
-       "Moat",          /* water that can't be boiled away */
-       "Water",         /* water on Water level; can't be boiled or frozen */
-       "(gap)",         /* drawbridge_up; replaced by whatever is under */
-/*20*/ "Lava",          /* lavapool */
-       "LavaWall",      /* lava that extends to ceiling */
-       "Bars",          /* ironbars */
-       "Doorway",       /* doorless or broken door; diagonal movement is ok */
-       "Corridor",      /* replaced by "Floor" */
-       "Room",          /* also replaced by "Floor" */
-       "Stairs",
-       "Ladder",
-       "Fountain",
-       "Throne",
-/*30*/ "Sink",
-       "Grave",
-       "Altar",
-       "Ice",
-       "Bridge",        /* drawbridge_down, span across moat/ice/lava/floor */
-       "Air",           /* open air on Air level or bubble on Water level */
-       "Cloud",         /* [part of] a cloud or Air level */
+       "Камень",         /* scorr: secret corridor */
+       "Пруд",          /* pool or non-moat water; can be boiled away */
+       "Ров",          /* water that can't be boiled away */
+       "Вода",         /* water on Water level; can't be boiled or frozen */
+       "(проём)",         /* drawbridge_up; replaced by whatever is under */
+/*20*/ "Лава",          /* lavapool */
+       "Стена-лавы",      /* lava that extends to ceiling */
+       "Прутья",          /* ironbars */
+       "Проём",       /* doorless or broken door; diagonal movement is ok */
+       "Коридор",      /* replaced by "Floor" */
+       "Комната",          /* also replaced by "Floor" */
+       "Лестница",
+       "Стремянка",
+       "Фонтан",
+       "Трон",
+/*30*/ "Раковина",
+       "Могила",
+       "Алтарь",
+       "Лёд",
+       "Мост",        /* drawbridge_down, span across moat/ice/lava/floor */
+       "Воздух",           /* open air on Air level or bubble on Water level */
+       "Облако",         /* [part of] a cloud or Air level */
        /*
         */
 /*37*/ "",              /* MAX_TYPE; skipped ratther than overloaded */
@@ -912,14 +946,14 @@ const char *terrain_descr[] = {
        /*
         * additional terrain names that aren't simple levl[][].typ values
         */
-/*39*/ "Floor",         /* substituted for room or corridor */
-/*40*/ "Ground",        /* 'room' on Earth level */
-       "Open-door",     /* open (not broken or doorless) */
-       "Shut-door",     /* closed or locked (or trapped) */
-       "Swamp",         /* Juiblex level */
-       "Submerged",     /* under water */
-       "Sea",           /* moat terrain on Medusa's level: "shallow sea" */
-       "WaterWall",     /* water that extends to the ceiling */
+/*39*/ "Пол",         /* substituted for room or corridor */
+/*40*/ "Земля",        /* 'room' on Earth level */
+       "Откр-дверь",     /* open (not broken or doorless) */
+       "Закр-дверь",     /* closed or locked (or trapped) */
+       "Болото",         /* Juiblex level */
+       "Под-водой",     /* under water */
+       "Море",           /* moat terrain on Medusa's level: "shallow sea" */
+       "Стена-воды",     /* water that extends to the ceiling */
 };
 
 /* cache-related */
@@ -3189,7 +3223,8 @@ match_str2conditionbitmask(const char *str)
     if (str && *str) {
         /* check matches to canonical names */
         for (i = 0; i < SIZE(conditions); i++)
-            if (fuzzymatch(conditions[i].text[0], str, " -_", TRUE)) {
+            if (fuzzymatch(conditions[i].text[0], str, " -_", TRUE)
+                || fuzzymatch(condition_names_en[i], str, " -_", TRUE)) {
                 mask |= conditions[i].mask;
                 nmatches++;
             }
