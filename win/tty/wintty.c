@@ -673,7 +673,7 @@ tty_player_selection(void)
 void
 tty_askname(void)
 {
-    static const char who_are_you[] = "\xCA\xF2\xEE \xF2\xFB? ";
+    static const char who_are_you[] = "\xCA\xF2\xEE \xE2\xFB? "; /* " то вы? " */
     int c, ct, tryct = 0;
 
 #ifdef SELECTSAVED

@@ -373,14 +373,25 @@ You(const char *line, ...)
     va_end(the_args);
 }
 
+/* RU: Your() and pline_The() have no "Your "/"The " prefix in Russian, so
+   the message would start with a lowercase word; format and capitalize */
+staticfn void
+vpline_capitalized(const char *line, va_list the_args)
+{
+    char buf[BUFSZ];
+
+    (void) vsnprintf(buf, sizeof buf, line, the_args);
+    buf[0] = highc(buf[0]);
+    pline("%s", buf);
+}
+
 void
 Your(const char *line, ...)
 {
     va_list the_args;
-    char *tmp;
 
     va_start(the_args, line);
-    vpline(YouMessage(tmp, "", line), the_args);
+    vpline_capitalized(line, the_args);
     va_end(the_args);
 }
 
@@ -414,10 +425,9 @@ void
 pline_The(const char *line, ...)
 {
     va_list the_args;
-    char *tmp;
 
     va_start(the_args, line);
-    vpline(YouMessage(tmp, "", line), the_args);
+    vpline_capitalized(line, the_args);
     va_end(the_args);
 }
 

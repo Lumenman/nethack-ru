@@ -1584,33 +1584,19 @@ build_plselection_prompt(
     char *buf, int buflen,
     int rolenum, int racenum, int gendnum, int alignnum)
 {
-    const char *defprompt = "Подобрать персонажа для тебя? [ynaq] ";
+    const char *defprompt = "Подобрать за вас персонажа? [ynaq] ";
     int num_post_attribs = 0;
     char tmpbuf[BUFSZ], *p;
 
     if (buflen < QBUFSZ)
         return (char *) defprompt;
 
-    Strcpy(tmpbuf, "Подобрать ");
-    if (racenum != ROLE_NONE || validrole(rolenum))
-        Strcat(tmpbuf, "твой ");
-    else
-        Strcat(tmpbuf, "некоего ");
-    /* <your> */
-
-    (void) root_plselection_prompt(eos(tmpbuf), buflen - Strlen(tmpbuf),
+    /* RU: "Подобрать за вас расу и пол (законный гном)?"; the root
+       description goes in parentheses unless it is the bare default */
+    (void) root_plselection_prompt(tmpbuf, (int) sizeof tmpbuf,
                                    rolenum, racenum, gendnum, alignnum);
-    /* "Shall I pick a character's role, race, gender, and alignment for you?"
-       plus " [ynaq] (y)" is a little too long for a conventional 80 columns;
-       also, "pick a character's <anything>" sounds a bit stilted */
-    strsubst(tmpbuf, "pick a character", "pick character");
-    Strcpy(buf, tmpbuf); /* RU translation: no possessive */
-    /* don't bother splitting caveman/cavewoman or priest/priestess
-       in order to apply possessive suffix to both halves, but do
-       change "priest/priestess'" to "priest/priestess's" */
-    if ((p = strstri(buf, "priest/priestess'")) != 0
-        && p[sizeof "priest/priestess'" - sizeof ""] == '\0')
-        strkitten(buf, 's');
+    Strcpy(buf, "Подобрать за вас");
+    p = eos(buf);
 
     /* buf should now be:
      *    <your lawful female gnomish cavewoman's>
@@ -1651,7 +1637,11 @@ build_plselection_prompt(
             Strcat(buf, "мировоззрение");
         }
     }
-    Strcat(buf, " для тебя? [ynaq] ");
+    if (!*p)
+        Strcat(buf, " персонажа");
+    if (strcmp(tmpbuf, "персонаж"))
+        Sprintf(eos(buf), " (%s)", tmpbuf);
+    Strcat(buf, "? [ynaq] ");
     return buf;
 }
 

@@ -902,18 +902,18 @@ doengrave_ctx_verb(struct _doengrave_ctx *de)
         break;
     case DUST:
         de->everb = de->adding ? "дописать к надписи в" : "писать в";
-        de->eloc = de->frosted ? "инея" : "пыль";
+        de->eloc = de->frosted ? "инее" : "пыли";
         break;
     case HEADSTONE:
         de->everb = de->adding ? "дописать к эпитафии на" : "выгравировать на";
         break;
     case ENGRAVE:
-        de->everb = de->adding ? "дописать к надписи в" : "гравировать в";
+        de->everb = de->adding ? "дописать к надписи на" : "гравировать на";
         break;
     case BURN:
-        de->everb = de->adding ? (de->frosted ? "дописать к тексту, впаянному в"
-                                  : "дописать к тексту, выжженному в")
-                       : (de->frosted ? "впаять в" : "выжечь в");
+        de->everb = de->adding ? (de->frosted ? "дописать к тексту, выплавленному на"
+                                  : "дописать к тексту, выжженному на")
+                       : (de->frosted ? "выплавить на" : "выжечь на");
         break;
     case MARK:
         de->everb = de->adding ? "дописать к граффити на" : "нацарапать на";
@@ -1168,24 +1168,20 @@ doengrave(void)
         }
     }
 
-    de->eloc = surface(u.ux, u.uy);
+    de->eloc = surface_ru(u.ux, u.uy); /* RU: everb ends with "на"/"в" */
     de->adding = (de->oep && !de->eow);
     doengrave_ctx_verb(de);
 
     /* Tell adventurer what is going on */
     if (de->otmp != &hands_obj)
-        You("%s %s; в ход идёт %s%s.", de->everb, de->eloc,
-            /* since doname() yields "N items" when quantity is more than
-               one, match that by using "1 of" rather than "one of" when
-               informing the player that the stack will be split */
-            (de->type == ENGRAVE && de->otmp->quan > 1L) ? "" : "",
-            doname(de->otmp));
+        pline("Вы собираетесь %s %s, используя %s.", de->everb, de->eloc,
+              obj_case(de->otmp, BP_ACC));
     else
-        You("%s %s вашим %s.",
-            de->everb, de->eloc, body_part_case(FINGERTIP, BP_INS));
+        pline("Вы собираетесь %s %s %s.",
+              de->everb, de->eloc, body_part_case(FINGERTIP, BP_INS));
 
     /* Prompt for engraving! */
-    Sprintf(de->qbuf, "Что вы хотите %s на %s здесь?",
+    Sprintf(de->qbuf, "Что вы хотите %s %s?",
             de->everb, de->eloc);
     getlin(de->qbuf, de->ebuf);
     /* convert tabs to spaces and condense consecutive spaces to one */

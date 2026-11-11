@@ -1099,7 +1099,8 @@ name_to_monclass(const char *in_str, int * mndx_p)
        so we don't want to accept "or", "other", "or other" there. */
     static NEARDATA const char *const falsematch[] = {
         /* multiple-letter input which matches any of these gets rejected */
-        "an", "the", "or", "other", "or other", 0
+        "an", "the", "or", "other", "or other",
+        "или", "другое", "другая", "или другое", "или другая", 0
     };
     /* positive pm_val => specific monster; negative => class */
     static NEARDATA const struct alt_spl truematch[] = {
@@ -1108,6 +1109,7 @@ name_to_monclass(const char *in_str, int * mndx_p)
         { "long worm", PM_LONG_WORM, NEUTRAL },
         /* matches wrong--or at least suboptimal--class */
         { "demon", -S_DEMON, NEUTRAL }, /* hits "imp or minor demon" */
+        { "демон", -S_DEMON, NEUTRAL }, /* RU: hits "бес или младший демон" */
         /* matches specific monster (overly restrictive) */
         { "devil", -S_DEMON, NEUTRAL }, /* always "horned devil" */
         /* some plausible guesses which need help */

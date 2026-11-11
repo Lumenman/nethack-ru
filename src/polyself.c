@@ -3425,24 +3425,23 @@ obj_case(struct obj *obj, int cse)
 {
     const struct obj_paradigm *pg;
     int cs = cse & BP_CASE_MASK;
-    int key, i;
+    int key, i, n;
 
     if (cs < 0 || cs > BP_PREP)
         return xname(obj);
     if (obj->oartifact > 0) {
-        pg = arti_paradigms;
+        pg = arti_paradigms, n = SIZE(arti_paradigms);
         key = (int) obj->oartifact;
-        for (i = 0; i < SIZE(arti_paradigms); i++)
-            if (arti_paradigms[i].key == key)
-                break;
     } else {
-        pg = obj_paradigms;
+        pg = obj_paradigms, n = SIZE(obj_paradigms);
         key = obj->otyp;
-        for (i = 0; i < SIZE(obj_paradigms); i++)
-            if (obj_paradigms[i].key == key)
-                break;
     }
-    if (i == SIZE(pg))
+    for (i = 0; i < n; i++)
+        if (pg[i].key == key)
+            break;
+    /* was 'i == SIZE(pg)': SIZE() of a pointer is 0, so a type without a
+       paradigm read past the end of the table and could crash */
+    if (i == n)
         return xname(obj);
     if (obj->quan != 1L && pg[i].p[cs])
         return pg[i].p[cs];

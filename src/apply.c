@@ -508,9 +508,9 @@ use_magic_whistle(struct obj *obj)
     } else {
         /* it's magic!  it works underwater too (at a higher pitch) */
         You(Deaf ? alt_whistle_str : whistle_str,
-            Hallucination ? "normal"
-            : (Underwater && !Deaf) ? "strange, high-pitched"
-              : "strange");
+            Hallucination ? "обычный"
+            : (Underwater && !Deaf) ? "странный пронзительный"
+              : "странный");
         Soundeffect(se_shrill_whistle, 80);
         magic_whistled(obj);
     }
@@ -1626,8 +1626,8 @@ use_lamp(struct obj *obj)
 {
     char buf[BUFSZ];
     const char *lamp = (obj->otyp == OIL_LAMP
-                        || obj->otyp == MAGIC_LAMP) ? "lamp"
-                       : (obj->otyp == BRASS_LANTERN) ? "lantern"
+                        || obj->otyp == MAGIC_LAMP) ? "светильник"
+                       : (obj->otyp == BRASS_LANTERN) ? "фонарь"
                          : NULL;
 
     /*
@@ -1646,8 +1646,8 @@ use_lamp(struct obj *obj)
     }
     if (Underwater) {
         pline("%s.",
-              !Is_candle(obj) ? "This is not a diving lamp"
-                              : "Sorry, fire and water don't mix");
+              !Is_candle(obj) ? "Это не водолазный фонарь"
+                              : "Увы, огонь и вода несовместимы");
         return;
     }
     /* magic lamps with an spe == 0 (wished for) cannot be lit */

@@ -328,7 +328,7 @@ curses_askname(void)
         }
 #endif /* SELECTSAVED */
 
-    curses_line_input_dialog("Who are you?", svp.plname, PL_NSIZ);
+    curses_line_input_dialog(" то вы?", svp.plname, PL_NSIZ);
     (void) mungspaces(svp.plname);
     if (!svp.plname[0] || svp.plname[0] == '\033')
          goto bail;

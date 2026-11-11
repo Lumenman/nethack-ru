@@ -428,7 +428,7 @@ attempt_restore:
         if (dorecover(nhfp)) {
             resuming = TRUE; /* not starting new game */
             if (discover)
-                You("are in non-scoring discovery mode.");
+                You("в режиме исследования; очки не начисляются.");
             if (discover || wizard) {
                 if (y_n("Do you want to keep the save file?") == 'n')
                     (void) delete_savefile();
@@ -459,7 +459,7 @@ attempt_restore:
         }
         newgame();
         if (discover)
-            You("are in non-scoring discovery mode.");
+            You("в режиме исследования; очки не начисляются.");
     }
 
         // iflags.debug_fuzzer = TRUE;
@@ -1197,7 +1197,7 @@ tty_self_recover_prompt(void)
     raw_print("\n");
     raw_print("\n");
     raw_print("\n");
-    raw_print("Найдены файлы незавершённой игры, сохранённые под твоим именем. ");
+    raw_print("Найдены файлы незавершённой игры, сохранённые под вашим именем. ");
     raw_print("Восстановить? [yn] ");
 
  tty_ask_again:
@@ -1257,12 +1257,12 @@ other_self_recover_prompt(void)
     c = 'n';
     ct = 0;
     if (iflags.window_inited || WINDOWPORT(curses)) {
-        c = y_n("Найдены файлы незавершённой игры, сохранённые под твоим именем. "
+        c = y_n("Найдены файлы незавершённой игры, сохранённые под вашим именем. "
                "Восстановить?");
     } else {
         c = 'n';
         ct = 0;
-        raw_print("Найдены файлы незавершённой игры, сохранённые под твоим именем. "
+        raw_print("Найдены файлы незавершённой игры, сохранённые под вашим именем. "
               "Восстановить? [yn]");
     }
 
