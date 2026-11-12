@@ -118,7 +118,7 @@ self_lookat(char *outbuf)
             (Invis && (senseself() || !Blind)) ? (Ugender == FEMALE ? "невидимая " : "невидимый ") : "", race,
             pmname(&mons[u.umonnum], Ugender), svp.plname);
     if (u.usteed)
-        Sprintf(eos(outbuf), ", едет верхом на %s", y_monnam(u.usteed));
+        Sprintf(eos(outbuf), ", едет верхом на %s", y_monnam_case(u.usteed, BP_PREP));
     if (u.uundetected || (Upolyd && U_AP_TYPE)
         || visible_region_at(u.ux, u.uy))
         mhidden_description(&gy.youmonst,

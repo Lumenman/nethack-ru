@@ -1401,7 +1401,7 @@ trapeffect_rocktrap(
             if (in_sight && see_it)
                 pline_mon(mtmp,
                       "Ќад %s открываетс€ люк, но ничего не выпадает!",
-                      mon_nam(mtmp));
+                      mon_nam_case(mtmp, BP_INS));
             deltrap(trap);
             newsym(mtmp->mx, mtmp->my);
             return Trap_Is_Gone;
@@ -1468,7 +1468,7 @@ trapeffect_sqky_board(
                 }
                 pline_mon(mtmp,
                       "ƒоска под %s громко скрипит%s.",
-                      mon_nam(mtmp), trapnote(trap, TRUE));
+                      mon_nam_case(mtmp, BP_INS), trapnote(trap, TRUE));
                 seetrap(trap);
             } else if (!mindless(mtmp->data)) {
                 pline_mon(mtmp,
@@ -1716,7 +1716,7 @@ trapeffect_rust_trap(
             goto mglovecheck;
         default:
             if (in_sight)
-                pline("%s по %s!", A_gush_of_water_hits, mon_nam(mtmp));
+                pline("%s по %s!", A_gush_of_water_hits, mon_nam_case(mtmp, BP_DAT));
             for (otmp = mtmp->minvent; otmp; otmp = otmp->nobj)
                 if (otmp->lamplit
                     /* exclude weapon(s) because cases 1 and 2 do them */
@@ -2634,7 +2634,7 @@ trapeffect_landmine(
             if (in_sight && !already_seen) {
                 pline_mon(mtmp,
                      "ѕод %s в куче земли по€вл€етс€ взводитель.",
-                      mon_nam(mtmp));
+                      mon_nam_case(mtmp, BP_INS));
                 seetrap(trap);
             }
             if (rn2(3))
@@ -4017,7 +4017,7 @@ float_up(void)
         if (Lev_at_will) {
             pline("%s магически взлетает вверх!", Monnam(u.usteed));
         } else {
-            You("не можете удержатьс€ на %s.", mon_nam(u.usteed));
+            You("не можете удержатьс€ на %s.", mon_nam_case(u.usteed, BP_PREP));
             dismount_steed(DISMOUNT_GENERIC);
         }
     }
@@ -5580,7 +5580,7 @@ disarm_holdingtrap(struct trap *ttmp)
        There's no need for a cockatrice test, only the trap is touched */
     if ((mtmp = m_at(ttmp->tx, ttmp->ty)) != 0) {
         mtmp->mtrapped = 0;
-        You("вытаскиваете %s из %s.", mon_nam(mtmp),
+        You("вытаскиваете %s из %s.", mon_nam_case(mtmp, BP_ACC),
                 (ttmp->ttyp == BEAR_TRAP) ? "капкана" : "паутины");
         reward_untrap(ttmp, mtmp);
     } else if (ttmp->ttyp == BEAR_TRAP) {
@@ -5773,7 +5773,7 @@ help_monster_out(
 
     You("прот€гиваете свои %s и хватаете %s.",
         body_part_case(ARM, BP_ACC | BP_PLURAL),
-        mon_nam(mtmp));
+        mon_nam_case(mtmp, BP_ACC));
 
     if (mtmp->msleeping) {
         mtmp->msleeping = 0;
@@ -5799,7 +5799,7 @@ help_monster_out(
             return 1;
     }
 
-    You("вытаскиваете %s из €мы.", mon_nam(mtmp));
+    You("вытаскиваете %s из €мы.", mon_nam_case(mtmp, BP_ACC));
     mtmp->mtrapped = 0;
     reward_untrap(ttmp, mtmp);
     fill_pit(mtmp->mx, mtmp->my);

@@ -1924,7 +1924,7 @@ eatcorpse(struct obj *otmp)
             /* make sure new ill doesn't result in improvement */
             if (Sick && (sick_time > Sick))
                 sick_time = (Sick > 1L) ? Sick - 1L : 1L;
-            make_sick(sick_time, corpse_xname(otmp, "гнила€", CXN_NORMAL),
+            make_sick(sick_time, corpse_xname(otmp, "гнилой", CXN_NORMAL),
                       TRUE, SICK_VOMITABLE);
 
             pline("(ѕохоже, он умер слишком давно, чтобы быть безопасным в пищу.)");

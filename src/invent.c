@@ -4169,7 +4169,7 @@ look_here(
          *  something along the lines of "because it's worn on the outside
          *  so is unreachable from in here...").
          */
-        You("пытаетесь рассмотреть, что лежит у %s (%s).", mon_nam(mtmp),
+        You("пытаетесь рассмотреть, что лежит у %s (%s).", mon_nam_case(mtmp, BP_GEN),
             mbodypart_case(mtmp, STOMACH, BP_GEN));
         otmp = mtmp->minvent;
         if (otmp) {

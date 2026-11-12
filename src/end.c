@@ -753,7 +753,7 @@ savelife(int how)
         expels(u.ustuck, u.ustuck->data, TRUE);
     } else if (u.ustuck) {
         if (Upolyd && sticks(gy.youmonst.data))
-            You("высвобождаетесь от %s.", mon_nam(u.ustuck));
+            You("высвобождаетесь от %s.", mon_nam_case(u.ustuck, BP_GEN));
         else
             pline("%s отпускает вас.", Monnam(u.ustuck));
         unstuck(u.ustuck);

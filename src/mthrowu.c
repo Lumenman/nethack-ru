@@ -110,16 +110,24 @@ thitu(
         } else if (u.uac + tlev <= dieroll - 2) {
             if (onm != onmbuf)
                 Strcpy(onmbuf, onm); /* [modifiable buffer for upstart()] */
-            pline("%s %s вас.", upstart(onmbuf),
-                   vtense(onmbuf, "промахивается мимо вас"));
-        } else
-            You("почти попадаете под удар %s.", onm);
+            pline("%s %s мимо вас.", upstart(onmbuf),
+                  vtense(onmbuf, "пролетает"));
+        } else {
+            if (onm != onmbuf)
+                Strcpy(onmbuf, onm);
+            pline("%s чуть не %s в вас.", upstart(onmbuf),
+                  vtense(onmbuf, "попадает"));
+        }
         return 0;
     } else {
-        if (Blind || !flags.verbose)
-            You("попадаете под удар%s", exclam(dam));
-        else
-            You("попадаете под удар %s%s", onm, exclam(dam));
+        if (Blind || !flags.verbose) {
+            pline("В вас что-то попадает%s", exclam(dam));
+        } else {
+            if (onm != onmbuf)
+                Strcpy(onmbuf, onm);
+            pline("%s %s в вас%s", upstart(onmbuf), vtense(onmbuf, "попадает"),
+                  exclam(dam));
+        }
 
         if (is_acid && Acid_resistance) {
             pline("Похоже, это вам не вредит.");
@@ -405,7 +413,7 @@ ohitmon(
             if (resists_poison(mtmp)) {
                 if (vis)
                     pline_The("Яд, похоже, не действует на %s.",
-                              mon_nam(mtmp));
+                              mon_nam_case(mtmp, BP_ACC));
             } else {
                 if (rn2(30)) {
                     damage += rnd(6);
@@ -422,7 +430,7 @@ ohitmon(
 
             /* note: extra silver damage is handled by dmgval() */
             if (vis) {
-                char *m_name = mon_nam(mtmp);
+                char *m_name = mon_nam_case(mtmp, BP_ACC);
                 char fleshbuf[BUFSZ];
 
                 if (flesh) /* s_suffix returns a modifiable buffer */
@@ -440,7 +448,7 @@ ohitmon(
             } else {
                 if (vis)
                     pline_The("%s обжигает %s!", hliquid("кислота"),
-                              mon_nam(mtmp));
+                              mon_nam_case(mtmp, BP_ACC));
                 else if (verbose && !gm.mtarget)
                     pline("Оно обожжено!");
             }
@@ -911,26 +919,26 @@ return_from_mtoss(
                 if (canseemon(magr)) {
                     if (mlevitating)
                         pline("%s к %s, приземляясь под %s %s.",
-                              Tobjnam(otmp, "возвращается"), mon_nam(magr),
+                              Tobjnam(otmp, "возвращается"), mon_nam_case(magr, BP_DAT),
                               mhis(magr),
                               mbodypart_case(magr, FOOT, BP_INS | BP_PLURAL));
                     else
                         pline("%s к %s, приземляясь у %s %s.",
-                              Tobjnam(otmp, "возвращается"), mon_nam(magr),
+                              Tobjnam(otmp, "возвращается"), mon_nam_case(magr, BP_DAT),
                               mhis(magr),
                               mbodypart_case(magr, FOOT, BP_GEN | BP_PLURAL));
                 } else if (!Deaf) {
-                    You_hear("%s падает возле %s.", Something, mon_nam(magr));
+                    You_hear("%s падает возле %s.", Something, mon_nam_case(magr, BP_GEN));
                 }
             } else {
                 dmg += rnd(3);
                 if (canseemon(magr)) {
                     pline("%s обратно к %s, попадая %s в %s!",
-                          Tobjnam(otmp, "летит"), mon_nam(magr),
+                          Tobjnam(otmp, "летит"), mon_nam_case(magr, BP_DAT),
                           mhim(magr), mbodypart_case(magr, ARM, BP_ACC));
                 } else if (!Deaf) {
                     You_hear("%s со стуком попадает в %s!", something,
-                             mon_nam(magr));
+                             mon_nam_case(magr, BP_ACC));
                 }
                 hits_thrower = TRUE;
             }

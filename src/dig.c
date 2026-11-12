@@ -342,7 +342,7 @@ dig(void)
             } else {
                 if (u.usteed)
                     pline("%s отскакивает и бьЄт %s!", The(xname(uwep)),
-                          mon_nam(u.usteed));
+                          mon_nam_case(u.usteed, BP_ACC));
                 else
                     pline("ќй!  %s отскакивает и бьЄт вас!", The(xname(uwep)));
                 set_wounded_legs(RIGHT_SIDE, 5 + rnd(5));

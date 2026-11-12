@@ -1316,7 +1316,7 @@ mon_break_armor(struct monst *mon, boolean polyspot)
             noride = TRUE;
     }
     if (noride || (mon == u.usteed && !can_ride(mon))) {
-        You("больше не может ездить на %s.", mon_nam(mon));
+        You("больше не может ездить на %s.", mon_nam_case(mon, BP_PREP));
         if (touch_petrifies(u.usteed->data) && !Stone_resistance && rnl(3)) {
             char buf[BUFSZ];
 

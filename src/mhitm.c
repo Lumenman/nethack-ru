@@ -81,10 +81,11 @@ missmm(
     pre_mm_attack(magr, mdef);
 
     if (gv.vis) {
+        boolean flirt = !(magr->mcan || !could_seduce(magr, mdef, mattk));
+
         pline("%s %s %s.", Monnam(magr),
-              (magr->mcan || !could_seduce(magr, mdef, mattk)) ? "промахивается"
-                  : "притворяется дружелюбным с",
-              mon_nam_too(mdef, magr));
+              !flirt ? "промахивается по" : "притворяется дружелюбным с",
+              mon_nam_too_case(mdef, magr, flirt ? BP_INS : BP_DAT));
     } else {
         noises(magr, mattk);
     }
@@ -230,7 +231,7 @@ mdisplacem(
             if (!quietly && canspotmon(magr)) {
                 if (gv.vis) {
                     pline("%s пытается убрать %s со %s пути.", Monnam(magr),
-                          mon_nam(mdef), is_rider(pa) ? "" : mhis(magr));
+                          mon_nam_case(mdef, BP_ACC), is_rider(pa) ? "" : mhis(magr));
                 }
                 pline_mon(magr, "%s превращается в камень!", Monnam(magr));
             }
@@ -343,7 +344,7 @@ mattackm(
                     && mdef->m_id == gl.last_hider)
                     pline_mon(mdef, "%s выходит из укрытия.", Monnam(mdef));
                 else if (mdef->m_id == gl.last_hider)
-                    You("замечаете %s.", mon_nam(mdef));
+                    You("замечаете %s.", mon_nam_case(mdef, BP_ACC));
                 else
                     pline("Внезапно вы замечаете %s.", a_monnam(mdef));
             }
@@ -511,7 +512,7 @@ mattackm(
             if (mdef->data == &mons[PM_SHADE]) { /* no silver teeth... */
                 if (gv.vis)
                     pline("%s не сумел поглотить %s.",
-                          Monnam(magr), mon_nam(mdef));
+                          Monnam(magr), mon_nam_case(mdef, BP_ACC));
                 strike = 0;
                 break;
             }
@@ -667,7 +668,8 @@ hitmm(
         if (compat) {
             Snprintf(buf, sizeof buf, "%s %s", magr_name,
                     mdef->mcansee ? "улыбается" : "разговаривает с");
-            pline("%s %s %s.", buf, mon_nam(mdef),
+            pline("%s %s %s.", buf,
+                  mon_nam_case(mdef, mdef->mcansee ? BP_DAT : BP_INS),
                   (compat == 2) ? "увлекательно" : "соблазнительно");
         } else {
             buf[0] = '\0';
@@ -699,12 +701,14 @@ hitmm(
                     Snprintf(buf, sizeof buf, "%s ударяет", magr_name);
                 break;
             }
-            if (*buf)
-                pline("%s %s.", buf, mon_nam_too(mdef, magr));
+            if (*buf) /* RU: "касается" takes the genitive */
+                pline("%s %s.", buf,
+                      mon_nam_too_case(mdef, magr, (mattk->aatyp == AT_TUCH)
+                                                   ? BP_GEN : BP_ACC));
 
             if (mon_hates_silver(mdef) && silverhit)
                 pline("%s опаляет %s своим %s!", magr_name,
-                      mon_nam_too(mdef, magr), simpleonames(mwep));
+                      mon_nam_too_case(mdef, magr, BP_ACC), simpleonames(mwep));
         }
     } else
         noises(magr, mattk);
@@ -733,7 +737,8 @@ gazemm(struct monst *magr, struct monst *mdef, struct attack *mattk)
                 altmesg ? Adjmonnam(magr, "ослеплён") : Monnam(magr),
                 altmesg ? "по направлению к" : "в");
         pline("%s %s...", buf,
-              canspotmon(mdef) ? mon_nam(mdef) : "что-то");
+              canspotmon(mdef) ? mon_nam_case(mdef, altmesg ? BP_DAT : BP_ACC)
+                               : (altmesg ? "чему-то" : "что-то"));
     }
 
     if (magr->mcan || !mdef->mcansee
@@ -847,7 +852,7 @@ gulpmm(
               digests(magr->data) ? "проглатывает"
               : enfolds(magr->data) ? "заключает"
                 : "поглощает",
-              mon_nam(mdef));
+              mon_nam_case(mdef, BP_ACC));
     }
     if (!flaming(magr->data)) {
         for (obj = mdef->minvent; obj; obj = obj->nobj)
@@ -1276,7 +1281,7 @@ mswingsm(
 
         pline("%s %s %s%s %s в %s.", Monnam(magr), mswings_verb(otemp, bash),
               (otemp->quan > 1L) ? "один из " : "", mhis(magr), xname(otemp),
-              mon_nam(mdef));
+              mon_nam_case(mdef, BP_ACC));
     }
 }
 
@@ -1372,7 +1377,7 @@ passivemm(
             } else { /* gelatinous cube */
                 Strcpy(buf, Monnam(magr));
                 if (canseemon(magr))
-                    pline("%s заморожен %s.", buf, mon_nam(mdef));
+                    pline("%s заморожен %s.", buf, mon_nam_case(mdef, BP_INS));
                 paralyze_monst(magr, tmp);
                 return (mdead | mhit);
             }

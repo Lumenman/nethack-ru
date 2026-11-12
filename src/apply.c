@@ -951,7 +951,7 @@ check_leash(coordxy x, coordxy y)
                     || (mtmp->mhp -= rnd(2)) <= 0) {
                     long save_pacifism = u.uconduct.killer;
 
-                    Your("поводок душит %s насмерть!", mon_nam(mtmp));
+                    Your("поводок душит %s насмерть!", mon_nam_case(mtmp, BP_ACC));
                     /* hero might not have intended to kill pet, but
                        that's the result of his actions; gain experience,
                        lose pacifism, take alignment and luck hit, make
@@ -1170,7 +1170,7 @@ use_mirror(struct obj *obj)
 
         if (mtmp->mfrozen) {
             if (vis)
-                You("не замечаете очевидной реакции от %s.", mon_nam(mtmp));
+                You("не замечаете очевидной реакции от %s.", mon_nam_case(mtmp, BP_GEN));
             else
                 You_feel(
                        "немного глупо указывать зеркалом в ту сторону.");
@@ -2022,14 +2022,14 @@ jump(int magic) /* 0=Physical, otherwise skill level */
             struct monst *mtmp = u.ustuck;
 
             set_ustuck((struct monst *) 0);
-            You("вырываетесь от %s.", mon_nam(mtmp));
+            You("вырываетесь от %s.", mon_nam_case(mtmp, BP_GEN));
             return ECMD_TIME;
         }
         if (magic) {
             You("немного извиваетесь в хватке %s!", mon_nam(u.ustuck));
             return ECMD_TIME;
         }
-        You("не можете вырваться от %s!", mon_nam(u.ustuck));
+        You("не можете вырваться от %s!", mon_nam_case(u.ustuck, BP_GEN));
         return ECMD_OK;
     } else if (Levitation || Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)) {
         if (magic) {
@@ -2880,7 +2880,7 @@ use_trap(struct obj *otmp)
             chance = (rnl(10) > 3);
         else
             chance = (rnl(10) > 5);
-        You("не очень умелы в доставании с %s.", mon_nam(u.usteed));
+        You("не очень умелы в доставании с %s.", mon_nam_case(u.usteed, BP_GEN));
         Sprintf(buf, "Продолжить попытку установить %s?",
                 the(trapname(ttyp, FALSE)));
         if (y_n(buf) == 'y') {
@@ -3019,7 +3019,7 @@ use_whip(struct obj *obj)
 
         /* Sometimes you hit your steed by mistake */
         if (u.usteed && !rn2(proficient + 2)) {
-            You("хлещете %s!", mon_nam(u.usteed));
+            You("хлещете %s!", mon_nam_case(u.usteed, BP_ACC));
             kick_steed();
             return ECMD_TIME;
         }
@@ -3832,7 +3832,7 @@ use_grapple(struct obj *obj)
             (void) attack_checks(mtmp, uwep);
             flags.confirm = save_confirm;
             check_caitiff(mtmp); /* despite fact there's no damage */
-            You("подтягиваете %s!", mon_nam(mtmp));
+            You("подтягиваете %s!", mon_nam_case(mtmp, BP_ACC));
             mtmp->mundetected = 0;
             rloc_to(mtmp, cc.x, cc.y);
             return ECMD_TIME;

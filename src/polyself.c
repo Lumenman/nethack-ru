@@ -955,7 +955,7 @@ polymon(int mntmp)
     if (u.usteed) {
         if (touch_petrifies(u.usteed->data) && !Stone_resistance && rnl(3)) {
             pline("%s касаетесь %s.", no_longer_petrify_resistant,
-                  mon_nam(u.usteed));
+                  mon_nam_case(u.usteed, BP_GEN));
             Sprintf(buf, "езды верхом (%s)",
                     pmname(u.usteed->data, Mgender(u.usteed)));
             instapetrify(buf);
@@ -1509,7 +1509,7 @@ dospinweb(void)
         return ECMD_OK;
     }
     if (u.uswallow) {
-        You("выпускаете паутинную жидкость внутри %s.", mon_nam(u.ustuck));
+        You("выпускаете паутинную жидкость внутри %s.", mon_nam_case(u.ustuck, BP_GEN));
         if (is_animal(u.ustuck->data)) {
             expels(u.ustuck, u.ustuck->data, TRUE);
             return ECMD_OK;
@@ -1541,7 +1541,7 @@ dospinweb(void)
             }
             return ECMD_OK;
         } /* default: a nasty jelly-like creature */
-        pline("Паутина растворяется в %s.", mon_nam(u.ustuck));
+        pline("Паутина растворяется в %s.", mon_nam_case(u.ustuck, BP_ACC));
         return ECMD_OK;
     }
     if (u.utrap) {
@@ -1685,7 +1685,7 @@ dogaze(void)
                 looked--;
                 continue;
             } else if (flags.safe_dog && mtmp->mtame && !Confusion) {
-                You("избегаете смотреть на %s.", y_monnam(mtmp));
+                You("избегаете смотреть на %s.", y_monnam_case(mtmp, BP_ACC));
             } else {
                 if (flags.confirm && mtmp->mpeaceful && !Confusion) {
                     Sprintf(qbuf, "Действительно %s %s?",
@@ -1713,9 +1713,9 @@ dogaze(void)
                 } else if (adtyp == AD_FIRE) {
                     int dmg = d(2, 6), orig_dmg = dmg, lev = (int) u.ulevel;
 
-                    You("атакуете %s огненным взглядом!", mon_nam(mtmp));
+                    You("атакуете %s огненным взглядом!", mon_nam_case(mtmp, BP_ACC));
                     if (resists_fire(mtmp)) {
-                        pline("Огонь не сжигает %s!", mon_nam(mtmp));
+                        pline("Огонь не сжигает %s!", mon_nam_case(mtmp, BP_ACC));
                         dmg = 0;
                     }
                     if (lev > rn2(20)) {

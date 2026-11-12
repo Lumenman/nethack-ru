@@ -593,10 +593,9 @@ endmultishot(boolean verbose)
 {
     if (gm.m_shot.i < gm.m_shot.n) {
         if (verbose && !svc.context.mon_moving) {
-            You("остановите %s после %d%s %s.",
-                gm.m_shot.s ? "стреляя" : "бросая",
-                gm.m_shot.i, ordin(gm.m_shot.i),
-                gm.m_shot.s ? "выстрел" : "швыряет");
+            You("прекращаете %s после %d-го %s.",
+                gm.m_shot.s ? "стрелять" : "бросать", gm.m_shot.i,
+                gm.m_shot.s ? "выстрела" : "броска");
         }
         gm.m_shot.n = gm.m_shot.i; /* make current shot be the last */
     }

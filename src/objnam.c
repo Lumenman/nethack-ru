@@ -982,7 +982,8 @@ xname_flags(
             char anbuf[10]; /* [4] would be enough: 'a','n',' ','\0' */
             const char *pm_name = obj_pmname(obj);
 
-            ConcatF2(buf, 0, " %s%s", just_an(anbuf, pm_name), pm_name);
+            ConcatF2(buf, 0, " %s%s", just_an(anbuf, pm_name),
+                     mon_gen_nom(pm_name, BP_GEN)); /* статуэтка гнома */
         } else if (is_wet_towel(obj)) {
             if (wizard)
                 ConcatF1(buf, 0, " (%d)", obj->spe);
@@ -1086,7 +1087,7 @@ xname_flags(
                      type_is_pname(&mons[omndx]) ? ""
                        : the_unique_pm(&mons[omndx]) ? ""
                          : just_an(anbuf, statue_pmname),
-                     statue_pmname);
+                     mon_gen_nom(statue_pmname, BP_GEN)); /* стату€ гнома */
         } else if (typ == BOULDER && obj->next_boulder == 1) {
             /* sometimes caller wants "next boulder" rather than just
                "boulder" (when pushing against a pile of more than one);
@@ -1376,7 +1377,10 @@ mshot_xname(struct obj *obj)
     if (gm.m_shot.n > 1 && gm.m_shot.o == obj->otyp) {
         /* "the Nth arrow"; value will eventually be passed to an() or
            The(), both of which correctly handle this "the " prefix */
-        Sprintf(tmpbuf, "%d-€ ", gm.m_shot.i);
+        char g = ru_name_gender(onm); /* RU: 1-й болт, 1-€ стрела, 1-е копьЄ */
+
+        Sprintf(tmpbuf, "%d-%s ", gm.m_shot.i,
+                (g == 'f') ? "€" : (g == 'n') ? "е" : (g == 'p') ? "е" : "й");
         onm = strprepend(onm, tmpbuf);
     }
     return onm;
@@ -1527,7 +1531,7 @@ doname_base(
        gx.xnamep always points to the start of that buffer;
        'bp_eos' and 'bpspaceleft' are used and updated by Concat*() macros */
     /* RU: a counted name is built from the singular ("3 золотых зель€") */
-    bp = xname_flags(obj, (obj->quan != 1L && obj->otyp != CORPSE)
+    bp = xname_flags(obj, (obj->quan != 1L)
                               ? CXN_SINGULAR : CXN_NORMAL);
     bp_end = gx.xnamep + BUFSZ - 1;
     bp_eos = eos(bp);
@@ -1556,7 +1560,7 @@ doname_base(
         ispoisoned = TRUE;
     }
 
-    if (obj->quan != 1L && obj->otyp != CORPSE) {
+    if (obj->quan != 1L) {
         long n = obj->quan % 100L;
         char form = (vague_quan && !dknown) ? 'G'
                     : (n % 10L == 1L && n != 11L) ? 0
@@ -1822,12 +1826,12 @@ doname_base(
             /* corpse_xname() sets xnamep; callers other than doname_base()
                itself shouldn't care about xnamep (pointer to start of
                current obuf[]) but keep it accurate anyway */
-            save_xnamep = gx.xnamep;
-            cxstr = corpse_xname(obj, prefix, cxarg);
-            Sprintf(prefix, "%s ", cxstr);
-            /* avoid having doname(corpse) consume an extra obuf */
-            releaseobuf(cxstr);
-            gx.xnamep = save_xnamep;
+            /* RU: the prefix stays, the monster follows: "труп шакала" */
+            nhUse(cxarg), nhUse(cxstr), nhUse(save_xnamep);
+            if (omndx != NON_PM)
+                ConcatF1(bp, 0, " %s",
+                         mon_gen_nom(obj_pmname(obj),
+                                     BP_GEN | ((obj->quan != 1L) ? BP_PLURAL : 0)));
         } else if (obj->otyp == EGG) {
 #if 0 /* corpses don't tell if they're stale either */
             if (known && stale_egg(obj))
@@ -1979,8 +1983,7 @@ doname_base(
 
     /* RU: prefix adjectives are written in the masculine; agree them with
        the name ("прокл€та€ ржава€ кирка"); a corpse's prefix is its name */
-    if (obj->otyp != CORPSE)
-        ru_agree_phrase(prefix, ru_pfx_g ? ru_pfx_g : ru_name_gender(bp));
+    ru_agree_phrase(prefix, ru_pfx_g ? ru_pfx_g : ru_name_gender(bp));
 
     if (!strncmp(prefix, "a ", 2)) {
         /* save current prefix, without "a "; might be empty */
@@ -2151,8 +2154,7 @@ corpse_xname(
     } else {
         mnam = obj_pmname(otmp);
         if (the_unique_pm(&mons[omndx]) || type_is_pname(&mons[omndx])) {
-            mnam = s_suffix(mnam);
-            possessive = TRUE;
+            possessive = TRUE; /* RU: "труп ћедузы" via the genitive */
             /* don't precede personal name like "Medusa" with an article */
             if (type_is_pname(&mons[omndx]))
                 no_prefix = TRUE;
@@ -2178,42 +2180,37 @@ corpse_xname(
        into the code, so the() has been modified to deal with capitalized
        monster names; we could switch to using it below like an() */
 
-    if (!adjective || !*adjective) {
-        /* normal case:  newt corpse */
-        Strcat(nambuf, mnam);
-    } else {
-        /* adjective positioning depends upon format of monster name */
-        if (possessive) /* Medusa's cursed partly eaten corpse */
-            Sprintf(eos(nambuf), "%s %s", mnam, adjective);
-        else /* cursed partly eaten troll corpse */
-            Sprintf(eos(nambuf), "%s %s", adjective, mnam);
-        /* in case adjective has a trailing space, squeeze it out */
-        mungspaces(nambuf);
-        /* doname() might include a count in the adjective argument;
-           if so, don't prepend an article */
-        if (digit(*adjective))
-            any_prefix = FALSE;
-    }
+    /* RU: "прокл€тый частично съеденный труп шакала", "трупы шакалов",
+       "3 трупа шакалов"; a glob is "капл€ серой слизи" */
+    {
+        boolean plural = (otmp->quan > 1L && !ignore_quan);
+        char head[BUFSZ];
 
-    if (glob) {
-        ; /* omit_corpse doesn't apply; quantity is always 1 */
-    } else if (!omit_corpse) {
-        Strcat(nambuf, " труп");
-        /* makeplural(nambuf) => append "s" to "corpse" */
-        if (otmp->quan > 1L && !ignore_quan) {
-            Strcat(nambuf, "");
-            any_prefix = FALSE; /* avoid "a newt corpses" */
+        Sprintf(head, "%s%s", (adjective && *adjective) ? adjective : "",
+                (adjective && *adjective) ? " " : "");
+        if (glob) {
+            Sprintf(nambuf, "%s%s", head, mnam);
+        } else {
+            const char *gen = mon_gen_nom(mnam, BP_GEN
+                                                | (plural ? BP_PLURAL : 0));
+
+            if (!omit_corpse) {
+                Strcat(head, "труп");
+                if (plural) {
+                    long n = otmp->quan % 100L;
+                    char form = !digit(*head) ? 'P'
+                                : (n % 10L == 1L && n != 11L) ? 0
+                                  : (n % 10L >= 2L && n % 10L <= 4L
+                                     && (n < 12L || n > 14L)) ? 'S' : 'G';
+
+                    if (form)
+                        (void) ru_number_name(head, sizeof head, form);
+                }
+            }
+            Sprintf(nambuf, "%s%s%s", head, (*head && !omit_corpse) ? " " : "",
+                    gen);
         }
-    }
-
-    /* it's safe to overwrite our nambuf[] after an() has copied its
-       old value into another buffer; and once _that_ has been copied,
-       the obuf[] returned by an() can be made available for re-use */
-    if (any_prefix) {
-        char *obufp;
-
-        Strcpy(nambuf, obufp = an(nambuf));
-        releaseobuf(obufp);
+        mungspaces(nambuf);
     }
     return nambuf;
 }
@@ -2527,10 +2524,15 @@ aobjnam(struct obj *otmp, const char *verb)
 
         /* RU: "4 оркских кинжала" from the singular (xname leaves PREFIX
            room in front); plain plural if the noun is unknown */
-        if (sg && (!form || ru_number_name(sg, BUFSZ - PREFIX, form)))
-            bp = sg, one = !form;
-        Sprintf(prefix, "%ld ", otmp->quan);
-        bp = strprepend(bp, prefix);
+        if (otmp->otyp == CORPSE) { /* "2 трупа гномов" */
+            Sprintf(prefix, "%ld", otmp->quan);
+            bp = corpse_xname(otmp, prefix, CXN_NORMAL), one = !form;
+        } else {
+            if (sg && (!form || ru_number_name(sg, BUFSZ - PREFIX, form)))
+                bp = sg, one = !form;
+            Sprintf(prefix, "%ld ", otmp->quan);
+            bp = strprepend(bp, prefix);
+        }
     }
     /* RU: English verbs left at call sites are dropped; the translated
        message already carries the Russian verb */
@@ -4426,6 +4428,8 @@ ru_name_to_mon(const char *str, int *gend)
         return m;
     if (!(*str & 0x80))
         return NON_PM;
+    if (mon_case_to_nom(str)) /* "летучей мыши", "ћедузы" */
+        return name_to_mon(mon_case_to_nom(str), gend);
     copynchars(buf, str, (int) sizeof buf - 1);
     len = (int) strlen(buf);
     for (k = 1; k <= 2 && len - k > 0; k++) {
@@ -5468,10 +5472,12 @@ readobjnam_postparse1(struct _readobjnam_data *d)
             const char *word;
             int what;
         } ru_corpse[] = {
-            { "труп", CORPSE },
-            { "стату€", STATUE },
-            { "статуэтка", FIGURINE },
-            { "€йцо", EGG },
+            { "труп", CORPSE }, { "трупа", CORPSE }, { "трупов", CORPSE },
+            { "трупы", CORPSE },
+            { "стату€", STATUE }, { "статуи", STATUE }, { "статуй", STATUE },
+            { "статуэтка", FIGURINE }, { "статуэтки", FIGURINE },
+            { "статуэток", FIGURINE },
+            { "€йцо", EGG }, { "€йца", EGG }, { "€иц", EGG },
         };
         int ci;
 

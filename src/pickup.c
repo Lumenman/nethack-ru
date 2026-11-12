@@ -2326,7 +2326,7 @@ doloot_core(void)
             if (!underfoot && container_at(cc.x, cc.y, FALSE)) {
                 if (mtmp) {
                     You_cant("ограбить что-либо %sтам, с %s на пути.",
-                             prev_inquiry ? "иначе " : "", mon_nam(mtmp));
+                             prev_inquiry ? "иначе " : "", mon_nam_case(mtmp, BP_INS));
                     return (timepassed ? ECMD_TIME : ECMD_OK);
                 } else {
                     You("нужно быть у контейнера, чтобы его ограбить.");
@@ -2460,7 +2460,7 @@ loot_mon(struct monst *mtmp, int *passed_info, boolean *prev_loot)
             extract_from_minvent(mtmp, otmp, TRUE, FALSE);
             if (flags.verbose)
                 You("снимите %s с %s.",
-                    thesimpleoname(otmp), mon_nam(mtmp));
+                    thesimpleoname(otmp), mon_nam_case(mtmp, BP_GEN));
             otmp = hold_another_object(otmp, "Вы бросаете %s!", doname(otmp),
                                        (const char *) 0);
             nhUse(otmp);
