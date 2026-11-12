@@ -35,6 +35,7 @@ struct _readobjnam_data {
 staticfn char *strprepend(char *, const char *) NONNULL NONNULLARG1;
 staticfn char *nextobuf(void) NONNULL;
 staticfn void releaseobuf(char *) NONNULLARG1;
+staticfn const char *ru_obj_gen(char, const char *);
 staticfn void xcalled(char *, int, const char *, const char *);
 staticfn char *xname_flags(struct obj *, unsigned);
 staticfn char *minimal_xname(struct obj *);
@@ -255,11 +256,7 @@ case SCROLL_CLASS:
             Sprintf(eos(buf), " (%s)", dn);
         return buf;
     case ARMOR_CLASS:
-        if (objects[otyp].oc_armcat == ARM_GLOVES
-            || objects[otyp].oc_armcat == ARM_BOOTS)
-            Strcpy(buf, "пара ");
-        else if (otyp >= GRAY_DRAGON_SCALES && otyp <= YELLOW_DRAGON_SCALES)
-            Strcpy(buf, "набор ");
+        /* RU: no "pair of"/"set of": "перчатки", "чешуя дракона" */
         FALLTHROUGH;
         /*FALLTHRU*/
     default:
@@ -286,7 +283,7 @@ case SCROLL_CLASS:
         if (ocl->oc_unique)
             Strcpy(buf, actualn); /* avoid spellbook of Book of the Dead */
         else
-            Sprintf(eos(buf), " %s", actualn);
+            Sprintf(eos(buf), " %s", ru_obj_gen(ocl->oc_class, actualn));
     }
     if (un) /* 3: length of " (" + ")" which will enclose 'dn' */
         xcalled(buf, BUFSZ - (dn ? (int) strlen(dn) + 3 : 0), "", un);
@@ -577,6 +574,233 @@ xcalled(
     Sprintf(eos(buf), "%s called %.*s", pfx, bufsiz - pfxlen, sfx);
 }
 
+#include "objgen_ru.h"
+
+/* RU: genitive of an identified name after its class word: "зелье
+   слепоты", "жезл огня"; the first table entry for a name is the main one */
+staticfn const char *
+ru_obj_gen(char oclass, const char *nom)
+{
+    int i;
+
+    for (i = 0; i < SIZE(ru_gen_names); i++)
+        if (ru_gen_names[i].oclass == oclass && !strcmp(nom, ru_gen_names[i].nom))
+            return ru_gen_names[i].gen;
+    return nom;
+}
+
+/* RU: agree one adjective (w..e, maybe followed by reflexive "ся") with
+   'f'/'n' (from the masculine "ый"/"ий"/"ой" only), plural 'p' or
+   genitive plural 'G' (from any nominative singular form); edits in place,
+   the length never changes.  FALSE if it is not such an adjective */
+boolean
+ru_agree_adj(char *w, char *e, char g)
+{
+    static const char *const ends[] = { "ый", "ий", "ой", "ая", "яя", "ое", "ее" };
+    char c2;
+    int i;
+    boolean ij, soft, hush, velar;
+
+    if (e - w >= 6 && !strncmp(e - 2, "ся", 2))
+        e -= 2; /* "пузырящийся" -> inflect before "ся" */
+    if (e - w < 3)
+        return FALSE;
+    for (i = 0; i < SIZE(ends); i++)
+        if (!strncmp(e - 2, ends[i], 2))
+            break;
+    if (i == SIZE(ends) || (i > 2 && g != 'p' && g != 'G'))
+        return FALSE;
+    ij = (i == 1);
+    c2 = e[-3]; /* letter before the 2-letter ending */
+    hush = !!strchr("жшчщ", c2);
+    velar = !!strchr("гкх", c2);
+    soft = (ij || i == 4 || i == 6) && !hush && !velar; /* "синий" */
+    switch (g) {
+    case 'f':
+        memcpy(e - 2, soft ? "яя" : "ая", 2);
+        break;
+    case 'n':
+        memcpy(e - 2, (soft || (ij && hush)) ? "ее" : "ое", 2);
+        break;
+    case 'p':
+        memcpy(e - 2, (soft || hush || velar) ? "ие" : "ые", 2);
+        break;
+    case 'G':
+        memcpy(e - 2, (soft || hush || velar) ? "их" : "ых", 2);
+        break;
+    }
+    return TRUE;
+}
+
+/* RU: agree every adjective in a phrase ("проклятый ржавый +1 ") with
+   g; the word after the preposition "с" is a noun phrase ("с ловушкой")
+   and is left alone */
+void
+ru_agree_phrase(char *s, char g)
+{
+    char *w, *p;
+    boolean skip = FALSE;
+
+    if (g == 'm')
+        return;
+    for (w = s; *w; w = p) {
+        for (p = w; *p && *p != ' '; p++)
+            ;
+        if (!skip)
+            (void) ru_agree_adj(w, p, g);
+        skip = !strncmp(w, "с ", 2);
+        while (*p == ' ')
+            p++;
+    }
+}
+
+/* RU: the head noun of a Russian item name: the first word that is not an
+   adjective ("кожаная броня" -> броня); null at a preposition ("с
+   надписью") or if there is none.  *lenp gets its length without
+   trailing punctuation */
+staticfn const char *
+ru_head(const char *s, size_t *lenp)
+{
+    static const char *const adj_end[] = {
+        "ый", "ий", "ой", "ая", "яя", "ое", "ее", "ые",
+    };
+    static const char *const preps[] = {
+        "с", "со", "из", "в", "во", "без", "под", "на", "для", "от", "к",
+    };
+    const char *w, *nx, *p;
+    size_t l;
+    int i;
+    boolean adj;
+
+    for (w = s; *w; w = nx) {
+        while (*w == ' ')
+            w++;
+        for (nx = w; *nx && *nx != ' '; nx++)
+            ;
+        for (p = nx; p > w && strchr(",.;:()", p[-1]); p--)
+            ;
+        l = (size_t) (p - w);
+        if (!l || digit(*w) || *w == '+' || *w == '-')
+            continue;
+        for (i = 0; i < SIZE(preps); i++)
+            if (strlen(preps[i]) == l && !strncmpi(w, preps[i], l))
+                return (const char *) 0;
+        if (l >= 6 && !strncmp(p - 2, "ся", 2))
+            p -= 2;
+        adj = FALSE;
+        if (p - w >= 4) {
+            for (i = 0; i < SIZE(adj_end); i++)
+                if (!strncmp(p - 2, adj_end[i], 2))
+                    adj = TRUE;
+            /* "синие ботинки" vs "оружие", "лечение": "-ие" is an
+               adjective only before a plural noun */
+            if (!strncmp(p - 2, "ие", 2)) {
+                const char *n2 = nx, *n2e;
+
+                while (*n2 == ' ')
+                    n2++;
+                for (n2e = n2; *n2e && *n2e != ' '; n2e++)
+                    ;
+                adj = (n2e > n2 && strchr("ыи", n2e[-1]));
+            }
+        }
+        if (!adj) {
+            *lenp = l;
+            return w;
+        }
+    }
+    return (const char *) 0;
+}
+
+#include "objnum_ru.h"
+
+staticfn const struct ru_num_name *
+ru_num_lookup(const char *w, size_t l)
+{
+    int i;
+
+    for (i = 0; i < SIZE(ru_num_names); i++)
+        if (strlen(ru_num_names[i].nom) == l
+            && !strncmp(w, ru_num_names[i].nom, l))
+            return &ru_num_names[i];
+    return (const struct ru_num_name *) 0;
+}
+
+/* RU: grammatical gender of a Russian item name: 'm', 'f', 'n' or plural
+   'p', from the head noun ("зелье под названием X" -> зелье) */
+char
+ru_name_gender(const char *s)
+{
+    static const char *const masc_soft[] = {
+        "камень", "кремень", "огонь", "фонарь", "янтарь", "скальпель",
+        "алкоголь", "контроль", "юми", "цуруги",
+    };
+    const struct ru_num_name *e;
+    char word[BUFSZ], *p, last;
+    const char *w;
+    size_t l;
+    int i;
+
+    if (!(w = ru_head(s, &l)))
+        return 'm';
+    if ((e = ru_num_lookup(w, l)) != 0)
+        return e->gend;
+    if (l >= sizeof word)
+        l = sizeof word - 1;
+    memcpy(word, w, l), word[l] = '\0';
+    /* "шапочка-череп": gender of the first part */
+    if ((p = strchr(word, '-')) != 0)
+        *p = '\0', l = strlen(word);
+    if (!l)
+        return 'm';
+    for (i = 0; i < SIZE(masc_soft); i++)
+        if (!strcmpi(word, masc_soft[i]))
+            return 'm';
+    last = word[l - 1];
+    if (strchr("ыи", last))
+        return 'p';
+    if (strchr("ая", last))
+        return 'f';
+    if (strchr("оеё", last))
+        return 'n';
+    if (strchr("ь", last)) /* "кость", "цепь" */
+        return 'f';
+    return 'm';
+}
+
+/* RU: put a singular item name into a number form, in place (bufsz is
+   the room at s): 'P' nominative plural ("золотые зелья"), 'S' after
+   2-4 ("3 золотых зелья", "2 золотые монеты"), 'G' after 5+ or
+   "несколько" ("5 золотых зелий").  Returns the form for adjectives in
+   front of the name ('p' or 'G'), or 0 if the head noun is unknown and
+   nothing was changed */
+char
+ru_number_name(char *s, size_t bufsz, char form)
+{
+    const struct ru_num_name *e;
+    const char *h, *noun;
+    char tmp[BUFSZ], adjg, *w, *p, *hd, *tail;
+    size_t l;
+
+    if (!(h = ru_head(s, &l)) || !(e = ru_num_lookup(h, l)))
+        return 0;
+    adjg = (form == 'P' || (form == 'S' && e->gend == 'f')) ? 'p' : 'G';
+    noun = (form == 'P') ? e->nom_pl : (form == 'S') ? e->gen_sg : e->gen_pl;
+    copynchars(tmp, s, (int) sizeof tmp - 1);
+    hd = tmp + (h - s);
+    for (w = tmp; w < hd; w = p) {
+        for (p = w; *p && *p != ' '; p++)
+            ;
+        (void) ru_agree_adj(w, p, adjg);
+        while (*p == ' ')
+            p++;
+    }
+    tail = hd + l;
+    *hd = '\0';
+    Snprintf(s, bufsz, "%s%s%s", tmp, noun, tail);
+    return adjg;
+}
+
 /* RU: combine an appearance description with a class noun.  Descriptions
    are written in the masculine ("мутный", "медный"); agree adjectives with
    the noun's gender ('m', 'f', 'n'), put prepositional phrases after the
@@ -607,32 +831,12 @@ ru_dn_noun(char *buf, const char *dn, const char *noun, char gend)
     }
     copynchars(adj, dn, (int) sizeof adj - 1);
     if (gend != 'm') {
-        /* inflect each leading adjective word (hyphenated: its last part) */
+        /* inflect the leading adjectives (hyphenated: their last part) */
         for (w = adj; *w; w = p) {
-            size_t l;
-            char c2, *e;
-
             for (p = w; *p && *p != ' '; p++)
                 ;
-            l = (size_t) (p - w);
-            if (l < 3)
-                break;
-            /* reflexive participle: "пузырящийся" -> inflect before "ся" */
-            e = (l >= 6 && !strncmp(p - 2, "ся", 2)) ? p - 2 : p;
-            c2 = e[-3]; /* letter before the 2-letter ending */
-            if (!strncmp(e - 2, "ый", 2) || !strncmp(e - 2, "ой", 2)
-                || !strncmp(e - 2, "ий", 2)) {
-                boolean soft = !strncmp(e - 2, "ий", 2)
-                               && !strchr("жшчщгкх", c2);
-                boolean hush = !strncmp(e - 2, "ий", 2) && !!strchr("жшчщ", c2);
-
-                if (gend == 'n')
-                    memcpy(e - 2, (soft || hush) ? "ее" : "ое", 2);
-                else
-                    memcpy(e - 2, soft ? "яя" : "ая", 2);
-            } else {
+            if (!ru_agree_adj(w, p, gend))
                 break; /* first non-adjective word ends the run */
-            }
             if (*p == ' ')
                 p++;
         }
@@ -761,9 +965,7 @@ xname_flags(
     case TOOL_CLASS:
         /* note: lenses or towel prefix would overwrite poisoned weapon
            prefix if both were simultaneously possible, but they aren't */
-        if (typ == LENSES)
-            Strcpy(buf, "пара ");
-        else if (is_wet_towel(obj))
+        if (is_wet_towel(obj)) /* RU: "линзы" need no "пара" */
             Strcpy(buf, (obj->spe < 3) ? "влажное " : "мокрое ");
 
         if (!dknown)
@@ -789,11 +991,8 @@ xname_flags(
     case ARMOR_CLASS:
         /* depends on order of the dragon scales objects */
         if (typ >= GRAY_DRAGON_SCALES && typ <= YELLOW_DRAGON_SCALES) {
-            Sprintf(buf, "набор %s", actualn);
+            Strcpy(buf, actualn); /* RU: "чешуя серого дракона" */
             break;
-        } else if (is_boots(obj) || is_gloves(obj)) {
-            Strcpy(buf, "пара ");
-            /*FALLTHRU*/
         } else if (is_shield(obj) && !dknown) {
             if (obj->otyp >= ELVEN_SHIELD && obj->otyp <= ORCISH_SHIELD) {
                 Strcpy(buf, "щит");
@@ -917,9 +1116,9 @@ xname_flags(
                 Strcat(buf, " ");
                 if (typ == POT_WATER && bknown
                     && (obj->blessed || obj->cursed)) {
-                    Strcat(buf, obj->blessed ? "святое " : "нечистое ");
+                    Strcat(buf, obj->blessed ? "святой " : "нечистой ");
                 }
-                Strcat(buf, actualn);
+                Strcat(buf, ru_obj_gen(POTION_CLASS, actualn));
             } else {
                 xcalled(buf, BUFSZ - PREFIX, "", un);
             }
@@ -931,9 +1130,11 @@ xname_flags(
         Strcpy(buf, "свиток");
         if (!dknown)
             break;
-        if (nn) {
+        if (nn && typ == SCR_BLANK_PAPER) {
+            Strcpy(buf, "чистый свиток");
+        } else if (nn) {
             Strcat(buf, " ");
-            Strcat(buf, actualn);
+            Strcat(buf, ru_obj_gen(SCROLL_CLASS, actualn));
         } else if (un) {
             xcalled(buf, BUFSZ - PREFIX, "", un);
         } else if (ocl->oc_magic) {
@@ -947,7 +1148,7 @@ xname_flags(
         if (!dknown)
             Strcpy(buf, "жезл");
         else if (nn)
-            Sprintf(buf, "жезл %s", actualn);
+            Sprintf(buf, "жезл %s", ru_obj_gen(WAND_CLASS, actualn));
         else if (un)
             xcalled(buf, BUFSZ - PREFIX, "жезл", un);
         else
@@ -967,10 +1168,13 @@ xname_flags(
             /* end of tribute */
         } else if (!dknown) {
             Strcpy(buf, "книга заклинаний");
+        } else if (nn && typ == SPE_BLANK_PAPER) {
+            Strcpy(buf, "чистая книга заклинаний");
         } else if (nn) {
             if (typ != SPE_BOOK_OF_THE_DEAD)
                 Strcpy(buf, "книга заклинаний ");
-            Strcat(buf, actualn);
+            Strcat(buf, (typ == SPE_BOOK_OF_THE_DEAD) ? actualn
+                        : ru_obj_gen(SPBOOK_CLASS, actualn));
         } else if (un) {
             xcalled(buf, BUFSZ - PREFIX, "книга заклинаний", un);
         } else
@@ -980,7 +1184,7 @@ xname_flags(
         if (!dknown)
             Strcpy(buf, "кольцо");
         else if (nn)
-            Sprintf(buf, "кольцо %s", actualn);
+            Sprintf(buf, "кольцо %s", ru_obj_gen(RING_CLASS, actualn));
         else if (un)
             xcalled(buf, BUFSZ - PREFIX, "кольцо", un);
         else
@@ -1100,6 +1304,8 @@ xname_flags(
         }
     }
 
+    if (!strncmp(buf, "отравленный ", 12)) /* "отравленная стрела" */
+        ru_agree_phrase(buf, ru_name_gender(buf + 12));
     return buf;
 }
 
@@ -1237,9 +1443,9 @@ add_erosion_words(struct obj *obj, char *prefix)
             Strcat(prefix, "основательно ");
             break;
         }
-        Strcat(prefix, is_rustprone(obj) ? "ржавое "
-                       : is_crackable(obj) ? "треснутое "
-                         : "обгоревшее ");
+        Strcat(prefix, is_rustprone(obj) ? "ржавый "
+                       : is_crackable(obj) ? "треснутый "
+                         : "обгоревший ");
     }
     if (obj->oeroded2 && !iscrys) {
         switch (obj->oeroded2) {
@@ -1250,18 +1456,18 @@ add_erosion_words(struct obj *obj, char *prefix)
             Strcat(prefix, "основательно ");
             break;
         }
-        Strcat(prefix, is_corrodeable(obj) ? "проржавевшее " : "гнилое ");
+        Strcat(prefix, is_corrodeable(obj) ? "проржавевший " : "гнилой ");
     }
     /* note: it is possible for an item to be both eroded and erodeproof
        (cursed scroll of destroy armor read while confused erodeproofs an
        item of armor without repairing existing erosion) */
     if (rknown && obj->oerodeproof)
-        Strcat(prefix, iscrys ? "укреплённое "
-                       : is_rustprone(obj) ? "нержавеющее "
-                         : is_corrodeable(obj) ? "некоррозируемое "
-                           : is_flammable(obj) ? "огнеупорное "
-                             : is_crackable(obj) ? "закалённое " /* hardened */
-                               : is_rottable(obj) ? "гнилоустойчивое "
+        Strcat(prefix, iscrys ? "укреплённый "
+                       : is_rustprone(obj) ? "нержавеющий "
+                         : is_corrodeable(obj) ? "некоррозируемый "
+                           : is_flammable(obj) ? "огнеупорный "
+                             : is_crackable(obj) ? "закалённый " /* hardened */
+                               : is_rottable(obj) ? "гнилоустойчивый "
                                  : "");
 }
 
@@ -1314,12 +1520,15 @@ doname_base(
     char *bp;
     char *bp_eos, *bp_end;
     size_t bpspaceleft;
+    char ru_pfx_g = 0; /* RU: gender/number for the prefix adjectives */
 
     /* 'bp' will be within an obuf[] rather than at the start of one,
        usually (but not always) pointing at &obuf[PREFIX];
        gx.xnamep always points to the start of that buffer;
        'bp_eos' and 'bpspaceleft' are used and updated by Concat*() macros */
-    bp = xname(obj);
+    /* RU: a counted name is built from the singular ("3 золотых зелья") */
+    bp = xname_flags(obj, (obj->quan != 1L && obj->otyp != CORPSE)
+                              ? CXN_SINGULAR : CXN_NORMAL);
     bp_end = gx.xnamep + BUFSZ - 1;
     bp_eos = eos(bp);
     assert(bp_end >= bp_eos); /* ok provided xname() bounds checking works */
@@ -1342,9 +1551,34 @@ doname_base(
      * combining both into one function taking a parameter.
      */
     /* must check opoisoned--someone can have a weirdly-named fruit */
-    if (!strncmp(bp, "отравленный ", 12) && obj->opoisoned) {
+    if (!strncmp(bp, "отравленн", 9) && bp[11] == ' ' && obj->opoisoned) {
         bp += 12; /* doesn't affect bp_eos or bpspaceleft */
         ispoisoned = TRUE;
+    }
+
+    if (obj->quan != 1L && obj->otyp != CORPSE) {
+        long n = obj->quan % 100L;
+        char form = (vague_quan && !dknown) ? 'G'
+                    : (n % 10L == 1L && n != 11L) ? 0
+                      : (n % 10L >= 2L && n % 10L <= 4L && (n < 12L || n > 14L))
+                        ? 'S' : 'G';
+
+        ru_pfx_g = ru_name_gender(bp); /* "21 золотая монета" */
+        if (form) {
+            char g = ru_number_name(bp, (size_t) (bp_end - bp), form);
+
+            if (g) {
+                ru_pfx_g = g;
+            } else { /* unknown noun: plain plural as before */
+                char *pl = makeplural(bp);
+
+                copynchars(bp, pl, (int) (bp_end - bp));
+                maybereleaseobuf(pl);
+                ru_pfx_g = 'p';
+            }
+        }
+        bp_eos = eos(bp);
+        bpspaceleft = (size_t) (bp_end - bp_eos);
     }
 
     /* fruits are allowed to be given artifact names; when that happens,
@@ -1443,7 +1677,7 @@ doname_base(
     }
 
     if (obj->greased)
-        Strcat(prefix, "смазанное ");
+        Strcat(prefix, "смазанный ");
 
     if (cknown && Has_contents(obj) && bpspaceleft > 0) {
         /* we count the number of separate stacks, which corresponds
@@ -1492,7 +1726,7 @@ doname_base(
         /*FALLTHRU*/
     case WEAPON_CLASS:
         if (ispoisoned)
-            Strcat(prefix, "отравленное ");
+            Strcat(prefix, "отравленный ");
         add_erosion_words(obj, prefix);
         if (known) {
             Sprintf(eos(prefix), "%+d ", obj->spe); /* sitoa(obj->spe)+" " */
@@ -1546,7 +1780,7 @@ doname_base(
                     turns_left += peek_timer(BURN_OBJECT, &timer) - svm.moves;
                 }
                 if (turns_left < full_burn_time)
-                    Strcat(prefix, "частично использованное ");
+                    Strcat(prefix, "частично использованный ");
             }
             if (obj->lamplit)
                 Concat(bp, 0, " (горит)");
@@ -1576,7 +1810,7 @@ doname_base(
         break;
     case FOOD_CLASS:
         if (obj->oeaten)
-            Strcat(prefix, "частично съеденное ");
+            Strcat(prefix, "частично съеденный ");
         if (obj->otyp == CORPSE) {
             /* (quan == 1) => want corpse_xname() to supply article,
                (quan != 1) => already have count or "some" as prefix;
@@ -1601,8 +1835,8 @@ doname_base(
 #endif
             if (ismnum(omndx)
                 && (known || (svm.mvitals[omndx].mvflags & MV_KNOWS_EGG))) {
-                Strcat(prefix, mons[omndx].pmnames[NEUTRAL]);
-                Strcat(prefix, " ");
+                ConcatF1(bp, 0, " %s",
+                         mon_gen_nom(mons[omndx].pmnames[NEUTRAL], BP_GEN));
                 if (obj->spe == 1)
                     Concat(bp, 0, " (снесено тобой)");
             }
@@ -1742,6 +1976,11 @@ doname_base(
     } else if (iflags.pricequotes && !objects[obj->otyp].oc_name_known) {
         append_price_quote(bp, &bp_eos, obj->otyp);
     }
+
+    /* RU: prefix adjectives are written in the masculine; agree them with
+       the name ("проклятая ржавая кирка"); a corpse's prefix is its name */
+    if (obj->otyp != CORPSE)
+        ru_agree_phrase(prefix, ru_pfx_g ? ru_pfx_g : ru_name_gender(bp));
 
     if (!strncmp(prefix, "a ", 2)) {
         /* save current prefix, without "a "; might be empty */
@@ -2277,8 +2516,19 @@ aobjnam(struct obj *otmp, const char *verb)
 {
     char prefix[PREFIX];
     char *bp = cxname(otmp);
+    boolean one = FALSE; /* RU: "21 стрела светится" */
 
     if (otmp->quan != 1L) {
+        long n = otmp->quan % 100L;
+        char form = (n % 10L == 1L && n != 11L) ? 0
+                    : (n % 10L >= 2L && n % 10L <= 4L && (n < 12L || n > 14L))
+                      ? 'S' : 'G';
+        char *sg = (otmp->otyp == CORPSE) ? (char *) 0 : xname_flags(otmp, CXN_SINGULAR);
+
+        /* RU: "4 оркских кинжала" from the singular (xname leaves PREFIX
+           room in front); plain plural if the noun is unknown */
+        if (sg && (!form || ru_number_name(sg, BUFSZ - PREFIX, form)))
+            bp = sg, one = !form;
         Sprintf(prefix, "%ld ", otmp->quan);
         bp = strprepend(bp, prefix);
     }
@@ -2286,7 +2536,7 @@ aobjnam(struct obj *otmp, const char *verb)
        message already carries the Russian verb */
     if (verb && (*verb & 0x80)) {
         Strcat(bp, " ");
-        Strcat(bp, otense(otmp, verb));
+        Strcat(bp, one ? verb : otense(otmp, verb));
     }
     return bp;
 }
@@ -2573,10 +2823,83 @@ otense(struct obj *otmp, const char *verb)
      */
     if (!is_plural(otmp))
         return vtense((char *) 0, verb);
+    if (*verb & 0x80) /* RU: "светится" -> "светятся" */
+        return ru_verb_plural(verb);
 
     buf = nextobuf();
     Strcpy(buf, verb);
     return buf;
+}
+
+/* RU: third person plural of a Russian present-tense verb phrase; the last
+   word is the verb ("яростно светится" -> "яростно светятся") */
+char *
+ru_verb_plural(const char *verb)
+{
+    static const char *const irreg[][2] = {
+        { "может", "могут" }, { "хочет", "хотят" }, { "бежит", "бегут" },
+        { "есть", "есть" },
+    };
+    char *buf = nextobuf(), *w, *e;
+    size_t l;
+    int i;
+    boolean vow, hush;
+
+    copynchars(buf, verb, BUFSZ - 5); /* "ет" -> "ют" never grows */
+    w = strrchr(buf, ' ');
+    w = w ? w + 1 : buf;
+    for (i = 0; i < SIZE(irreg); i++)
+        if (!strcmp(w, irreg[i][0])) {
+            Strcpy(w, irreg[i][1]);
+            return buf;
+        }
+    e = eos(w);
+    l = (size_t) (e - w);
+    if (l >= 4 && !strcmp(e - 2, "ся"))
+        e -= 2; /* inflect before reflexive "ся" */
+    if (e - w < 3)
+        return buf;
+    vow = !!strchr("аеёиоуыэюяь", e[-3]);
+    hush = !!strchr("жшчщ", e[-3]);
+    if (!strncmp(e - 2, "ит", 2))
+        memcpy(e - 2, hush ? "ат" : "ят", 2);
+    else if (!strncmp(e - 2, "ет", 2) || !strncmp(e - 2, "ёт", 2))
+        memcpy(e - 2, vow ? "ют" : "ут", 2);
+    return buf;
+}
+
+/* RU: "сам"/"сама"/"само"/"сами" agreeing with an object and its count
+   ("21 стрела приваривается сама") */
+const char *
+ru_self_word(struct obj *obj)
+{
+    long n = obj->quan % 100L;
+    char g = 'p';
+
+    if (obj->quan == 1L || (n % 10L == 1L && n != 11L)) {
+        char *nm = cxname_singular(obj);
+
+        g = ru_name_gender(nm);
+        maybereleaseobuf(nm);
+    }
+    return (g == 'f') ? "сама" : (g == 'n') ? "само" : (g == 'p') ? "сами"
+                                                                  : "сам";
+}
+
+/* RU: "N <name>" in the number form for N: "3 стрелы", "5 стрел" */
+char *
+ru_count_xname(struct obj *obj, long cnt)
+{
+    char prefix[PREFIX], *s = xname_flags(obj, CXN_SINGULAR);
+    long n = cnt % 100L;
+    char form = (n % 10L == 1L && n != 11L) ? 0
+                : (n % 10L >= 2L && n % 10L <= 4L && (n < 12L || n > 14L))
+                  ? 'S' : 'G';
+
+    if (form && !ru_number_name(s, BUFSZ - PREFIX, form))
+        s = xname(obj); /* unknown noun: plain plural */
+    Sprintf(prefix, "%ld ", cnt);
+    return strprepend(s, prefix);
 }
 
 /* various singular words that vtense would otherwise categorize as plural;
@@ -2925,6 +3248,9 @@ ru_makeplural(const char *oldstr)
 
     str = nextobuf();
     Strcpy(str, oldstr);
+    /* item names: head noun and its adjectives ("золотые зелья") */
+    if (ru_number_name(str, BUFSZ, 'P'))
+        return str;
     word = str;
     for (p = str; *p; p++)
         if (*p == ' ')
@@ -4126,7 +4452,6 @@ ru_is_objname(const char *str)
 }
 
 #include "objnames_en.h"
-#include "objgen_ru.h"
 #include "artinames_en.h"
 
 /* RU: original English name of an object type, as upstream xname() spells

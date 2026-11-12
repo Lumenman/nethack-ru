@@ -1419,6 +1419,8 @@ tin_variety_txt(char *s, int *tinvariety)
     return 0;
 }
 
+DISABLE_WARNING_FORMAT_NONLITERAL
+
 /*
  * This assumes that buf already contains the word "tin",
  * as is the case with caller xname().
@@ -1426,35 +1428,45 @@ tin_variety_txt(char *s, int *tinvariety)
 void
 tin_details(struct obj *obj, int mnum, char *buf)
 {
-    char buf2[BUFSZ];
+    /* RU: "áàíêà ìÿñà êîáîëüäà"; %s is the contents in the genitive.
+       Same order as tintxts[]; shortcut: adjectives are masculine/neuter
+       ("ìàğèíîâàííîãî") even for a feminine vegetable */
+    static const char *const ru_tin_fmt[] = {
+        "ïğîòóõøàÿ áàíêà %s", "ñàìîäåëüíàÿ áàíêà %s", "áàíêà ñóïà èç %s",
+        "áàíêà %s ïî-ôğàíöóçñêè", "áàíêà ìàğèíîâàííîãî %s",
+        "áàíêà âàğåíîãî %s", "áàíêà êîï÷åíîãî %s", "áàíêà ñóøåíîãî %s",
+        "áàíêà %s âî ôğèòşğå", "áàíêà %s ïî-ñû÷óàíüñêè",
+        "áàíêà çàïå÷åííîãî %s", "áàíêà æàğåííîãî â âîêå %s",
+        "áàíêà îáæàğåííîãî %s", "áàíêà çàñàõàğåííîãî %s", "áàíêà ïşğå èç %s",
+    };
+    char what[BUFSZ];
 
     if (!obj || !buf)
         return;
 
     int r = tin_variety(obj, TRUE);
 
-    if (r == SPINACH_TIN)
+    if (r == SPINACH_TIN) {
         Strcat(buf, " øïèíàòà");
-    else if (mnum == NON_PM)
+    } else if (mnum == NON_PM) {
         Strcpy(buf, "ïóñòàÿ áàíêà");
-    else {
-        if ((obj->cknown || iflags.override_ID) && obj->spe < 0) {
-            if (r == ROTTEN_TIN || r == HOMEMADE_TIN) {
-                /* put these before the word tin */
-                Sprintf(buf2, "%s %s èç ", tintxts[r].txt, buf);
-                Strcpy(buf, buf2);
-            } else {
-                Sprintf(eos(buf), " èç %s ", tintxts[r].txt);
-            }
-        } else {
-            Strcpy(eos(buf), " èç ");
-        }
+    } else {
+        const char *mgen = mon_gen_nom(mons[mnum].pmnames[NEUTRAL], BP_GEN);
+
         if (vegetarian(&mons[mnum]))
-            Sprintf(eos(buf), "%s", mons[mnum].pmnames[NEUTRAL]);
+            Strcpy(what, mgen);
         else
-            Sprintf(eos(buf), "ìÿñî %s", mons[mnum].pmnames[NEUTRAL]);
+            Sprintf(what, "ìÿñà %s", mgen);
+        if ((obj->cknown || iflags.override_ID) && obj->spe < 0
+            && r >= 0 && r < SIZE(ru_tin_fmt))
+            Sprintf(buf, ru_tin_fmt[r], what);
+        else
+            Sprintf(buf, "áàíêà %s", what);
     }
 }
+
+RESTORE_WARNING_FORMAT_NONLITERAL
+
 
 void
 set_tin_variety(struct obj *obj, int forcetype)
