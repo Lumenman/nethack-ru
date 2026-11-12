@@ -794,7 +794,7 @@ intervene(void)
         break;
     case 2:
         if (!Blind)
-            You("notice a %s glow surrounding you.", hcolor(NH_BLACK));
+            You("замечаете %s сияние вокруг себя.", ru_color(hcolor(NH_BLACK), 'n', BP_NOM));
         rndcurse();
         break;
     case 3:

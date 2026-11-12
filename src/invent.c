@@ -1742,8 +1742,12 @@ getobj_prompt(char *qbuf, const char *word)
         Sprintf(qbuf, "На чём вы хотите писать?");
     else if (!strcmp(word, "писать чем"))
         Sprintf(qbuf, "Чем вы хотите писать?");
-    else if (!strcmp(word, "окунуть"))
-        Sprintf(qbuf, "Во что вы хотите окунуть?");
+    else if (!strcmp(word, "окунуть")) /* #altdip asks this for the potion */
+        Sprintf(qbuf, "Что вы хотите окунуть?");
+    else if (!strncmp(word, "окунуть ", 8) && strlen(word) > 10
+             && !strcmp(eos((char *) word) - 2, " в")) /* "окунуть X в" */
+        Sprintf(qbuf, "Во что вы хотите окунуть %.*s?",
+                (int) strlen(word) - 10, word + 8);
     else if (!strcmp(word, "выстрелить"))
         Sprintf(qbuf, "Чем вы хотите выстрелить?");
     else

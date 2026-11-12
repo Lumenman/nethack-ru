@@ -5840,7 +5840,7 @@ maybe_destroy_item(
             if (u_carry ? !Blind : vis) {
                 pline("%s светится странным %s, но остаётся целым.",
                       The(u_carry ? xname(obj) : distant_name(obj, xname)),
-                      hcolor("тёмно-красным"));
+                      ru_color(hcolor("тёмно-красный"), 'm', BP_INS));
             }
             break;
         }

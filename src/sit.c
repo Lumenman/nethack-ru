@@ -629,7 +629,7 @@ rndcurse(void)
             curse(otmp);
         if (!Blind) {
             pline("%s светится %s.", Yobjnam2(otmp, (char *) 0),
-                  hcolor(otmp->cursed ? NH_BLACK : (const char *) "коричневым"));
+                  ru_color(hcolor(otmp->cursed ? NH_BLACK : (const char *) "коричневый"), 'n', BP_INS));
             otmp->bknown = Hallucination ? 0 : 1; /* bypass set_bknown() */
         } else {
             otmp->bknown = 0; /* bypass set_bknown() */

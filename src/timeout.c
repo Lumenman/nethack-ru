@@ -279,7 +279,7 @@ static NEARDATA const char *const choke_texts[] = {
     "Вам трудно дышать.",
     "Вы задыхаетесь, хватая ртом воздух.",
     "Вы больше не можете дышать.",
-    "Вы превращаетесь %s.",
+    "Вы становитесь %s.",
     "Вы задыхаетесь."
 };
 
@@ -308,7 +308,7 @@ choke_dialogue(void)
             const char *str = choke_texts[SIZE(choke_texts) - i];
 
             if (strchr(str, '%'))
-                urgent_pline(str, hcolor(NH_BLUE));
+                urgent_pline(str, ru_color(hcolor(NH_BLUE), flags.female ? 'f' : 'm', BP_INS));
             else
                 urgent_pline("%s", str);
             stop_occupation();
@@ -384,7 +384,7 @@ levitation_dialogue(void)
 }
 
 static NEARDATA const char *const slime_texts[] = {
-    "Вы немного превращаетесь в %s.",   /* 5 */
+    "Вы становитесь слегка %s.",   /* 5 */
     "Ваши конечности становятся студенистыми.",   /* 4 */
     "Ваша кожа начинает отслаиваться.", /* 3 */
     "Вы превращаетесь в %s.",       /* 2 */
@@ -417,10 +417,12 @@ slime_dialogue(void)
         if (strchr(buf, '%')) {
             if (i == 4L) {  /* "you are turning green" */
                 if (!Blind) /* [what if you're already green?] */
-                    urgent_pline(buf, hcolor(NH_GREEN));
+                    urgent_pline(buf, ru_color(hcolor(NH_GREEN), flags.female ? 'f' : 'm', BP_INS));
             } else {
-                urgent_pline(buf, an(Hallucination ? rndmonnam(NULL)
-                                                   : "green slime"));
+                /* RU: "превращаетесь в зелёную слизь", "стали зелёной слизью" */
+                urgent_pline(buf, mon_gen_nom(Hallucination ? rndmonnam(NULL)
+                                                            : "зелёная слизь",
+                                              (i == 0L) ? BP_INS : BP_ACC));
             }
         } else {
             urgent_pline("%s", buf);
@@ -662,7 +664,8 @@ nh_timeout(void)
             u.uspellprot--;
             find_ac();
             if (!Blind)
-                Norep("%s дымка вокруг вас %s.", hcolor(NH_GOLDEN),
+                Norep("%s дымка вокруг вас %s.",
+                  upstart((char *) ru_color(hcolor(NH_GOLDEN), 'f', BP_NOM)),
                       u.uspellprot ? "становится менее плотной" : "рассеивается");
         }
     }

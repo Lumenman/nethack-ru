@@ -1,0 +1,16 @@
+import os
+exec(open(os.path.join(os.path.dirname(__file__), 'common.py'), encoding='utf-8').read())
+def rd(w):
+    R = W(w); K('r'); K(R); M(); K('\x1b'); M()
+rd('scroll of enchant weapon')
+rd('scroll of enchant weapon')
+rd('scroll of enchant armor')
+rd('cursed scroll of enchant weapon')
+H = W('blessed potion of water')
+K('#'); K('dip' + CR); K('a', 'dipq'); M(); K(H, 'dip'); M()
+U = W('cursed potion of water')
+K('#'); K('dip' + CR); K('a'); M(); K(U, 'dip2'); M()
+P = W('potion of hallucination'); K('q'); K(P, 'hallu'); M()
+rd('scroll of enchant weapon')
+rd('scroll of enchant weapon')
+rd('scroll of enchant armor')

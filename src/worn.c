@@ -951,7 +951,7 @@ m_dowear_type(
             if (autocurse)
                 pline("%s %s %s %s на мгновение.", mhis_up(mon),
                       simpleonames(best), otense(best, "светится"),
-                      hcolor(NH_BLACK));
+                      ru_color(hcolor(NH_BLACK), 'n', BP_INS));
         } /* can see it */
         m_delay += objects[best->otyp].oc_delay;
         mon->mfrozen = m_delay;
