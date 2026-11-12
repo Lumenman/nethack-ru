@@ -1,0 +1,12 @@
+import os
+exec(open(os.path.join(os.path.dirname(__file__), 'common.py'), encoding='utf-8').read())
+L = W('4 orcish daggers')
+K('w'); K(L); M()
+R = W('scroll of enchant weapon')
+K('r'); K(R, 'read'); M(); K('\x1b'); M()
+L = W('21 arrows')
+K('w'); K(L); M()
+R = W('scroll of enchant weapon')
+K('r'); K(R, 'read21'); M(); K(''); M()
+L = W('3 potions of fruit juice')
+K('q'); K(L, 'quaff'); M()

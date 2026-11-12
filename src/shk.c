@@ -5880,10 +5880,11 @@ shk_your(char *buf, struct obj *obj)
             { "ваш", "ваша", "ваше", "ваши" }, { "этот", "эта", "это", "эти" }
         };
         static const char gends[] = "mfnp";
-        char *nm = cxname(obj);
-        const char *g = strchr(gends, ru_name_gender(nm));
+        char *nm = is_plural(obj) ? (char *) 0 : cxname(obj);
+        const char *g = strchr(gends, nm ? ru_name_gender(nm) : 'p');
 
-        maybereleaseobuf(nm);
+        if (nm)
+            maybereleaseobuf(nm);
         Strcpy(buf, forms[*buf != 'в'][g ? (int) (g - gends) : 0]);
     }
     return strcat(buf, " ");

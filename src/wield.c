@@ -201,7 +201,7 @@ ready_weapon(struct obj *wep)
             else
                 tmp = "";
             pline("%s%s %s к %s%s!", tmp, aobjnam(wep, "приваривается"),
-                  (wep->quan == 1L) ? "сам" : "сами", /* a3 */
+                  ru_self_word(wep), /* a3 */
                   bimanual(wep) ? "вашим "
                                 : (URIGHTY ? "вашей правой "
                                            : "вашей левой "),
@@ -1015,7 +1015,7 @@ chwepon(struct obj *otmp, int amount)
         return 1;
     }
     if (!Blind) {
-        xtime = (amount * amount == 1) ? "мгновение" : "некоторое время";
+        xtime = (amount * amount == 1) ? "мгновения" : "некоторого времени";
         pline("%s %s в течение %s.",
               Yobjnam2(uwep, amount == 0 ? "яростно светится" : "светится"), color,
               xtime);

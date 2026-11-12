@@ -242,9 +242,11 @@ throw_obj(struct obj *obj, int shotlimit)
        attempted to specify a count */
     if (multishot > 1 || shotlimit > 0) {
         /* "You shoot N arrows." or "You throw N daggers." */
-        You("%s %d %s.", gm.m_shot.s ? "выпускаете" : "бросаете",
-            multishot, /* (might be 1 if player gave shotlimit) */
-            (multishot == 1) ? singular(obj, xname) : xname(obj));
+        /* RU: "3 кинжала", "5 стрел"; multishot might be 1 if player gave
+           shotlimit; an inanimate accusative matches the nominative except
+           for a lone feminine "1 стрела" (shortcut: not changed to "стрелу") */
+        You("%s %s.", gm.m_shot.s ? "выпускаете" : "бросаете",
+            ru_count_xname(obj, (long) multishot));
     }
 
     wep_mask = obj->owornmask;
