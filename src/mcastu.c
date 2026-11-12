@@ -73,9 +73,9 @@ cursetxt(struct monst *mtmp, boolean undirected)
                  || u.uundetected)
             point_msg = "в вашем направлении";
         else if (Displaced && (mtmp->mux != u.ux || mtmp->muy != u.uy))
-            point_msg = "ваш смещённый образ";
+            point_msg = "на ваш смещённый образ";
         else
-            point_msg = "вас";
+            point_msg = "на вас";
 
         pline_mon(mtmp, "%s указывает %s.", Monnam(mtmp), point_msg);
     } else if ((!(svm.moves % 4) || !rn2(4))) {

@@ -440,7 +440,12 @@ newman(void)
                 : (gu.urace.individual.m)
                    ? gu.urace.individual.m
                    : gu.urace.noun;
-    polyman("Вы чувствуете себя новым %s!", newform);
+    /* RU: "новым человеком", "новой женщиной", "новым эльфом" */
+    polyman(!strcmp(newform, "женщина") ? "Вы чувствуете себя новой %s!"
+                                        : "Вы чувствуете себя новым %s!",
+            !strcmp(newform, "женщина") ? "женщиной"
+            : !strcmp(newform, "мужчина") ? "мужчиной"
+              : mon_gen_nom(newform, BP_INS));
 
     newgend = poly_gender();
     /* note: newman() bypasses achievements for new ranks attained and
@@ -795,14 +800,36 @@ polymon(int mntmp)
 
     Strcpy(ustuckNam, u.ustuck ? Some_Monnam(u.ustuck) : "");
 
-    Strcpy(buf, (u.umonnum != mntmp) ? "" : "новый ");
-    if (dochange) {
-        flags.female = !flags.female;
-        Strcat(buf, (is_male(&mons[mntmp]) || is_female(&mons[mntmp]))
-                       ? "" : flags.female ? "самка " : "самец ");
+    {
+        /* RU: "превращаетесь в красного дракона", "в самку вампира",
+           "чувствуете себя новым драконом" */
+        boolean sexword = FALSE;
+        const char *pm;
+
+        if (dochange) {
+            flags.female = !flags.female;
+            sexword = !(is_male(&mons[mntmp]) || is_female(&mons[mntmp]));
+        }
+        pm = pmname(&mons[mntmp], flags.female ? FEMALE : MALE);
+        if (u.umonnum != mntmp) {
+            if (sexword)
+                Sprintf(buf, "%s %s", flags.female ? "самку" : "самца",
+                        mon_gen_nom(pm, BP_GEN));
+            else
+                Strcpy(buf, mon_gen_nom(pm, BP_ACC));
+            You("превращаетесь в %s!", buf);
+        } else {
+            if (sexword)
+                Sprintf(buf, "%s %s", flags.female ? "новой самкой"
+                                                    : "новым самцом",
+                        mon_gen_nom(pm, BP_GEN));
+            else
+                Sprintf(buf, "%s %s",
+                        (mon_name_gender(pm) == 'f') ? "новой" : "новым",
+                        mon_gen_nom(pm, BP_INS));
+            You("чувствуете себя %s!", buf);
+        }
     }
-    Strcat(buf, pmname(&mons[mntmp], flags.female ? FEMALE : MALE));
-    You("%s %s!", (u.umonnum != mntmp) ? "превращаетесь в" : "чувствуете себя", an(buf));
 
     if (Stoned && poly_when_stoned(&mons[mntmp])) {
         /* poly_when_stoned already checked stone golem genocide */
@@ -1030,7 +1057,7 @@ polymon(int mntmp)
        possible fatalities above and it isn't useful unless hero survives */
     if (flags.verbose) {
         static const char use_thec[] = "Используйте команду #%s, чтобы %s.";
-        static const char monsterc[] = "монстр";
+        static const char monsterc[] = "monster"; /* the command's name */
         struct permonst *uptr = gy.youmonst.data;
         boolean might_hide = (is_hider(uptr) || hides_under(uptr));
 
@@ -1391,7 +1418,8 @@ rehumanize(void)
 
     if (emits_light(gy.youmonst.data))
         del_light_source(LS_MONSTER, monst_to_any(&gy.youmonst));
-    polyman("Вы возвращаетесь к %s форме!", gu.urace.adj);
+    polyman("Вы возвращаетесь в облик %s!",
+            mon_gen_nom(gu.urace.noun, BP_GEN)); /* "в облик человека" */
 
     if (u.uhp < 1) {
         /* can only happen if some bit of code reduces u.uhp

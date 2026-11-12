@@ -34,9 +34,9 @@ throne_mon_sound(struct monst *mtmp)
         && mon_in_room(mtmp, COURT)) {
         static const char *const throne_msg[4] = {
             "звуки светской беседы.",
-            "скипетр, ударяемый при суде.",
-            "Кто-то кричит \"Долой голову %s!\"",
-            "Кошки королевы Берутиель!",
+            "стук скипетра, призывающий к порядку.",
+            "Кто-то кричит: \"Отрубить %s голову!\"",
+            "кошек королевы Берутиэль!",
         };
         int which = rn2(3) + (Hallucination ? 1 : 0);
 
@@ -49,7 +49,7 @@ throne_mon_sound(struct monst *mtmp)
             You_hear1(throne_msg[which]);
         } else {
             DISABLE_WARNING_FORMAT_NONLITERAL
-            pline(throne_msg[2], uhis());
+            pline(throne_msg[2], flags.female ? "ей" : "ему");
             RESTORE_WARNING_FORMAT_NONLITERAL
         }
         return TRUE;
@@ -76,7 +76,7 @@ beehive_mon_sound(struct monst *mtmp)
             break;
         case 2:
             Soundeffect(se_bees, 100);
-            You_hear("пчёлы в вашей %sшляпе!",
+            You_hear("пчёл в вашей %sшляпе!",
                      uarmh ? "" : "несуществующей ");
             break;
         }
@@ -118,7 +118,7 @@ zoo_mon_sound(struct monst *mtmp)
         int hallu = Hallucination ? 1 : 0, selection = rn2(2) + hallu;
         static const char *const zoo_msg[3] = {
             "звук, напоминающий слона, наступающего на арахис.",
-            "звук, напоминающий тюленя, лающего.", "Доктор Дулиттл!",
+            "звук, напоминающий лай тюленя.", "доктора Дулиттла!",
         };
         You_hear1(zoo_msg[selection]);
         return TRUE;
@@ -143,9 +143,9 @@ temple_priest_sound(struct monst *mtmp)
            care if telepathy or extended detection reveals that the
            priest is not currently standing on the altar; he's mobile). */
         static const char *const temple_msg[] = {
-            "*кто-то восхваляет %s.", "*кто-то умоляет %s.",
-            "#туша животного приносится в жертву.",
-            "*резкая мольба о пожертвованиях.",
+            "*как кто-то восхваляет %s.", "*как кто-то умоляет %s.",
+            "#как в жертву приносят тушу животного.",
+            "*резкую мольбу о пожертвованиях.",
         };
         const char *msg;
         int hallu = Hallucination ? 1 : 0;
@@ -167,7 +167,7 @@ temple_priest_sound(struct monst *mtmp)
             ++msg; /* skip control flags */
         if (strchr(msg, '%')) {
             DISABLE_WARNING_FORMAT_NONLITERAL
-            You_hear(msg, halu_gname(EPRI(mtmp)->shralign));
+            You_hear(msg, ru_god_case(halu_gname(EPRI(mtmp)->shralign), BP_ACC));
             RESTORE_WARNING_FORMAT_NONLITERAL
         } else
             You_hear1(msg);
@@ -188,8 +188,8 @@ oracle_sound(struct monst *mtmp)
         static const char *const ora_msg[5] = {
             "странный ветер.",     /* Jupiter at Dodona */
             "судорожный бред.", /* Apollo at Delphi */
-            "храпящие змеи.",     /* AEsculapius at Epidaurus */
-            "кто-то говорит \"Больше нет сурков!\"",
+            "храп змей.",     /* AEsculapius at Epidaurus */
+            "как кто-то говорит: \"Больше никаких сурков!\"",
             "громкое ZOT!" /* both rec.humor.oracle */
         };
         You_hear1(ora_msg[rn2(3) + hallu * 2]);
@@ -211,14 +211,14 @@ dosounds(void)
 
     if (svl.level.flags.nfountains && !rn2(400)) {
         static const char *const fountain_msg[4] = {
-            "булькающая вода.", "вода, падающая на монеты.",
-            "плеск наяды.", "содовый фонтанчик!",
+            "булькающую воду.", "звук воды, падающей на монеты.",
+            "плеск наяды.", "шипение газировки!",
         };
         You_hear1(fountain_msg[rn2(3) + hallu]);
     }
     if (svl.level.flags.nsinks && !rn2(300)) {
         static const char *const sink_msg[3] = {
-            "медленное капание.", "булькающий звук.", "посуда моется!",
+            "медленное капание.", "булькающий звук.", "звон моющейся посуды!",
         };
         You_hear1(sink_msg[rn2(2) + hallu]);
     }
@@ -228,10 +228,10 @@ dosounds(void)
     }
     if (svl.level.flags.has_swamp && !rn2(200)) {
         static const char *const swamp_msg[3] = {
-            "слышны комары!", "пахнет болотным газом!", /* so it's a smell...*/
-            "слышен Дональд Дак!",
+            "Слышен писк комаров!", "Пахнет болотным газом!", /* so it's a smell...*/
+            "Слышен Дональд Дак!",
         };
-        You1(swamp_msg[rn2(2) + hallu]);
+        pline1(swamp_msg[rn2(2) + hallu]);
         return;
     }
     if (svl.level.flags.has_vault && !rn2(200)) {
@@ -253,11 +253,11 @@ dosounds(void)
                     != (ROOM_INDEX(sroom) + ROOMOFFSET)) {
                     if (gold_in_vault) {
                         You_hear(!hallu
-                                     ? "кто-то считает золотые монеты."
-                                     : "квотербек выкрикивает комбинацию.");
+                                     ? "как кто-то считает деньги."
+                                     : "как квотербек выкрикивает комбинацию.");
                     } else {
                         Soundeffect(se_someone_searching, 30);
-                        You_hear("кто-то ищет.");
+                        You_hear("как кто-то что-то ищет.");
                     }
                     break;
                 }
@@ -269,7 +269,7 @@ dosounds(void)
                 You_hear("шаги стражника в дозоре.");
                 break;
             case 2:
-                You_hear("Эбенезер Скрудж!");
+                You_hear("Эбенезера Скруджа!");
                 break;
             }
         return;
@@ -284,8 +284,8 @@ dosounds(void)
     }
     if (svl.level.flags.has_barracks && !rn2(200)) {
         static const char *const barracks_msg[4] = {
-            "лезвия точатся.", "громкий храп.", "кости бросаются.",
-            "Генерал Макартур!",
+            "как точат клинки.", "громкий храп.", "стук игральных костей.",
+            "генерала Макартура!",
         };
         int count = 0;
 
@@ -318,8 +318,8 @@ dosounds(void)
         if (tended_shop(sroom)
             && !strchr(u.ushops, (int) (ROOM_INDEX(sroom) + ROOMOFFSET))) {
             static const char *const shop_msg[3] = {
-                "кто-то проклинает воришек.",
-                "звон кассового аппарата.", "Нейман и Маркус спорят!",
+                "как кто-то проклинает воришек.",
+                "звон кассового аппарата.", "как спорят Нейман и Маркус!",
             };
             You_hear1(shop_msg[rn2(2) + hallu]);
             noisy_shop(sroom);

@@ -241,7 +241,8 @@ summon_minion(aligntyp alignment, boolean talk)
     if (mon) {
         if (talk) {
             if (!Deaf)
-                pline("Голос %s гремит:", align_gname(alignment));
+                pline("Голос %s гремит:",
+                  ru_god_case(align_gname(alignment), BP_GEN));
             else
                 You_feel("%s громовой голос:",
                          god_gen(align_gname(alignment)));

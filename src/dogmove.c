@@ -456,6 +456,8 @@ dog_invent(struct monst *mtmp, struct edog *edog, int udist)
                                while otmp is still on floor */
                             char *otmpname = distant_name(otmp, doname);
 
+                ru_inan_acc(otmpname); /* "подбирает книгу" */
+
                             if (flags.verbose)
                                 pline_xy(omx, omy, "%s подбирает %s.",
                                       Monnam(mtmp), otmpname);

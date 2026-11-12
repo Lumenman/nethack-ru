@@ -2369,9 +2369,14 @@ domove_fight_empty(coordxy x, coordxy y)
         }
 
  futile:
-        You("%s%s %s.",
-            !(boulder || solid) ? "" : !explo ? "безвредно " : "тщетно ",
-            explo ? "взрываетесь" : "атакуете", buf);
+        if (explo) { /* RU: no object for "взрываетесь" */
+            You("%s.", (boulder || solid) ? "тщетно взрываетесь"
+                                           : "взрываетесь в пустоте");
+        } else {
+            ru_inan_acc(buf); /* "атакуете стену" */
+            You("%sатакуете %s.", !(boulder || solid) ? "" : "безвредно ",
+                buf);
+        }
 
         nomul(0);
         if (explo) {

@@ -200,7 +200,8 @@ ready_weapon(struct obj *wep)
                 tmp = thestr;
             else
                 tmp = "";
-            pline("%s%s %s к %s%s!", tmp, aobjnam(wep, "приваривается"),
+            pline("%s%s %s к %s%s!", tmp,
+                  upstart(aobjnam(wep, "приваривается")),
                   ru_self_word(wep), /* a3 */
                   bimanual(wep) ? "вашим "
                                 : (URIGHTY ? "вашей правой "

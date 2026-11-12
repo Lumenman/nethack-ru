@@ -2270,9 +2270,8 @@ accessory_or_armor_on(struct obj *obj)
                 mask = LEFT_RING;
             } else {
                 do {
-                    Sprintf(qbuf, "Какие %s%s, Правая или Левая?",
-                            humanoid(gy.youmonst.data) ? "колец-" : "",
-                            body_part_case(FINGER, BP_NOM | BP_PLURAL));
+                    Sprintf(qbuf, "На какую %s, правую или левую?",
+                            body_part_case(HAND, BP_ACC));
                     answer = yn_function(qbuf, rightleftchars, '\0', TRUE);
                     switch (answer) {
                     case '\0':
