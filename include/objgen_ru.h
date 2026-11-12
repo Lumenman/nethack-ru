@@ -170,4 +170,6 @@ static const struct ru_gen_name {
     { SPBOOK_CLASS, "чистого листа", "чистый лист" },
     { SPBOOK_CLASS, "чистой бумаги", "чистый лист" },
     { SPBOOK_CLASS, "романа", "роман" },
+    { SPBOOK_CLASS, "огненной сферы", "огненная сфера" },
+    { SPBOOK_CLASS, "морозной сферы", "морозная сфера" },
 };
