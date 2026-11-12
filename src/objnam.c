@@ -577,6 +577,70 @@ xcalled(
     Sprintf(eos(buf), "%s called %.*s", pfx, bufsiz - pfxlen, sfx);
 }
 
+/* RU: combine an appearance description with a class noun.  Descriptions
+   are written in the masculine ("мутный", "медный"); agree adjectives with
+   the noun's gender ('m', 'f', 'n'), put prepositional phrases after the
+   noun ("жезл из красного дерева") and turn the gem-name ring appearances
+   into "кольцо с тигровым глазом" */
+staticfn char *
+ru_dn_noun(char *buf, const char *dn, const char *noun, char gend)
+{
+    static const char *const after[][2] = {
+        { "тигровый глаз", "с тигровым глазом" },
+        { "лунный камень", "с лунным камнем" },
+        { "чЄрный оникс", "с чЄрным ониксом" },
+        { "слонова€ кость", "из слоновой кости" },
+        { "индиго", "цвета индиго" },
+    };
+    char adj[BUFSZ], *w, *p;
+    int i;
+
+    for (i = 0; i < SIZE(after); i++)
+        if (!strcmp(dn, after[i][0])) {
+            Sprintf(buf, "%s %s", noun, after[i][1]);
+            return buf;
+        }
+    if (!strncmp(dn, "в ", 2) || !strncmp(dn, "с ", 2) || !strncmp(dn, "из ", 3)
+        || !strncmp(dn, "без ", 4)) {
+        Sprintf(buf, "%s %s", noun, dn);
+        return buf;
+    }
+    copynchars(adj, dn, (int) sizeof adj - 1);
+    if (gend != 'm') {
+        /* inflect each leading adjective word (hyphenated: its last part) */
+        for (w = adj; *w; w = p) {
+            size_t l;
+            char c2, *e;
+
+            for (p = w; *p && *p != ' '; p++)
+                ;
+            l = (size_t) (p - w);
+            if (l < 3)
+                break;
+            /* reflexive participle: "пузыр€щийс€" -> inflect before "с€" */
+            e = (l >= 6 && !strncmp(p - 2, "с€", 2)) ? p - 2 : p;
+            c2 = e[-3]; /* letter before the 2-letter ending */
+            if (!strncmp(e - 2, "ый", 2) || !strncmp(e - 2, "ой", 2)
+                || !strncmp(e - 2, "ий", 2)) {
+                boolean soft = !strncmp(e - 2, "ий", 2)
+                               && !strchr("жшчщгкх", c2);
+                boolean hush = !strncmp(e - 2, "ий", 2) && !!strchr("жшчщ", c2);
+
+                if (gend == 'n')
+                    memcpy(e - 2, (soft || hush) ? "ее" : "ое", 2);
+                else
+                    memcpy(e - 2, soft ? "€€" : "а€", 2);
+            } else {
+                break; /* first non-adjective word ends the run */
+            }
+            if (*p == ' ')
+                p++;
+        }
+    }
+    Sprintf(buf, "%s %s", adj, noun);
+    return buf;
+}
+
 char *
 xname(struct obj *obj)
 {
@@ -860,8 +924,7 @@ xname_flags(
                 xcalled(buf, BUFSZ - PREFIX, "", un);
             }
         } else {
-            Strcat(buf, dn);
-            Strcat(buf, " зелье");
+            (void) ru_dn_noun(eos(buf), dn, "зелье", 'n');
         }
         break;
     case SCROLL_CLASS:
@@ -877,8 +940,7 @@ xname_flags(
             Strcat(buf, " с надписью ");
             Strcat(buf, dn);
         } else {
-            Strcpy(buf, dn);
-            Strcat(buf, " свиток");
+            (void) ru_dn_noun(buf, dn, "свиток", 'm');
         }
         break;
     case WAND_CLASS:
@@ -889,7 +951,7 @@ xname_flags(
         else if (un)
             xcalled(buf, BUFSZ - PREFIX, "жезл", un);
         else
-            Sprintf(buf, "%s жезл", dn);
+            (void) ru_dn_noun(buf, dn, "жезл", 'm');
         break;
     case SPBOOK_CLASS:
         if (typ == SPE_NOVEL) { /* 3.6 tribute */
@@ -900,7 +962,7 @@ xname_flags(
             else if (un)
                 xcalled(buf, BUFSZ - PREFIX, "книга", un);
             else
-                Sprintf(buf, "%s книга", dn);
+                (void) ru_dn_noun(buf, dn, "книга", 'f');
             break;
             /* end of tribute */
         } else if (!dknown) {
@@ -912,7 +974,7 @@ xname_flags(
         } else if (un) {
             xcalled(buf, BUFSZ - PREFIX, "книга заклинаний", un);
         } else
-            Sprintf(buf, "%s книга заклинаний", dn);
+            (void) ru_dn_noun(buf, dn, "книга заклинаний", 'f');
         break;
     case RING_CLASS:
         if (!dknown)
@@ -922,7 +984,7 @@ xname_flags(
         else if (un)
             xcalled(buf, BUFSZ - PREFIX, "кольцо", un);
         else
-            Sprintf(buf, "%s кольцо", dn);
+            (void) ru_dn_noun(buf, dn, "кольцо", 'n');
         break;
     case GEM_CLASS: {
         const char *rock = (ocl->oc_material == MINERAL) ? "камень" : "самоцвет";
