@@ -1239,11 +1239,10 @@ thrwmu(struct monst *mtmp)
             return; /* Out of range, or intervening wall */
 
         if (canseemon(mtmp)) {
-            onm = xname(otmp);
+            onm = obj_is_pname(otmp) ? the(xname(otmp)) : ru_obj_with(otmp);
             pline_mon(mtmp, "%s %s %s.", Monnam(mtmp),
                   /* "thrusts" or "swings", or "bashes with" if adjacent */
-                  mswings_verb(otmp, (rang <= 2) ? TRUE : FALSE),
-                  obj_is_pname(otmp) ? the(onm) : an(onm));
+                  mswings_verb(otmp, (rang <= 2) ? TRUE : FALSE), onm);
         }
 
         dam = dmgval(otmp, &gy.youmonst);

@@ -823,7 +823,7 @@ use_defensive(struct monst *mtmp)
             if (otmp)
                 pline_mon(mtmp, "%s использует единорогов рог!", Monnam(mtmp));
             else
-                pline(" онец рога %s светитс€!", mon_nam(mtmp));
+                pline(" онец рога %s светитс€!", mon_nam_case(mtmp, BP_GEN));
         }
         if (!mtmp->mcansee) {
             mcureblindness(mtmp, vismon);
@@ -1901,7 +1901,8 @@ use_offensive(struct monst *mtmp)
         /* Identify the scroll */
         if (canspotmon(mtmp)) {
             pline_The("%s грохочет %s %s!", ceiling(mtmp->mx, mtmp->my),
-                      otmp->blessed ? "вокруг" : "над", mon_nam(mtmp));
+                      otmp->blessed ? "вокруг" : "над",
+                      mon_nam_case(mtmp, otmp->blessed ? BP_GEN : BP_INS));
             if (oseen)
                 makeknown(otmp->otyp);
         } else if (cansee(mtmp->mx, mtmp->my)) {

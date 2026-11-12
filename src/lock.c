@@ -411,7 +411,7 @@ pick_lock(
         return PICKLOCK_DID_NOTHING;
     } else if (u.uswallow) {
         You_cant("%sотпереть %s.", (picktyp == CREDIT_CARD) ? "" : "запереть или ",
-                 mon_nam(u.ustuck));
+                 mon_nam_case(u.ustuck, BP_ACC));
         return PICKLOCK_DID_NOTHING;
     }
 

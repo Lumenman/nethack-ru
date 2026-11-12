@@ -1679,7 +1679,8 @@ dogaze(void)
             if (Invis && !perceives(mtmp->data)) {
                 pline("%s, кажется, не замечает вашего взгляда.", Monnam(mtmp));
             } else if (mtmp->minvis && !See_invisible) {
-                You_cant("увидеть, куда смотреть на %s.", Monnam(mtmp));
+                You("не видите, куда смотреть, чтобы взглянуть на %s.",
+                    mon_nam_case(mtmp, BP_ACC));
             } else if (M_AP_TYPE(mtmp) == M_AP_FURNITURE
                        || M_AP_TYPE(mtmp) == M_AP_OBJECT) {
                 looked--;
@@ -1690,7 +1691,7 @@ dogaze(void)
                 if (flags.confirm && mtmp->mpeaceful && !Confusion) {
                     Sprintf(qbuf, "Действительно %s %s?",
                             (adtyp == AD_CONF) ? "сбить с толку" : "атаковать",
-                            mon_nam(mtmp));
+                            mon_nam_case(mtmp, BP_ACC));
                     if (y_n(qbuf) != 'y')
                         continue;
                 }
@@ -1705,7 +1706,7 @@ dogaze(void)
                  */
                 if (adtyp == AD_CONF) {
                     if (!mtmp->mconf)
-                        Your("взгляд сбивает с толку %s!", mon_nam(mtmp));
+                        Your("взгляд сбивает с толку %s!", mon_nam_case(mtmp, BP_ACC));
                     else
                         pline("%s становится всё более и более сбитым с толку.",
                               Monnam(mtmp));

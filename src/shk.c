@@ -903,7 +903,7 @@ u_entered_shop(char *enterstring)
                 pline("%s %s впускать вас, пока вы едете на %s.",
                       Shknam(shkp),
                       not_upset ? "не хочет" : "отказывается",
-                      y_monnam(u.usteed));
+                      y_monnam_case(u.usteed, BP_PREP));
             }
             should_block = TRUE;
         } else {

@@ -1320,9 +1320,10 @@ mon_break_armor(struct monst *mon, boolean polyspot)
         if (touch_petrifies(u.usteed->data) && !Stone_resistance && rnl(3)) {
             char buf[BUFSZ];
 
-            You("касается %s.", mon_nam(u.usteed));
-            Sprintf(buf, "падает с %s",
-                    an(pmname(u.usteed->data, Mgender(u.usteed))));
+            You("касаетесь %s.", mon_nam_case(u.usteed, BP_GEN));
+            Sprintf(buf, "падения с %s", /* "окаменел из-за падения с …" */
+                    mon_gen_nom(pmname(u.usteed->data, Mgender(u.usteed)),
+                                BP_GEN));
             instapetrify(buf);
         }
         dismount_steed(DISMOUNT_FELL);

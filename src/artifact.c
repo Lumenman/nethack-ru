@@ -1637,7 +1637,7 @@ artifact_hit(
                 }
                 if (noncorporeal(mdef->data) || amorphous(mdef->data)) {
                     pline("%s рассекает насквозь горло %s.", wepdesc,
-                          mon_nam(mdef));
+                          mon_nam_case(mdef, BP_GEN));
                     return TRUE;
                 }
                 *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;

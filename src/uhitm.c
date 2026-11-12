@@ -1545,7 +1545,8 @@ hmon_hitmon_jousting(
     struct obj *obj) /* lance; obj is not NULL */
 {
     hmd->dmg += d(2, (obj == uwep) ? 10 : 2); /* [was in dmgval()] */
-    You("играете в джоуст %s%s", mon_nam(mon), canseemon(mon) ? exclam(hmd->dmg) : ".");
+    You("таранным ударом поражаете %s%s", mon_nam_case(mon, BP_ACC),
+        canseemon(mon) ? exclam(hmd->dmg) : ".");
     /* if this hit just broke the never-hit-with-wielded-weapon conduct
        (handled by caller...), give a livelog message for that now */
     if (u.uconduct.weaphit <= 1)
@@ -2224,11 +2225,11 @@ steal_it(struct monst *mdef, struct attack *mattk)
         if (gender(mdef) == (int) u.mfemale
             && gy.youmonst.data->mlet == S_NYMPH)
             You("очаровываете %s. %s охотно отдаёт %s%s имущество.",
-                mon_nam(mdef), upstart(strcpy(heshe, mhe(mdef))),
+                mon_nam_case(mdef, BP_ACC), upstart(strcpy(heshe, mhe(mdef))),
                 !gold ? "" : "большую часть из ", mhis(mdef));
         else
             You("соблазняете %s, и %s начинает снимать %s одежду.",
-                mon_nam(mdef), mhe(mdef), mhis(mdef));
+                mon_nam_case(mdef, BP_ACC), mhe(mdef), mhis(mdef));
     }
 
     /* prevent gold from being stolen so that steal-item isn't a superset
@@ -2822,7 +2823,7 @@ mhitm_ad_sgld(
                 Your("кошелёк становится тяжелее.");
             } else {
                 You("хватаете золото %s, но не находите места в рюкзаке.",
-                    mon_nam(mdef));
+                    mon_nam_case(mdef, BP_GEN));
                 dropy(mongold);
             }
         }
@@ -4959,7 +4960,7 @@ start_engulf(struct monst *mdef)
     }
     You("%s %s%s!",
         u_digest ? "глотаете" : u_enfold ? "охватываете" : "поглощаете",
-        mon_nam(mdef), u_digest ? " целиком" : "");
+        mon_nam_case(mdef, BP_ACC), u_digest ? " целиком" : "");
     nh_delay_output();
     nh_delay_output();
 }
@@ -5600,7 +5601,8 @@ hmonas(struct monst *mon)
                     You("%s %s %s.",
                         (mon->mcansee && haseyes(mon->data)) ? "улыбаетесь"
                                                              : "разговариваете с",
-                        mon_nam(mon),
+                        mon_nam_case(mon, (mon->mcansee && haseyes(mon->data))
+                                              ? BP_DAT : BP_INS),
                         (compat == 2) ? "завлекающе" : "соблазнительно");
                     /* doesn't anger it; no wakeup() */
                     sum[i] = damageum(mon, mattk, 0);

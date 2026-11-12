@@ -180,8 +180,8 @@ adjattrib(
             } else {
                 /* current stayed the same but base value changed, or
                    base is at minimum and reduction caused max to drop */
-                Your("innate %s has %s.", attrname[ndx],
-                     (incr > 0) ? "improved" : "declined");
+                pline("Ваша врождённая характеристика «%s» %s.",
+                      attrname[ndx], (incr > 0) ? "улучшилась" : "ухудшилась");
             }
         }
         return FALSE;

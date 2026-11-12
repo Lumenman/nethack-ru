@@ -258,7 +258,7 @@ mdisplacem(
     update_monster_region(mdef);
 
     if (gv.vis && !quietly)
-        pline("%s убирает %s со %s пути!", Monnam(magr), mon_nam(mdef),
+        pline("%s убирает %s со %s пути!", Monnam(magr), mon_nam_case(mdef, BP_ACC),
               is_rider(pa) ? "" : mhis(magr));
     newsym(fx, fy);  /* see it       */
     newsym(tx, ty);  /*   all happen */
@@ -1279,8 +1279,8 @@ mswingsm(
                         && (dist2(magr->mx, magr->my, mdef->mx, mdef->my)
                             <= 2));
 
-        pline("%s %s %s%s %s в %s.", Monnam(magr), mswings_verb(otemp, bash),
-              (otemp->quan > 1L) ? "один из " : "", mhis(magr), xname(otemp),
+        pline("%s %s %s, целясь в %s.", Monnam(magr),
+              mswings_verb(otemp, bash), ru_obj_with(otemp),
               mon_nam_case(mdef, BP_ACC));
     }
 }

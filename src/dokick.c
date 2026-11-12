@@ -304,7 +304,7 @@ ghitm(struct monst *mtmp, struct obj *gold)
         /* too light to do real damage */
         if (canseemon(mtmp)) {
             pline_The("%s безвредно %s %s.", xname(gold),
-                      otense(gold, "задевает"), mon_nam(mtmp));
+                      otense(gold, "задевает"), mon_nam_case(mtmp, BP_ACC));
             msg_given = TRUE;
         }
     } else {

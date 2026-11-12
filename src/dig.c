@@ -1565,7 +1565,7 @@ zap_dig(void)
 
         if (!is_whirly(mtmp->data)) {
             if (digests(mtmp->data))
-                You("пробиваете брюхо %s!", mon_nam(mtmp));
+                You("пробиваете брюхо %s!", mon_nam_case(mtmp, BP_GEN));
             if (unique_corpstat(mtmp->data))
                 mtmp->mhp = (mtmp->mhp + 1) / 2;
             else
@@ -2189,12 +2189,13 @@ bury_monst(struct monst *mtmp)
     debugpline1("bury_monst: %s", mon_nam(mtmp));
     if (canseemon(mtmp)) {
         if (is_flyer(mtmp->data) || is_floater(mtmp->data)) {
-            pline_The("%s opens up, but %s is not swallowed!",
-                      surface(mtmp->mx, mtmp->my), mon_nam(mtmp));
+            pline("%s разверзается, но %s не проваливается!",
+                  upstart(surface(mtmp->mx, mtmp->my)), mon_nam(mtmp));
             return;
         } else
-            pline_The("%s opens up and swallows %s!",
-                      surface(mtmp->mx, mtmp->my), mon_nam(mtmp));
+            pline("%s разверзается и поглощает %s!",
+                  upstart(surface(mtmp->mx, mtmp->my)),
+                  mon_nam_case(mtmp, BP_ACC));
     }
 
     mtmp->mburied = TRUE;
