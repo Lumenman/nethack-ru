@@ -132,10 +132,8 @@ mswings(
     boolean bash)       /* True: polearm used at too close range */
 {
     if (flags.verbose && !Blind && mon_visible(mtmp)) {
-        pline_mon(mtmp, "%s %s %s%s %s.", Monnam(mtmp),
-                  mswings_verb(otemp, bash),
-                  (otemp->quan > 1L) ? "один из " : "",
-                  mhis(mtmp), xname(otemp));
+        pline_mon(mtmp, "%s %s %s.", Monnam(mtmp),
+                  mswings_verb(otemp, bash), ru_obj_with(otemp));
     }
 }
 
@@ -291,7 +289,8 @@ expels(
                 } else {
                     Strcpy(blast, " с чавканьем");
                 }
-                You("изгоняет из себя %s%s!", mon_nam(mtmp), blast);
+                pline("Вас выбрасывает из %s%s!", mon_nam_case(mtmp, BP_GEN),
+                      blast);
             }
         }
     }

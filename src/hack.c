@@ -1112,7 +1112,7 @@ test_move(
                             || Fumbling) {
                             if (u.usteed) {
                                 You_cant("провести %s через ту закрытую дверь.",
-                                         y_monnam(u.usteed));
+                                         y_monnam_case(u.usteed, BP_ACC));
                             } else {
                                 pline("Ой! Вы ударяетесь о дверь.");
                                 exercise(A_DEX, FALSE);

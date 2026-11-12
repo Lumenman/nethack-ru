@@ -608,7 +608,7 @@ ru_agree_adj(char *w, char *e, char g)
     for (i = 0; i < SIZE(ends); i++)
         if (!strncmp(e - 2, ends[i], 2))
             break;
-    if (i == SIZE(ends) || (i > 2 && g != 'p' && g != 'G'))
+    if (i == SIZE(ends) || (i > 2 && g != 'p' && g != 'G' && g != 'I'))
         return FALSE;
     ij = (i == 1);
     c2 = e[-3]; /* letter before the 2-letter ending */
@@ -627,6 +627,12 @@ ru_agree_adj(char *w, char *e, char g)
         break;
     case 'G':
         memcpy(e - 2, (soft || hush || velar) ? "их" : "ых", 2);
+        break;
+    case 'I': /* instrumental singular, keeping the word's own gender */
+        if (i == 3 || i == 4) /* "-а€", "-€€": "острой", "синей", "гор€щей" */
+            memcpy(e - 2, (i == 4 || strchr("чщ", c2)) ? "ей" : "ой", 2);
+        else /* "-ый", "-ой", "-ий", "-ое", "-ее": "острым", "синим" */
+            memcpy(e - 2, (soft || hush || velar || i == 6) ? "им" : "ым", 2);
         break;
     }
     return TRUE;
@@ -784,8 +790,10 @@ ru_number_name(char *s, size_t bufsz, char form)
 
     if (!(h = ru_head(s, &l)) || !(e = ru_num_lookup(h, l)))
         return 0;
-    adjg = (form == 'P' || (form == 'S' && e->gend == 'f')) ? 'p' : 'G';
-    noun = (form == 'P') ? e->nom_pl : (form == 'S') ? e->gen_sg : e->gen_pl;
+    adjg = (form == 'I') ? 'I'
+           : (form == 'P' || (form == 'S' && e->gend == 'f')) ? 'p' : 'G';
+    noun = (form == 'P') ? e->nom_pl : (form == 'S') ? e->gen_sg
+           : (form == 'I') ? e->ins_sg : e->gen_pl;
     copynchars(tmp, s, (int) sizeof tmp - 1);
     hd = tmp + (h - s);
     for (w = tmp; w < hd; w = p) {
@@ -2903,6 +2911,28 @@ ru_count_xname(struct obj *obj, long cnt)
         s = xname(obj); /* unknown noun: plain plural */
     Sprintf(prefix, "%ld ", cnt);
     return strprepend(s, prefix);
+}
+
+/* RU: what a monster attacks with, in the instrumental: "своим кинжалом",
+   "своей булавой", "одним из своих кинжалов" (for mswings_verb() verbs:
+   "колет", "бьЄт", "размахивает") */
+char *
+ru_obj_with(struct obj *obj)
+{
+    char *s = xname_flags(obj, CXN_SINGULAR);
+    char g = ru_name_gender(s);
+
+    if (obj->quan > 1L) {
+        if (!ru_number_name(s, BUFSZ - PREFIX, 'G'))
+            s = xname(obj);
+        return strprepend(s, "одним из своих ");
+    }
+    if (!ru_number_name(s, BUFSZ - PREFIX, 'I')) { /* unknown noun */
+        Strcat(s, ")");
+        return strprepend(s, "своим оружием (");
+    }
+    return strprepend(s, (g == 'f') ? "своей " : (g == 'p') ? "своими "
+                                                            : "своим ");
 }
 
 /* various singular words that vtense would otherwise categorize as plural;

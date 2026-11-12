@@ -6419,9 +6419,12 @@ makewish(void)
                             : (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)
                                || levl[u.ux][u.uy].typ < IRONBARS
                                || levl[u.ux][u.uy].typ >= ICE)
-                               ? "ќй!  %s улетает от вас!"
+                               ? ((otmp->quan > 1L) ? "ќй!  %s улетают от вас!"
+                                                    : "ќй!  %s улетает от вас!")
                                : !(otmp->otyp == CORPSE && otmp->wishedfor)
-                                 ? "ќй!  %s оказываетс€ на полу!"
+                                 ? ((otmp->quan > 1L)
+                                    ? "ќй!  %s оказываютс€ на полу!"
+                                    : "ќй!  %s оказываетс€ на полу!")
                                  : "ќсторожно! %s на полу!");
 
     /* The(aobjnam()) is safe since otmp is unidentified -dlc */

@@ -1953,7 +1953,7 @@ tele_restrict(struct monst *mon)
     if (noteleport_level(mon)) {
         if (canseemon(mon))
             pline("Таинственная сила не даёт %s телепортироваться!",
-                  mon_nam(mon));
+                  mon_nam_case(mon, BP_DAT));
         return TRUE;
     }
     return FALSE;

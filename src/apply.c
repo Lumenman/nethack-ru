@@ -2026,7 +2026,7 @@ jump(int magic) /* 0=Physical, otherwise skill level */
             return ECMD_TIME;
         }
         if (magic) {
-            You("немного извиваетесь в хватке %s!", mon_nam(u.ustuck));
+            You("немного извиваетесь в хватке %s!", mon_nam_case(u.ustuck, BP_GEN));
             return ECMD_TIME;
         }
         You("не можете вырваться от %s!", mon_nam_case(u.ustuck, BP_GEN));
@@ -3247,7 +3247,7 @@ use_whip(struct obj *obj)
                 stumble_onto_mimic(mtmp);
                 do_snap = FALSE;
             } else {
-                You("щёлкаете хлыстом в сторону %s.", mon_nam(mtmp));
+                You("щёлкаете хлыстом в сторону %s.", mon_nam_case(mtmp, BP_GEN));
             }
             if (proficient && force_attack(mtmp, FALSE))
                 return ECMD_TIME;

@@ -4604,7 +4604,7 @@ there_cmd_menu_next2u(
 
         Sprintf(buf, "%s %s",
                 !has_mgivenname(mtmp) ? "Назвать" : "Переименовать",
-                mon_nam(mtmp));
+                mon_nam_case(mtmp, BP_ACC));
         mcmd_addmenu(win, MCMD_NAME, buf), ++K;
     }
 
