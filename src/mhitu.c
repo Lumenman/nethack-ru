@@ -1004,8 +1004,7 @@ summonmu(struct monst *mtmp, boolean youseeit)
                 const char *from_nowhere;
 
                 if (!Deaf) {
-                    pline("%s %s!", Something,
-                          makeplural(growl_sound(mtmp)));
+                    pline("%s %s!", Something, growl_sound(mtmp));
                     from_nowhere = "";
                 } else {
                     from_nowhere = " из ниоткуда";
