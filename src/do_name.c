@@ -1937,22 +1937,26 @@ roguename(void)
 }
 
 static NEARDATA const char *const hcolors[] = {
-    "ultraviolet", "infrared", "bluish-orange", "reddish-green", "dark white",
-    "light black", "sky blue-pink", "pinkish-cyan", "indigo-chartreuse",
-    "salty", "sweet", "sour", "bitter", "umami", /* basic tastes */
-    "striped", "spiral", "swirly", "plaid", "checkered", "argyle", "paisley",
-    "blotchy", "guernsey-spotted", "polka-dotted", "square", "round",
-    "triangular", "cabernet", "sangria", "fuchsia", "wisteria", "lemon-lime",
-    "strawberry-banana", "peppermint", "romantic", "incandescent",
-    "octarine", /* Discworld: the Colour of Magic */
-    "excitingly dull", "mauve", "electric",
-    "neon", "fluorescent", "phosphorescent", "translucent", "opaque",
-    "psychedelic", "iridescent", "rainbow-colored", "polychromatic",
-    "colorless", "colorless green",
-    "dancing", "singing", "loving", "loudy", "noisy", "clattery", "silent",
-    "apocyan", "infra-pink", "opalescent", "violant", "tuneless",
-    "viridian", "aureolin", "cinnabar", "purpurin", "gamboge", "madder",
-    "bistre", "ecru", "fulvous", "tekhelet", "selective yellow",
+    /* RU: masculine adjectives only, see ru_color() */
+    "ультрафиолетовый", "инфракрасный", "синевато-оранжевый",
+    "красновато-зелЄный", "тЄмно-белый", "светло-чЄрный",
+    "небесно-голубо-розовый", "розовато-бирюзовый", "индигово-шартрезовый",
+    "солЄный", "сладкий", "кислый", "горький", "пр€ный", /* basic tastes */
+    "полосатый", "спиральный", "завитой", "шотландский", "клетчатый",
+    "ромбический", "огуречный", "п€тнистый", "гернсейско-п€тнистый",
+    "горошковый", "квадратный", "круглый", "треугольный", "каберне-совиньонный",
+    "сангриевый", "фуксиевый", "глициниевый", "лимонно-лаймовый",
+    "клубнично-банановый", "м€тный", "романтичный", "раскалЄнный",
+    "октариновый", /* Discworld: the Colour of Magic */
+    "волнующе-тусклый", "лиловый", "электрический",
+    "неоновый", "флуоресцентный", "фосфоресцирующий", "полупрозрачный",
+    "непрозрачный", "психоделический", "переливчатый", "радужный",
+    "многоцветный", "бесцветный", "бесцветно-зелЄный",
+    "танцующий", "поющий", "люб€щий", "громкий", "шумный", "грохочущий",
+    "безмолвный", "апобирюзовый", "инфра-розовый", "опаловый", "фиолентный",
+    "немелодичный", "виридиановый", "ауреолиновый", "киноварный",
+    "пурпуриновый", "гуммигутовый", "мареновый", "бистровый", "экрюйный",
+    "рыжевато-бурый", "тхелетовый", "избирательно-жЄлтый",
 };
 
 const char *
@@ -1970,8 +1974,68 @@ rndcolor(void)
     int k = rn2(CLR_MAX);
 
     return Hallucination ? hcolor((char *) 0)
-                         : (k == NO_COLOR) ? "colorless"
+                         : (k == NO_COLOR) ? "бесцветный"
                                            : c_obj_colors[k];
+}
+
+/* RU: a colour (a masculine adjective or a phrase of them, "€рко-синий")
+   agreed with gender g ('m', 'f', 'n', 'p') in case cse: "светитс€
+   синим" = ru_color(c, 'n', BP_INS), "син€€ вспышка" = ru_color(c, 'f',
+   BP_NOM).  Words that are not such adjectives are left as they are */
+const char *
+ru_color(const char *color, char g, int cse)
+{
+    /* type x gender x case; types: -ый, -ой, -кий, -кой, -жий, -жой, -ний */
+    static const char *const end[7][4][6] = {
+        { { "ый", "ого", "ому", "ый", "ым", "ом" }, { "а€", "ой", "ой", "ую", "ой", "ой" },
+          { "ое", "ого", "ому", "ое", "ым", "ом" }, { "ые", "ых", "ым", "ые", "ыми", "ых" } },
+        { { "ой", "ого", "ому", "ой", "ым", "ом" }, { "а€", "ой", "ой", "ую", "ой", "ой" },
+          { "ое", "ого", "ому", "ое", "ым", "ом" }, { "ые", "ых", "ым", "ые", "ыми", "ых" } },
+        { { "ий", "ого", "ому", "ий", "им", "ом" }, { "а€", "ой", "ой", "ую", "ой", "ой" },
+          { "ое", "ого", "ому", "ое", "им", "ом" }, { "ие", "их", "им", "ие", "ими", "их" } },
+        { { "ой", "ого", "ому", "ой", "им", "ом" }, { "а€", "ой", "ой", "ую", "ой", "ой" },
+          { "ое", "ого", "ому", "ое", "им", "ом" }, { "ие", "их", "им", "ие", "ими", "их" } },
+        { { "ий", "его", "ему", "ий", "им", "ем" }, { "а€", "ей", "ей", "ую", "ей", "ей" },
+          { "ее", "его", "ему", "ее", "им", "ем" }, { "ие", "их", "им", "ие", "ими", "их" } },
+        { { "ой", "ого", "ому", "ой", "им", "ом" }, { "а€", "ой", "ой", "ую", "ой", "ой" },
+          { "ое", "ого", "ому", "ое", "им", "ом" }, { "ие", "их", "им", "ие", "ими", "их" } },
+        { { "ий", "его", "ему", "ий", "им", "ем" }, { "€€", "ей", "ей", "юю", "ей", "ей" },
+          { "ее", "его", "ему", "ее", "им", "ем" }, { "ие", "их", "им", "ие", "ими", "их" } },
+    };
+    static const char gs[] = "mfnp";
+    char *out = nextmbuf(), *o = out;
+    const char *w = color, *e, *gp = strchr(gs, g);
+    int cs = cse & BP_CASE_MASK, gi = gp ? (int) (gp - gs) : 0, t;
+
+    if (cs < 0 || cs > BP_PREP)
+        cs = 0;
+    while (*w && strlen(w) < (size_t) (out + BUFSZ - 8 - o)) {
+        for (e = w; *e && *e != ' '; e++)
+            ;
+        t = -1;
+        if (e - w >= 4) {
+            char c = e[-3];
+            boolean velar = !!strchr("гкх", c), hush = !!strchr("жшчщ", c);
+
+            if (!strncmp(e - 2, "ый", 2))
+                t = 0;
+            else if (!strncmp(e - 2, "ой", 2))
+                t = velar ? 3 : hush ? 5 : 1;
+            else if (!strncmp(e - 2, "ий", 2))
+                t = velar ? 2 : hush ? 4 : 6;
+        }
+        if (t >= 0)
+            Sprintf(o, "%.*s%s", (int) (e - w - 2), w, end[t][gi][cs]);
+        else
+            Sprintf(o, "%.*s", (int) (e - w), w);
+        o = eos(o);
+        if (*e == ' ')
+            *o++ = ' ', e++;
+        *o = '\0';
+        w = e;
+    }
+    *o = '\0';
+    return out;
 }
 
 static NEARDATA const char *const hliquids[] = {

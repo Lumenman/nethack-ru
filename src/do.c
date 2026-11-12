@@ -621,10 +621,10 @@ dosinkring(struct obj *obj)
             break;
         case RIN_PROTECTION:
             pline("Раковина на мгновение светится %s.",
-                      hcolor((obj->spe < 0) ? NH_BLACK : NH_SILVER));
+                      ru_color(hcolor((obj->spe < 0) ? NH_BLACK : NH_SILVER), 'n', BP_INS));
             break;
         case RIN_WARNING:
-            pline("Раковина на мгновение светится %s.", hcolor(NH_WHITE));
+            pline("Раковина на мгновение светится %s.", ru_color(hcolor(NH_WHITE), 'n', BP_INS));
             break;
         case RIN_TELEPORT_CONTROL:
             pline("Похоже, что раковину куда-то телепортируют.");

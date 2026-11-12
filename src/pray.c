@@ -361,7 +361,7 @@ fix_curse_trouble(struct obj *otmp, const char *what)
     if (!Blind || (otmp == ublindf && Blindfolded_only)) {
         pline("%s %s.",
                 what ? what : (const char *) Yobjnam2(otmp, "мягко светится"),
-                hcolor(NH_AMBER));
+                ru_color(hcolor(NH_AMBER), 'n', BP_INS));
         iflags.last_msg = PLNMSG_OBJ_GLOWS;
         otmp->bknown = !Hallucination; /* ok to skip set_bknown() */
     }
@@ -595,7 +595,7 @@ fix_worst_trouble(int trouble)
     case TROUBLE_SADDLE:
         otmp = which_armor(u.usteed, W_SADDLE);
         if (!Blind) {
-            pline("%s %s.", Yobjnam2(otmp, "мягко светится"), hcolor(NH_AMBER));
+            pline("%s %s.", Yobjnam2(otmp, "мягко светится"), ru_color(hcolor(NH_AMBER), 'n', BP_INS));
             set_bknown(otmp, 1);
         }
         uncurse(otmp);
@@ -677,7 +677,8 @@ god_zaps_you(aligntyp resp_god)
             fry_by_god(resp_god, TRUE);
             monstunseesu(M_SEEN_DISINT);
         } else {
-            You("нежитесь в его %s сиянии минуту...", NH_BLACK);
+            You("нежитесь в его %s сиянии минуту...",
+                ru_color(hcolor(NH_BLACK), 'n', BP_PREP));
             godvoice(resp_god, "Я этому не верю!");
             monstseesu(M_SEEN_DISINT);
         }
@@ -757,7 +758,8 @@ angrygods(aligntyp resp_god)
     case 5:
         gods_angry(resp_god);
         if (!Blind && !Antimagic)
-            pline("%s сияние окружает вас.", An(hcolor(NH_BLACK)));
+            pline("%s сияние окружает вас.",
+                  upstart((char *) ru_color(hcolor(NH_BLACK), 'n', BP_NOM)));
         if (rn2(2) || !attrcurse())
             rndcurse();
         break;
@@ -1188,7 +1190,7 @@ pleased(aligntyp g_align)
                 if (uwep->cursed) {
                     if (!Blind) {
                         pline("%s %s%s.", Yobjnam2(uwep, "мягко светится"),
-                              hcolor(NH_AMBER), repair_buf);
+                              ru_color(hcolor(NH_AMBER), 'n', BP_INS), repair_buf);
                         iflags.last_msg = PLNMSG_OBJ_GLOWS;
                     } else
                         You_feel("власть %s над %s.", u_gname(),
@@ -1253,7 +1255,7 @@ pleased(aligntyp g_align)
             /*FALLTHRU*/
         case 2:
             if (!Blind)
-                You("окружены %s сиянием.", an(hcolor(NH_GOLDEN)));
+                You("окружены %s сиянием.", ru_color(hcolor(NH_GOLDEN), 'n', BP_INS));
             /* if any levels have been lost (and not yet regained),
                treat this effect like blessed full healing */
             if (u.ulevel < u.ulevelmax) {
@@ -1295,7 +1297,7 @@ pleased(aligntyp g_align)
             if (Blind)
                 You_feel("власть %s.", u_gname());
             else
-                You("окружены %s аурой.", an(hcolor(NH_LIGHT_BLUE)));
+                You("окружены %s аурой.", ru_color(hcolor(NH_LIGHT_BLUE), 'f', BP_INS));
             for (otmp = gi.invent; otmp; otmp = nextobj) {
                 nextobj = otmp->nobj;
                 if (otmp->cursed
@@ -1303,7 +1305,7 @@ pleased(aligntyp g_align)
                         || uarmh->otyp != HELM_OF_OPPOSITE_ALIGNMENT)) {
                     if (!Blind) {
                         pline("%s %s.", Yobjnam2(otmp, "мягко светится"),
-                              hcolor(NH_AMBER));
+                              ru_color(hcolor(NH_AMBER), 'n', BP_INS));
                         iflags.last_msg = PLNMSG_OBJ_GLOWS;
                         otmp->bknown = 1; /* ok to bypass set_bknown() */
                         ++any;
@@ -1414,7 +1416,8 @@ water_prayer(boolean bless_water)
               ((other && changed > 1L) ? "Некоторые зелья"
                                        : (other ? "Одно из зелий" : "Зелья")),
               ((other || changed > 1L) ? "" : ""), (changed > 1L ? "" : ""),
-              (bless_water ? hcolor(NH_LIGHT_BLUE) : hcolor(NH_BLACK)));
+              ru_color(bless_water ? hcolor(NH_LIGHT_BLUE) : hcolor(NH_BLACK),
+                       'n', BP_INS));
     }
     return (boolean) (changed > 0L);
 }
@@ -1564,7 +1567,7 @@ offer_real_amulet(struct obj *otmp, aligntyp altaralign)
         pline("%s злобно рычит и пробует снова...", Moloch);
         fry_by_god(A_NONE, TRUE); /* wrath of Moloch */
         /* declined to die in wizard or explore mode */
-        pline(cloud_of_smoke, hcolor(NH_BLACK));
+        pline(cloud_of_smoke, ru_color(hcolor(NH_BLACK), 'm', BP_GEN));
         done(ESCAPED);
         /*NOTREACHED*/
     } else if (u.ualign.type != altaralign) {
@@ -1575,7 +1578,7 @@ offer_real_amulet(struct obj *otmp, aligntyp altaralign)
               a_gname(), u_gname());
         pline("%s в ярости...", u_gname());
         pline("К счастью, %s позволяет вам жить...", a_gname());
-        pline(cloud_of_smoke, hcolor(NH_ORANGE));
+        pline(cloud_of_smoke, ru_color(hcolor(NH_ORANGE), 'm', BP_GEN));
         done(ESCAPED);
         /*NOTREACHED*/
     } else {
@@ -1680,9 +1683,9 @@ offer_different_alignment_altar(
             newsym(u.ux, u.uy); /* in case Invisible to self */
             if (!Blind)
                 pline("Алтарь светится %s.",
-                          hcolor((u.ualign.type == A_LAWFUL) ? NH_WHITE
+                          ru_color(hcolor((u.ualign.type == A_LAWFUL) ? NH_WHITE
                                  : u.ualign.type ? NH_BLACK
-                                   : (const char *) "Серым"));
+                                   : (const char *) "серый"), 'n', BP_INS));
 
             if (rnl(u.ulevel) > 6 && u.ualign.record > 0
                 && rnd(u.ualign.record) > (3 * ALIGNLIM) / 4)
@@ -1737,7 +1740,7 @@ sacrifice_your_race(
         if (altaralign == A_CHAOTIC && u.ualign.type != A_CHAOTIC) {
             pline(
             "Кровь заливает алтарь, и он исчезает в %s облаке!",
-                    an(hcolor(NH_BLACK)));
+                    ru_color(hcolor(NH_BLACK), 'n', BP_PREP));
             levl[u.ux][u.uy].typ = ROOM;
             levl[u.ux][u.uy].altarmask = 0;
             newsym(u.ux, u.uy);

@@ -1658,7 +1658,7 @@ consume_tin(const char *mesg)
     } else { /* spinach... */
         if (tin->cursed) {
             pline("Внутри что-то гнилое%s%s.",
-                  Blind ? "" : " ", Blind ? "" : hcolor(NH_GREEN));
+                  Blind ? "" : " ", Blind ? "" : ru_color(hcolor(NH_GREEN), 'n', BP_NOM));
         } else {
             pline("Внутри шпинат.");
             observe_object(tin);

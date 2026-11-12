@@ -1265,7 +1265,8 @@ use_crystal_ball(struct obj **optr)
         gn.nomovemsg = "";
 
         if (!charged) {
-            pline("Âñ¸, ÷òî âû âèäèòå — ıòî ñòğàííîå %s ìàğåâî.", hcolor((char *) 0));
+            pline("Âñ¸, ÷òî âû âèäèòå — ıòî ñòğàííîå %s ìàğåâî.",
+                  ru_color(hcolor((char *) 0), 'n', BP_NOM));
             if (obj->spe < 0)
                 goto implode; /* destroy it when it has been cancelled */
         } else {
@@ -1279,7 +1280,7 @@ use_crystal_ball(struct obj **optr)
                 break;
             case 3:
                 pline("Êğèñòàëë ïóëüñèğóåò çëîâåùèì %s ñâåòîì!",
-                          hcolor((char *) 0));
+                          ru_color(hcolor((char *) 0), 'm', BP_INS));
                 break;
             case 4:
                 You_see("çîëîòûå ğûáêè ïëàâàşò íàä ñâåòÿùèìèñÿ ñêàëàìè.");

@@ -1062,7 +1062,7 @@ use_mirror(struct obj *obj)
                 pline("Хм?  Это не похоже на вас!");
                 make_confused(HConfusion + d(3, 4), FALSE);
             } else if (Hallucination) {
-                You(look_str, hcolor((char *) 0));
+                You(look_str, ru_color(hcolor((char *) 0), 'p', BP_INS));
             } else if (Sick) {
                 You(look_str, "измождённо");
             } else if (u.uhs >= WEAK) {
@@ -2753,7 +2753,7 @@ use_stone(struct obj *tstone)
                 break;
             }
         }
-        streak_color = c_obj_colors[objects[obj->otyp].oc_color];
+        streak_color = ru_color(c_obj_colors[objects[obj->otyp].oc_color], 'p', BP_ACC);
         break; /* gem or ring */
 
     default:
@@ -2786,7 +2786,7 @@ use_stone(struct obj *tstone)
                scratch a stone.  They will leave streaks on
                non-touchstones and touchstones alike. */
             if (is_flimsy(obj))
-                streak_color = c_obj_colors[objects[obj->otyp].oc_color];
+                streak_color = ru_color(c_obj_colors[objects[obj->otyp].oc_color], 'p', BP_ACC);
             else
                 do_scratch = (tstone->otyp != TOUCHSTONE);
             break;
@@ -4312,7 +4312,7 @@ doapply(void)
             /* sometimes the blessing will be worn off */
             if (!rn2(49)) {
                 if (!Blind) {
-                    pline("%s светится %s.", Yobjnam2(obj, (char *) 0), hcolor("коричневым"));
+                    pline("%s светится %s.", Yobjnam2(obj, (char *) 0), ru_color(hcolor("коричневый"), 'n', BP_INS));
                     set_bknown(obj, 1);
                 }
                 unbless(obj);
@@ -4485,7 +4485,7 @@ flip_through_book(struct obj *obj)
                      Hallucination ? "хихикающий"
                                    : "шуршащий");
         } else if (!Blind) {
-            You_see("страницы слабо светятся %s.", hcolor(NH_RED));
+            You_see("страницы слабо светятся %s.", ru_color(hcolor(NH_RED), 'n', BP_INS));
         } else {
             You_feel("страницы дрожат.");
         }

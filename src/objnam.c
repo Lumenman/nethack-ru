@@ -1900,8 +1900,9 @@ doname_base(
                     && (EWarn_of_mon & W_WEP) != 0L)
                     /* we know bp[] ends with ')'; overwrite that */
                     ConcatF2(bp, 1, ", %s %s)",
-                             glow_verb(gw.warn_obj_cnt, GLOW_ADJ),
-                             glow_color(obj->oartifact));
+                             glow_verb(gw.warn_obj_cnt, GLOW_FINITE),
+                             ru_color(glow_color(obj->oartifact), 'n',
+                                      BP_INS)); /* "мерцает синим" */
                 else if (obj->lamplit && artifact_light(obj))
                     /* as above, overwrite known closing paren */
                     ConcatF1(bp, 1, ", %s горит)",

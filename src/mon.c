@@ -5781,7 +5781,7 @@ mimic_hit_msg(struct monst *mtmp, short otyp)
         if (otyp == SPE_HEALING || otyp == SPE_EXTRA_HEALING) {
             pline_mon(mtmp, "%s кажетс€ более €рким %s, чем раньше.",
                   The(simple_typename(ap)),
-                  c_obj_colors[objects[ap].oc_color]);
+                  ru_color(c_obj_colors[objects[ap].oc_color], 'm', BP_INS));
         }
         break;
     }

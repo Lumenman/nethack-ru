@@ -6497,7 +6497,7 @@ chest_trap(
         case 1:
         case 0:
             pline("Облако %s газа валит из %s.",
-                  Blind ? ROLL_FROM(blindgas) : rndcolor(),
+                  Blind ? ROLL_FROM(blindgas) : ru_color(rndcolor(), 'm', BP_GEN),
                   the(xname(obj)));
             if (!Stunned) {
                 if (Hallucination)

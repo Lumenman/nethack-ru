@@ -1150,24 +1150,26 @@ cast_protection(void)
             const char *hgolden = hcolor(NH_GOLDEN), *atmosphere;
 
             if (u.uspellprot) {
-                pline("%s Дымка вокруг вас становится плотнее.", hgolden);
+                pline("%s дымка вокруг вас становится плотнее.",
+                      upstart((char *) ru_color(hgolden, 'f', BP_NOM)));
             } else {
                 struct permonst *pm = u.ustuck ? u.ustuck->data : 0;
 
                 rmtyp = levl[u.ux][u.uy].typ;
+                /* RU: "Воздух вокруг вас начинает мерцать золотистой дымкой" */
                 atmosphere = (pm && u.uswallow)
-                                ? ((pm == &mons[PM_FOG_CLOUD]) ? "туманом"
-                                   : is_whirly(pm) ? "водоворотом"
-                                     : enfolds(pm) ? "складками"
-                                       : is_animal(pm) ? "пастью"
-                                         : "слизью")
-                                : (u.uinwater ? hliquid("water")
-                                   : (rmtyp == CLOUD) ? "облаком"
-                                     : IS_TREE(rmtyp) ? "растительностью"
-                                       : IS_STWALL(rmtyp) ? "камнем"
-                                         : "воздухом");
-                pline("%s Вокруг вас начинает мерцать %s дымкой.",
-                          atmosphere, an(hgolden));
+                                ? ((pm == &mons[PM_FOG_CLOUD]) ? "Туман"
+                                   : is_whirly(pm) ? "Вихрь"
+                                     : enfolds(pm) ? "Плоть"
+                                       : is_animal(pm) ? "Пасть"
+                                         : "Слизь")
+                                : (u.uinwater ? "Вода"
+                                   : (rmtyp == CLOUD) ? "Облако"
+                                     : IS_TREE(rmtyp) ? "Листва"
+                                       : IS_STWALL(rmtyp) ? "Камень"
+                                         : "Воздух");
+                pline("%s вокруг вас начинает мерцать %s дымкой.",
+                      atmosphere, ru_color(hgolden, 'f', BP_INS));
             }
         }
         u.uspellprot += gain;

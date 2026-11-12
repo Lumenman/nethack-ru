@@ -1554,9 +1554,9 @@ H2Opotion_dip(
         if (useeit) {
             glowcolor = hcolor(glowcolor);
             if (altfmt)
-                pline("%s с ореолом %s.", objphrase, an(glowcolor));
+                pline("%s %s ореолом.", objphrase, ru_color(glowcolor, 'm', BP_INS));
             else
-                pline("%s %s.", objphrase, glowcolor);
+                pline("%s %s.", objphrase, ru_color(glowcolor, 'n', BP_INS));
             iflags.last_msg = PLNMSG_OBJ_GLOWS;
             targobj->bknown = !Hallucination;
         } else {
@@ -2577,7 +2577,7 @@ potion_dip(struct obj *obj, struct obj *potion)
             pline("Смесь пузырится%s.", Blind ? "" : ", Затем проясняется");
         } else if (!Blind) {
             pline("Смесь выглядит %s.",
-                      hcolor(OBJ_DESCR(objects[obj->otyp])));
+                      ru_color(hcolor(OBJ_DESCR(objects[obj->otyp])), 'f', BP_INS));
         }
 
         /* this is required when 'obj' was split off from a bigger stack,
@@ -2595,8 +2595,8 @@ potion_dip(struct obj *obj, struct obj *potion)
         && obj->corpsenm == PM_LICHEN) {
         pline("%s %s %s по краям.", The(cxname(obj)),
               otense(obj, "скручивается"), Blind ? "сморщенный"
-                                   : potion->odiluted ? hcolor(NH_ORANGE)
-                                     : hcolor(NH_RED));
+                                   : potion->odiluted ? ru_color(hcolor(NH_ORANGE), 'n', BP_INS)
+                                     : ru_color(hcolor(NH_RED), 'n', BP_INS));
         potion->in_use = FALSE; /* didn't go poof */
         if (potion->dknown)
             trycall(potion);
@@ -2732,7 +2732,7 @@ potion_dip(struct obj *obj, struct obj *potion)
         oldbuf[0] = '\0';
         if (potion->dknown) {
             old_dknown = TRUE;
-            Sprintf(oldbuf, "%s ", hcolor(OBJ_DESCR(objects[potion->otyp])));
+            Sprintf(oldbuf, "%s ", ru_color(hcolor(OBJ_DESCR(objects[potion->otyp])), 'n', BP_NOM));
         }
         /* with multiple merged potions, split off one and
            just clear it */
@@ -2758,7 +2758,7 @@ potion_dip(struct obj *obj, struct obj *potion)
                 Sprintf(newbuf, "прояснилось");
             else if (!Blind)
                 Sprintf(newbuf, "становится %s",
-                        hcolor(OBJ_DESCR(objects[mixture])));
+                        ru_color(hcolor(OBJ_DESCR(objects[mixture])), 'n', BP_INS));
             if (*newbuf)
                 pline("%sЗелье%s %s.", oldbuf,
                           more_than_one ? ", В которое вы окунули" : "",

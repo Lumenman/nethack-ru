@@ -2458,7 +2458,9 @@ const char *
 glow_color(int arti_indx)
 {
     int colornum = artilist[arti_indx].acolor;
-    const char *colorstr = clr2colorname(colornum);
+    /* RU: the Russian colour table, not the English option names */
+    const char *colorstr = (colornum >= 0 && colornum < CLR_MAX)
+                               ? c_obj_colors[colornum] : "белый";
 
     return hcolor(colorstr);
 }
@@ -2516,7 +2518,7 @@ Sting_effects(
             if (!Blind)
                 pline("%s %s %s%c", bare_artifactname(uwep),
                       otense(uwep, glow_verb(orc_count, GLOW_FINITE)),
-                      glow_color(uwep->oartifact),
+                      ru_color(glow_color(uwep->oartifact), 'n', BP_INS),
                       (newstr > oldstr) ? '!' : '.');
             else if (oldstr == 0) /* дрожит */
                 pline("%s %s слегка.", bare_artifactname(uwep),
