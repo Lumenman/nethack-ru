@@ -1376,7 +1376,10 @@ mshot_xname(struct obj *obj)
     if (gm.m_shot.n > 1 && gm.m_shot.o == obj->otyp) {
         /* "the Nth arrow"; value will eventually be passed to an() or
            The(), both of which correctly handle this "the " prefix */
-        Sprintf(tmpbuf, "%d-я ", gm.m_shot.i);
+        char g = ru_name_gender(onm); /* RU: 1-й болт, 1-я стрела, 1-е копьё */
+
+        Sprintf(tmpbuf, "%d-%s ", gm.m_shot.i,
+                (g == 'f') ? "я" : (g == 'n') ? "е" : (g == 'p') ? "е" : "й");
         onm = strprepend(onm, tmpbuf);
     }
     return onm;

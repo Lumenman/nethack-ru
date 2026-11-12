@@ -67,7 +67,7 @@ use_saddle(struct obj *otmp)
     if (touch_petrifies(ptr) && !uarmg && !Stone_resistance) {
         char kbuf[BUFSZ];
 
-        You("касаетесь %s.", mon_nam(mtmp));
+        You("касаетесь %s.", mon_nam_case(mtmp, BP_GEN));
         if (!(poly_when_stoned(gy.youmonst.data) && polymon(PM_STONE_GOLEM))) {
             Sprintf(kbuf, "пытаясь оседлать %s",
                     an(pmname(mtmp->data, Mgender(mtmp))));
@@ -288,7 +288,7 @@ mount_steed(
     if (touch_petrifies(ptr) && !Stone_resistance) {
         char kbuf[BUFSZ];
 
-        You("касаетесь %s.", mon_nam(mtmp));
+        You("касаетесь %s.", mon_nam_case(mtmp, BP_GEN));
         Sprintf(kbuf, "пытаясь сесть верхом на %s",
                 an(pmname(mtmp->data, Mgender(mtmp))));
         instapetrify(kbuf);
@@ -326,7 +326,7 @@ mount_steed(
     /* Is the player impaired? */
     if (!force && !is_floater(ptr) && !is_flyer(ptr) && Levitation
         && !Lev_at_will) {
-        You("не можете дотянуться до %s.", mon_nam(mtmp));
+        You("не можете дотянуться до %s.", mon_nam_case(mtmp, BP_GEN));
         return (FALSE);
     }
     if (!force && uarm && is_metallic(uarm) && greatest_erosion(uarm)) {

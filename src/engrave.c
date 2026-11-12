@@ -997,7 +997,7 @@ doengrave(void)
     }
 
     if (de->jello) {
-        You("щекочете %s своим %s.", mon_nam(u.ustuck), de->writer);
+        You("щекочете %s своим %s.", mon_nam_case(u.ustuck, BP_ACC), de->writer);
         Your("послание растворяется...");
         goto doengr_exit;
     }

@@ -1117,7 +1117,7 @@ u_stuck_cannot_go(const char *updn)
             struct monst *mtmp = u.ustuck;
 
             set_ustuck((struct monst *) 0);
-            You("отпускаете %s.", mon_nam(mtmp));
+            You("отпускаете %s.", mon_nam_case(mtmp, BP_ACC));
         }
     }
     return FALSE;

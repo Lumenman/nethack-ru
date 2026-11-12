@@ -1994,7 +1994,7 @@ doseduce(struct monst *mon)
     if (!seewho)
         pline("Кто-то ласкает вас...");
     else
-        You_feel("сильное влечение к %s.", mon_nam(mon));
+        You_feel("сильное влечение к %s.", mon_nam_case(mon, BP_DAT));
     /* cache the seducer's name in a local buffer */
     Strcpy(Who, (!seewho ? (fem ? "Она" : "Он") : Monnam(mon)));
 

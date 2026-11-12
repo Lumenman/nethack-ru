@@ -224,7 +224,7 @@ bhitm(struct monst *mtmp, struct obj *otmp)
             check_gear_next_turn(mtmp); /* might want speed boots */
 
             if (engulfing_u(mtmp) && is_whirly(mtmp->data)) {
-                You("развеиваете %s!", mon_nam(mtmp));
+                You("развеиваете %s!", mon_nam_case(mtmp, BP_ACC));
                 pline("Открывается огромная дыра...");
                 expels(mtmp, mtmp->data, TRUE);
             }
@@ -595,7 +595,7 @@ release_hold(void)
            set_ustuck() will set flag for botl update, You() pline will
            trigger a status update with "UHold" removed */
         set_ustuck((struct monst *) 0);
-        You("освобождаетесь от %s.", mon_nam(mtmp));
+        You("освобождаетесь от %s.", mon_nam_case(mtmp, BP_GEN));
     } else { /* held but not swallowed */
         char relbuf[BUFSZ];
 
@@ -3568,15 +3568,15 @@ hit(
                                  || canspotmon(mtmp) || engulfing_u(mtmp))));
 
     pline("%s %s %s%s", The(str), vtense(str, "ударяет"),
-          verbosely ? mon_nam(mtmp) : "его", force);
+          verbosely ? mon_nam_case(mtmp, BP_ACC) : "его", force);
 }
 
 void
 miss(const char *str, struct monst *mtmp)
 {
-    pline("%s %s %s.", The(str), vtense(str, "промахивается"),
+    pline("%s %s мимо %s.", The(str), vtense(str, "пролетает"),
           ((cansee(gb.bhitpos.x, gb.bhitpos.y) || canspotmon(mtmp))
-           && flags.verbose) ? mon_nam(mtmp) : "его");
+           && flags.verbose) ? mon_nam_case(mtmp, BP_GEN) : "него");
 }
 
 staticfn void
@@ -3968,7 +3968,7 @@ bhit(
             } else if (mtmp && M_IN_WATER(mtmp->data)) {
                 if (!Blind && canspotmon(mtmp))
                     pline("%s %s над %s.", Yname2(obj), otense(obj, "проносится"),
-                          mon_nam(mtmp));
+                          mon_nam_case(mtmp, BP_INS));
                 mtmp = (struct monst *) 0;
             }
         }
@@ -4814,7 +4814,7 @@ dobuzz(
             u.uswallow = 0;
         } else {
             pline("%s врезается в %s%s", The(flash_str(fltyp, FALSE)),
-                  mon_nam(u.ustuck), exclam(tmp));
+                  mon_nam_case(u.ustuck, BP_ACC), exclam(tmp));
             /* Using disintegration from the inside only makes a hole... */
             if (tmp == MAGIC_COOKIE)
                 u.ustuck->mhp = 0;

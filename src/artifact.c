@@ -1379,7 +1379,7 @@ Mb_hit(struct monst *magr, /* attacker */
                 gn.nomovemsg = "";
                 if (magr && magr == u.ustuck && sticks(gy.youmonst.data)) {
                     set_ustuck((struct monst *) 0);
-                    You("отпускаете %s!", mon_nam(magr));
+                    You("отпускаете %s!", mon_nam_case(magr, BP_ACC));
                 }
             }
         } else {
@@ -1578,7 +1578,7 @@ artifact_hit(
             wepdesc = "ќстрый как бритва клинок";
             /* not really beheading, but so close, why add another SPFX */
             if (youattack && engulfing_u(mdef)) {
-                You("вскрываете %s насквозь!", mon_nam(mdef));
+                You("вскрываете %s насквозь!", mon_nam_case(mdef, BP_ACC));
                 *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
                 return TRUE;
             }
@@ -1589,7 +1589,7 @@ artifact_hit(
 
                 if (bigmonst(mdef->data)) {
                     if (youattack)
-                        You("глубоко режете %s!", mon_nam(mdef));
+                        You("глубоко режете %s!", mon_nam_case(mdef, BP_ACC));
                     else if (vis)
                         pline("%s глубоко режет %s!", Monnam(magr),
                               hittee_acc);
@@ -1597,7 +1597,7 @@ artifact_hit(
                     return TRUE;
                 }
                 *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
-                pline("%s разрезает %s пополам!", wepdesc, mon_nam(mdef));
+                pline("%s разрезает %s пополам!", wepdesc, mon_nam_case(mdef, BP_ACC));
                 observe_object(otmp);
                 return TRUE;
             } else {
@@ -1629,7 +1629,7 @@ artifact_hit(
             if (!youdefend) {
                 if (!has_head(mdef->data) || gn.notonhead || u.uswallow) {
                     if (youattack)
-                        pline(" аким-то образом вы дико промахиваетесь мимо %s.", mon_nam(mdef));
+                        pline(" аким-то образом вы дико промахиваетесь мимо %s.", mon_nam_case(mdef, BP_GEN));
                     else if (vis)
                         pline(" аким-то образом %s промахиваетс€.", mon_nam(magr));
                     *dmgptr = 0;
@@ -1690,10 +1690,10 @@ artifact_hit(
 
                 if (is_art(otmp, ART_STORMBRINGER))
                     pline_The("%s клинок выт€гивает %s из %s!",
-                              hcolor(NH_BLACK), life, mon_nam(mdef));
+                              hcolor(NH_BLACK), life, mon_nam_case(mdef, BP_GEN));
                 else
                     pline("%s выт€гивает %s из %s!",
-                          The(otmpname), life, mon_nam(mdef));
+                          The(otmpname), life, mon_nam_case(mdef, BP_GEN));
             }
             if (mdef->m_lev == 0) {
                 /* losing a level when at 0 is fatal */

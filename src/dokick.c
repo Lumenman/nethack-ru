@@ -204,10 +204,10 @@ kick_monster(struct monst *mon, coordxy x, coordxy y)
                 /* doesn't matter whether it would have hit or missed,
                    and shades have no passive counterattack */
                 Your("Ваш пинок безвредно проходит сквозь %s.",
-                     mon_nam(mon));
+                     mon_nam_case(mon, BP_ACC));
                 break; /* skip any additional kicks */
             } else if (tmp > kickdieroll) {
-                You("пинаете %s.", mon_nam(mon));
+                You("пинаете %s.", mon_nam_case(mon, BP_ACC));
                 sum = damageum(mon, uattk, specialdmg);
                 (void) passive(mon, uarmf, (sum != M_ATTK_MISS),
                                !(sum & M_ATTK_DEF_DIED), AT_KICK, FALSE);
@@ -252,7 +252,7 @@ kick_monster(struct monst *mon, coordxy x, coordxy y)
     else if (uarm && objects[uarm->otyp].oc_bulky && ACURR(A_DEX) < rnd(25))
         clumsy = TRUE;
  doit:
-    You("пинаете %s.", mon_nam(mon));
+    You("пинаете %s.", mon_nam_case(mon, BP_ACC));
     if (!rn2(clumsy ? 3 : 4) && (clumsy || !bigmonst(mon->data))
         && mon->mcansee && !mon->mtrapped && !thick_skinned(mon->data)
         && mon->data->mlet != S_EEL && haseyes(mon->data) && mon->mcanmove
@@ -1272,7 +1272,7 @@ dokick(void)
         if (yn_function("Пнуть ваше верховое животное?", ynchars, 'y',
                         TRUE)
             == 'y') {
-            You("пинаете %s.", mon_nam(u.usteed));
+            You("пинаете %s.", mon_nam_case(u.usteed, BP_ACC));
             kick_steed();
             return ECMD_TIME;
         } else {

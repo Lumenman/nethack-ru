@@ -1225,6 +1225,19 @@ mon_nam_too(struct monst *mon, struct monst *other_mon)
     return outbuf;
 }
 
+/* RU: mon_nam_too() in case cse; the reflexive pronoun is declined too */
+char *
+mon_nam_too_case(struct monst *mon, struct monst *other_mon, int cse)
+{
+    static const char *const refl[6] = { "себ€", "себ€", "себе", "себ€",
+                                         "собой", "себе" };
+    int cs = cse & BP_CASE_MASK;
+
+    if (mon != other_mon)
+        return mon_nam_case(mon, cse);
+    return strcpy(nextmbuf(), refl[(cs >= 0 && cs <= BP_PREP) ? cs : 0]);
+}
+
 /* construct "<monnamtext> <verb> <othertext> {him|her|it}self" which might
    be distorted by Hallu; if that's plural, adjust monnamtext and verb */
 char *
@@ -1613,6 +1626,8 @@ static const struct mon_paradigm mon_paradigms[] = {
     { "летуча€ мышь",
       { "летуча€ мышь", "летучей мыши", "летучей мыши", "летучую мышь", "летучей мышью", "летучей мыши" },
       { "летучие мыши", "летучих мышей", "летучим мышам", NULL, "летучими мышами", "летучих мышах" } },
+    /* the rest, generated */
+#include "moncase_ru.h"
 };
 
 /* Case-inflected monster name from a nominative string; cse is an
@@ -1644,6 +1659,103 @@ const char *
 mon_gen(struct monst *mon, int cse)
 {
     return mon_gen_nom(mon_pmname(mon), cse);
+}
+
+/* RU: one adjective-like word ("невидимый", "ваша", "осЄдланна€") in case
+   cse; anim decides the masculine accusative.  Unknown words are copied */
+staticfn void
+ru_adj_case(char *out, const char *w, size_t l, int cse, boolean anim)
+{
+    /* rows: m hard, m soft/velar/hush (-ий), f hard, f soft (-€€), "ваш",
+       "ваша"; columns nom gen dat acc ins prep */
+    static const struct { const char *nom; const char *f[6]; } tab[] = {
+        { "ый", { "ый", "ого", "ому", "", "ым", "ом" } },
+        { "ой", { "ой", "ого", "ому", "", "ым", "ом" } },
+        { "ий", { "ий", "его", "ему", "", "им", "ем" } },
+        { "а€", { "а€", "ой", "ой", "ую", "ой", "ой" } },
+        { "€€", { "€€", "ей", "ей", "юю", "ей", "ей" } },
+    };
+    int i, cs = cse & BP_CASE_MASK;
+    const char *end;
+
+    if (l == 3 && !strncmp(w, "ваш", 3)) {
+        static const char *const v[6] = { "ваш", "вашего", "вашему", "",
+                                          "вашим", "вашем" };
+        Strcpy(out, cs == BP_ACC ? (anim ? v[1] : v[0]) : v[cs]);
+        return;
+    }
+    if (l == 4 && !strncmp(w, "ваша", 4)) {
+        static const char *const v[6] = { "ваша", "вашей", "вашей", "вашу",
+                                          "вашей", "вашей" };
+        Strcpy(out, v[cs]);
+        return;
+    }
+    for (i = 0; l > 3 && i < SIZE(tab); i++) {
+        if (strncmp(w + l - 2, tab[i].nom, 2))
+            continue;
+        end = tab[i].f[cs];
+        if (!*end) /* masculine accusative */
+            end = tab[i].f[anim ? 1 : 0];
+        /* "-кий"/"-гий"/"-хий" take "ого"/"ом": "великого" */
+        if (i == 2 && strchr("гкх", w[l - 3]) && (cs == BP_GEN || cs == BP_DAT
+                                                 || cs == BP_PREP
+                                                 || (cs == BP_ACC && anim)))
+            end = (cs == BP_DAT) ? "ому" : (cs == BP_PREP) ? "ом" : "ого";
+        /* "-ша€"/"-жа€" stay hard in the feminine; "большой" ins "им" */
+        if ((i == 1 || i == 0) && cs == BP_INS && strchr("гкхжшчщ", w[l - 3]))
+            end = "им";
+        Sprintf(out, "%.*s%s", (int) (l - 2), w, end);
+        return;
+    }
+    Sprintf(out, "%.*s", (int) l, w);
+}
+
+/* RU: a monster's name as mon_nam() gives it, in case cse: "вы бьЄте
+   котЄнка", "промахиваетесь по пчеле-убийце", "вашей маленькой собаке".
+   The species name is taken from the paradigm table, the words in front
+   of it ("ваш", "невидимый") are declined by their endings, the rest
+   ("по имени ‘идо") is kept.  Given names alone stay nominative. */
+char *
+mon_nam_case(struct monst *mtmp, int cse)
+{
+    char *nm = mon_nam(mtmp), *out, *p, *w;
+    const char *sp = mon_pmname(mtmp), *form, *acc, *gen;
+    int cs = cse & BP_CASE_MASK;
+    size_t l;
+    boolean anim;
+
+    if (cs == BP_NOM || cs > BP_PREP)
+        return nm;
+    if (!strcmp(nm, "вы")) {
+        static const char *const v[6] = { "вы", "вас", "вам", "вас", "вами",
+                                          "вас" };
+        return strcpy(nm, v[cs]);
+    }
+    if (!strcmp(nm, "оно")) {
+        static const char *const v[6] = { "оно", "его", "ему", "его", "им",
+                                          "нЄм" };
+        return strcpy(nm, v[cs]);
+    }
+    if (!(p = strstri(nm, sp)) || (p > nm && p[-1] != ' '))
+        return nm;
+    form = mon_gen_nom(sp, cs);
+    acc = mon_gen_nom(sp, BP_ACC), gen = mon_gen_nom(sp, BP_GEN);
+    anim = !strcmp(acc, gen) && strcmp(acc, sp);
+    out = nextmbuf();
+    *out = '\0';
+    for (w = nm; w < p; w += l) {
+        while (*w == ' ')
+            w++;
+        if (w >= p)
+            break;
+        for (l = 0; w + l < p && w[l] != ' '; l++)
+            ;
+        ru_adj_case(eos(out), w, l, cs, anim);
+        Strcat(out, " ");
+    }
+    Strcat(out, form);
+    Strcat(out, p + strlen(sp));
+    return out;
 }
 
 /* mons[]->pmname for a corpse or statue or figurine */
