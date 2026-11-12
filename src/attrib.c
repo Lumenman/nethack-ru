@@ -17,8 +17,8 @@ static const char
 extern const char *const attrname[6];
 
 const char
-    *const attrname[] = { "strength", "intelligence", "wisdom",
-                          "dexterity", "constitution", "charisma" };
+    *const attrname[] = { "сила", "интеллект", "мудрость",
+                          "ловкость", "телосложение", "харизма" };
 
 static const struct innate {
     schar ulevel;
