@@ -1462,16 +1462,16 @@ on_fire(struct permonst *mptr, struct attack *mattk)
     case PM_FIRE_VORTEX:
     case PM_FIRE_ELEMENTAL:
     case PM_SALAMANDER:
-        what = "already on fire";
+        what = "уже горит"; /* RU: 3rd person verb, see on_fire_you() */
         break;
     case PM_WATER_ELEMENTAL:
     case PM_FOG_CLOUD:
     case PM_STEAM_VORTEX:
-        what = "boiling";
+        what = "кипит";
         break;
     case PM_ICE_VORTEX:
     case PM_GLASS_GOLEM:
-        what = "melting";
+        what = "плавитс€";
         break;
     case PM_STONE_GOLEM:
     case PM_CLAY_GOLEM:
@@ -1480,16 +1480,34 @@ on_fire(struct permonst *mptr, struct attack *mattk)
     case PM_EARTH_ELEMENTAL:
     case PM_DUST_VORTEX:
     case PM_ENERGY_VORTEX:
-        what = "heating up";
+        what = "раскал€етс€";
         break;
     default:
-        what = (mattk->aatyp == AT_HUGS) ? "being roasted" : "on fire";
+        what = (mattk->aatyp == AT_HUGS) ? "поджариваетс€" : "горит";
         break;
     }
     return what;
 }
 
 /* similar to on_fire(); creature is summoned in a cloud of <something> */
+/* RU: on_fire() for the hero: "¬ы горите!" */
+const char *
+on_fire_you(struct permonst *mptr, struct attack *mattk)
+{
+    static const char *const you[][2] = {
+        { "уже горит", "уже горите" }, { "кипит", "кипите" },
+        { "плавитс€", "плавитесь" }, { "раскал€етс€", "раскал€етесь" },
+        { "поджариваетс€", "поджариваетесь" }, { "горит", "горите" },
+    };
+    const char *what = on_fire(mptr, mattk);
+    int i;
+
+    for (i = 0; i < SIZE(you); i++)
+        if (!strcmp(what, you[i][0]))
+            return you[i][1];
+    return what;
+}
+
 const char *
 msummon_environ(struct permonst *mptr, const char **cloud)
 {
