@@ -24,7 +24,7 @@ if os.path.exists(logf):
 LEV = os.path.join(os.environ['LOCALAPPDATA'], 'NetHack', '5.0')
 def clean():
     import glob
-    for f in glob.glob(os.path.join(LEV, 'wizard.*')) + glob.glob(os.path.join(LEV, 'Tester.*')):
+    for f in glob.glob(os.path.join(LEV, 'wizard.*')) + glob.glob(os.path.join(LEV, 'Tester.*')) + glob.glob(os.path.join(LEV, 'bon*')):
         os.remove(f)
     lk = os.path.join(os.environ['PROGRAMDATA'], 'NetHack', '5.0', 'NHPERM_lock')
     if os.path.exists(lk):
@@ -73,7 +73,7 @@ def boot(maxwait=25):
         elif is_more(s):
             msgs.append(s.split('\n')[0])
             b.send(CR)
-        elif 'Восстановить?' in s:
+        elif 'Восстановить?' in s or 'Get bones?' in s:
             b.send('n', 1.0)
         elif 'Ур.:' in s or 'Dlvl' in s:
             return S('boot done')

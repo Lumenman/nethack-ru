@@ -114,6 +114,17 @@ static struct ll_achieve_msg achieve_msg [] = {
 #define you_have_X(something) \
     enl_msg(You_, have, (const char *) "", (something), "")
 
+/* RU: "1 очко", "2 очка", "5 очков" */
+staticfn const char *
+ru_points(long n)
+{
+    long m = n % 100L;
+
+    return (m % 10L == 1L && m != 11L) ? "очко"
+           : (m % 10L >= 2L && m % 10L <= 4L && (m < 12L || m > 14L)) ? "очка"
+             : "очков";
+}
+
 staticfn void
 enlght_out(const char *buf)
 {
@@ -146,6 +157,11 @@ enlght_line(
     char buf[BUFSZ];
 
     Sprintf(buf, " %s%s%s%s.", start, middle, end, ps);
+    /* RU: pieces often carry their own spaces or final period */
+    while (strstr(buf + 1, "  "))
+        (void) strsubst(buf + 1, "  ", " ");
+    if (strlen(buf) > 2 && !strcmp(eos(buf) - 2, ".."))
+        eos(buf)[-1] = '\0';
 #ifndef NO_ENLGHT_CONTRACTIONS
     if (strstri(buf, " not ")) { /* TODO: switch to libc strstr() */
         for (i = 0; i < SIZE(contra); ++i)
@@ -446,7 +462,7 @@ enlightenment(
         }
     }
     (void) fmt_elapsed_time(buf, final);
-    enl_msg("Общее время игры ", "", "", buf, "");
+    enl_msg("Общее время игры:", "", "", buf, "");
 
     if (!ge.en_via_menu) {
         display_nhwindow(ge.en_win, TRUE);
@@ -512,26 +528,27 @@ background_enlightenment(int unused_mode UNUSED, int final)
     if (!gu.urole.name.f
         && ((gu.urole.allow & ROLE_GENDMASK) == (ROLE_MALE | ROLE_FEMALE)
             || innategend != flags.initgend))
-        Sprintf(tmpbuf, "%s ", genders[innategend].adj);
+        Sprintf(tmpbuf, "%s, ", (innategend == 1) ? "женщина"
+                                : (innategend == 0) ? "мужчина"
+                                  : genders[innategend].adj);
     buf[0] = '\0';
     if (Upolyd)
         Strcpy(buf, "на самом деле "); /* "Вы на самом деле ..." */
     if (!strcmpi(rank_titl, role_titl)) {
         /* omit role when rank title matches it */
-        Sprintf(eos(buf), "%s, уровень %d %s%s", rank_titl, u.ulevel,
+        Sprintf(eos(buf), "— %s %d-го уровня (%s%s)", rank_titl, u.ulevel,
                 tmpbuf, gu.urace.noun);
     } else {
-        Sprintf(eos(buf), "%s, уровень %d %s%s %s", rank_titl, u.ulevel,
-                tmpbuf, gu.urace.adj, role_titl);
+        Sprintf(eos(buf), "— %s %d-го уровня (%s%s, %s)", rank_titl,
+                u.ulevel, tmpbuf, gu.urace.noun, role_titl);
     }
     you_are(buf, "");
 
     /* report alignment (bypass you_are() in order to omit ending period);
        adverb is used to distinguish between temporary change (helm of opp.
        alignment), permanent change (one-time conversion), and original */
-    Sprintf(buf, " %s%s%s, %sна миссии для %s",
+    Sprintf(buf, " %s%s— %s%s; %s %s — %s",
             You_, !final ? are : were,
-            align_str(u.ualign.type),
             /* helm of opposite alignment (might hide conversion) */
             (u.ualign.type != u.ualignbase[A_CURRENT])
                /* what's the past tense of "currently"? if we used "formerly"
@@ -548,12 +565,20 @@ background_enlightenment(int unused_mode UNUSED, int final)
                      ? "номинально "
                      /* lastly, normal case */
                      : "",
-            u_gname());
+            ru_color(align_str(u.ualign.type), flags.female ? 'f' : 'm',
+                     BP_NOM),
+            !strcmp(align_gtitle(u.ualign.type), "богиня") ? "ваша" : "ваш",
+            align_gtitle(u.ualign.type), u_gname());
+    /* tty menus cut long lines: finish the sentence on a second one */
+    Strcat(buf, ",");
     enlght_out(buf);
     /* show the rest of this game's pantheon (finishes previous sentence)
        [appending "also Moloch" at the end would allow for straightforward
        trailing "and" on all three aligned entries but looks too verbose] */
-    Sprintf(buf, ", которому %s противостоят", !final ? "" : "противостояли");
+    Sprintf(buf, "   %s %s",
+            !strcmp(align_gtitle(u.ualign.type), "богиня") ? "которой"
+                                                           : "которому",
+            !final ? "противостоят" : "противостояли");
     if (u.ualign.type != A_LAWFUL)
         Sprintf(eos(buf), " %s (%s) и", align_gname(A_LAWFUL),
                 align_str(A_LAWFUL));
@@ -610,16 +635,27 @@ background_enlightenment(int unused_mode UNUSED, int final)
                  "", tmpbuf);
     } else if (Is_knox(&u.uz)) {
         /* this gives away the fact that the knox branch is only 1 level */
-        Sprintf(buf, "на %s уровне", svd.dungeons[u.uz.dnum].dname);
+        Strcpy(buf, "в Форте Лудиос");
         /* TODO? maybe phrase it differently when actually inside the fort,
            if we're able to determine that (not trivial) */
     } else {
         char dgnbuf[QBUFSZ];
 
-        Strcpy(dgnbuf, svd.dungeons[u.uz.dnum].dname);
-        if (!strncmpi(dgnbuf, "The ", 4))
-            *dgnbuf = lowc(*dgnbuf);
-        Sprintf(tmpbuf, "уровень %d",
+        static const char *const dgn_prep[][2] = {
+            { "Подземелья Судьбы", "в Подземельях Судьбы" },
+            { "Гномьи шахты", "в Гномьих шахтах" },
+            { "Сокобан", "в Сокобане" }, { "Квест", "в Квесте" },
+            { "Форт Лудиос", "в Форте Лудиос" }, { "Геенна", "в Геенне" },
+            { "Стихийные планы", "на Стихийных планах" },
+            { "Башня Влада", "в Башне Влада" },
+        };
+        int di;
+
+        Sprintf(dgnbuf, "в %s", svd.dungeons[u.uz.dnum].dname);
+        for (di = 0; di < SIZE(dgn_prep); di++)
+            if (!strcmp(svd.dungeons[u.uz.dnum].dname, dgn_prep[di][0]))
+                Strcpy(dgnbuf, dgn_prep[di][1]);
+        Sprintf(tmpbuf, "%d-м уровне",
                 In_quest(&u.uz) ? dunlev(&u.uz) : depth(&u.uz));
         /* TODO? maybe extend this bit to include various other automatic
            annotations from the dungeon overview code */
@@ -627,7 +663,7 @@ background_enlightenment(int unused_mode UNUSED, int final)
             Strcat(tmpbuf, ", примитивная область");
         else if (Is_bigroom(&u.uz) && !Blind)
             Strcat(tmpbuf, ", очень большая комната");
-        Snprintf(buf, sizeof buf, "в %s, на %s", dgnbuf, tmpbuf);
+        Snprintf(buf, sizeof buf, "%s, на %s", dgnbuf, tmpbuf);
     }
     you_are(buf, "");
 
@@ -657,7 +693,7 @@ background_enlightenment(int unused_mode UNUSED, int final)
            have dragged on for an arbitrary amount of time.  We want to
            report the values that currently affect play--or affected
            play when game ended--rather than actual outside situation.] */
-        Sprintf(buf, "сейчас %s%s",
+        Sprintf(buf, "Сейчас %s%s",
                 (flags.moonphase == FULL_MOON) ? "полнолуние"
                 : (flags.moonphase == NEW_MOON) ? "новолуние"
                   /* showing these would probably just lead to confusion
@@ -689,7 +725,7 @@ background_enlightenment(int unused_mode UNUSED, int final)
         /* [flags.showexp currently does not matter; should it?] */
 
         /* experience level is already shown above */
-        Sprintf(buf, "%-1ld очков опыта", u.uexp);
+        Sprintf(buf, "%ld %s опыта", u.uexp, ru_points(u.uexp));
         /* TODO?
          *  Remove wizard-mode restriction since patient players can
          *  determine the numbers needed without resorting to spoilers
@@ -701,13 +737,10 @@ background_enlightenment(int unused_mode UNUSED, int final)
         if (ulvl < 30 && (final || wizard)) {
             long nxtlvl = newuexp(ulvl), delta = nxtlvl - u.uexp;
 
-            Sprintf(eos(buf), ", ещё %ld очков до %s уровня %d",
-                    delta,
-                    /* present tense=="needed", past tense=="were needed" */
-                    (ulvl < 18) ? "следующего" : "след.",
-                    (ulvl + 1));
+            Sprintf(eos(buf), "; до %d-го уровня %s ещё %ld", ulvl + 1,
+                    !final ? "нужно" : "было нужно", delta);
         }
-        you_have(buf, "");
+        enl_msg("У вас ", "", "", buf, "");
     }
 #ifdef SCORE_ON_BOTL
     if (flags.showscore) {
@@ -726,7 +759,7 @@ background_enlightenment(int unused_mode UNUSED, int final)
 staticfn void
 basics_enlightenment(int mode UNUSED, int final)
 {
-    static char Power[] = "очков энергии (сила заклинаний)";
+    static char Power[] = "энергии (сила заклинаний)";
     char buf[BUFSZ];
     int pw = u.uen, hp = (Upolyd ? u.mh : u.uhp),
         pwmax = u.uenmax, hpmax = (Upolyd ? u.mhmax : u.uhpmax);
@@ -738,19 +771,21 @@ basics_enlightenment(int mode UNUSED, int final)
         hp = 0;
     /* "1 out of 1" rather than "all" if max is only 1; should never happen */
     if (hp == hpmax && hpmax > 1)
-        Sprintf(buf, "имеете все %d очков здоровья", hpmax);
+        Sprintf(buf, "все %d %s здоровья", hpmax, ru_points(hpmax));
     else
-        Sprintf(buf, "имеете %d из %d очков здоровья", hp, hpmax);
-    you_have(buf, "");
+        Sprintf(buf, "%d из %d %s здоровья", hp, hpmax, ru_points(hpmax));
+    enl_msg("У вас ", "", "", buf, "");
 
     /* low max energy is feasible, so handle couple of extra special cases */
-    if (pwmax == 0 || (pw == pwmax && pwmax == 2)) /* both: not "all 2" */
-        Sprintf(buf, "%s %s", !pwmax ? "не имеете" : "имеете оба", Power);
+    if (pwmax == 0)
+        Sprintf(buf, "нет %s", Power);
+    else if (pw == pwmax && pwmax == 2) /* both: not "all 2" */
+        Sprintf(buf, "оба очка %s", Power);
     else if (pw == pwmax && pwmax > 2)
-        Sprintf(buf, "имеете все %d %s", pwmax, Power);
+        Sprintf(buf, "все %d %s %s", pwmax, ru_points(pwmax), Power);
     else
-        Sprintf(buf, "имеете %d из %d %s", pw, pwmax, Power);
-    you_have(buf, "");
+        Sprintf(buf, "%d из %d %s %s", pw, pwmax, ru_points(pwmax), Power);
+    enl_msg("У вас ", "", "", buf, "");
 
     if (Upolyd) {
         switch (mons[u.umonnum].mlevel) {
@@ -773,7 +808,7 @@ basics_enlightenment(int mode UNUSED, int final)
     if (abs(u.uac) == AC_MAX)
         Sprintf(eos(buf), ", %s из возможных",
                 (u.uac < 0) ? "лучший" : "худший");
-    enl_msg("Ваш класс доспеха ", "", "", buf, "");
+    enl_msg("Ваш класс брони: ", "", "", buf, "");
 
     /* gold; similar to doprgold (#showgold) but without shop billing info;
        includes container contents, unlike status line but like doprgold */
@@ -781,9 +816,9 @@ basics_enlightenment(int mode UNUSED, int final)
         long umoney = money_cnt(gi.invent), hmoney = hidden_gold(final);
 
         if (!umoney) {
-            Sprintf(buf, " Ваш кошелёк %s пуст", !final ? "" : "был");
+            Sprintf(buf, " Ваш кошелёк%s пуст", !final ? "" : " был");
         } else {
-            Sprintf(buf, " В вашем кошельке %s %ld %s", !final ? "" : "было",
+            Sprintf(buf, " В вашем кошельке%s %ld %s", !final ? "" : " было",
                     umoney, currency(umoney));
         }
         /* terminate the wallet line if appropriate, otherwise add an
@@ -894,6 +929,7 @@ one_characteristic(int mode, int final, int attrindx)
     acurrent = ACURR(attrindx);
     (void) attrval(attrindx, acurrent, valubuf); /* Sprintf(valubuf,"%d",) */
     Sprintf(subjbuf, "%s: ", attrname[attrindx]);
+    *subjbuf = highc(*subjbuf); /* RU: "Сила: 18" */
 
     if (!hide_innate_value) {
         /* show abase, amax, and/or attrmax if acurr doesn't match abase
@@ -1323,17 +1359,14 @@ weapon_insight(int final)
             (void) lcase(skill_level_name(wtype, sklvlbuf));
         /* "you have no/basic/expert/master/grand-master skill with <skill>"
            or "you are unskilled/skilled in <skill>" */
-        Sprintf(buf, "%s %s %s", skill_name(wtype),
-                hav ? " — навык " : " — уровень ", sklvlbuf);
+        nhUse(hav);
+        Sprintf(buf, "навык «%s»: %s", skill_name(wtype), sklvlbuf);
 
         if (!u.twoweap) {
             if (can_advance(wtype, FALSE))
-                Sprintf(eos(buf), " и %s этот навык",
-                        !final ? "можете улучшить" : "могли бы улучшить");
-            if (hav)
-                you_have(buf, "");
-            else
-                you_are(buf, "");
+                Sprintf(eos(buf), " (%s улучшить)",
+                        !final ? "можно" : "можно было");
+            enl_msg("Ваш ", "", "", buf, "");
 
         } else { /* two-weapon */
             static const char also_[] = "также ";
@@ -1510,7 +1543,7 @@ attributes_enlightenment(
         you_are(hofe_titles[u.uevent.uhand_of_elbereth - 1], "");
     }
 
-    Sprintf(buf, "%s", piousness(TRUE, "привержены своему выравниванию"));
+    Sprintf(buf, "%s", piousness(TRUE, "привержены своему мировоззрению"));
     if (u.ualign.record >= 0)
         you_are(buf, "");
     else
@@ -1518,7 +1551,7 @@ attributes_enlightenment(
 
     if (wizard) {
         Sprintf(buf, " %d", u.ualign.record);
-        enl_msg("Ваше выравнивание ", "", "", buf, "");
+        enl_msg("Счёт мировоззрения:", "", "", buf, "");
     }
 
     /*** Resistances to troubles ***/
