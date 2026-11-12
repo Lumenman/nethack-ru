@@ -740,6 +740,8 @@ extern char *mon_nam_case(struct monst *, int) NONNULLARG1;
 extern char *y_monnam_case(struct monst *, int) NONNULLARG1;
 extern const char *mon_case_to_nom(const char *) NONNULLARG1;
 extern char mon_name_gender(const char *) NONNULLARG1;
+extern boolean ru_god_female(const char *) NONNULLARG1;
+extern const char *ru_god_case(const char *, int) NONNULLARG1;
 extern const char *ru_color(const char *, char, int) NONNULLARG1;
 extern char *mon_nam_too_case(struct monst *, struct monst *, int) NONNULLARG12;
 
@@ -2240,6 +2242,7 @@ extern char *ru_verb_plural(const char *) NONNULLARG1;
 extern const char *ru_self_word(struct obj *) NONNULLARG1;
 extern char *ru_count_xname(struct obj *, long) NONNULLARG1;
 extern char *ru_obj_with(struct obj *) NONNULLARG1;
+extern void ru_inan_acc(char *) NONNULLARG1;
 extern char *mshot_xname(struct obj *) NONNULLARG1;
 extern boolean the_unique_obj(struct obj *) NONNULLARG1;
 extern boolean the_unique_pm(struct permonst *) NONNULLARG1;

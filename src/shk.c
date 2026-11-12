@@ -62,6 +62,9 @@ extern const struct shclass shtypes[]; /* defined in shknam.c */
 static const char and_its_contents[] = " и его содержимое";
 static const char the_contents_of[] = "содержимое ";
 
+staticfn char *ru_xname_acc(struct obj *);
+staticfn char *ru_simpleonames_acc(struct obj *);
+staticfn const char *ru_shop_acc(int);
 staticfn void append_honorific(char *);
 staticfn long addupbill(struct monst *);
 staticfn void pacify_shk(struct monst *, boolean);
@@ -707,9 +710,8 @@ rob_shop(struct monst *shkp)
     /* by this point, we know an actual robbery has taken place */
     eshkp->robbed += total;
     You("украли товара на %ld %s.", total, currency(total));
-    livelog_printf(LL_ACHIEVE, "украл товара на %ld %s из %s %s",
-                   total, currency(total), s_suffix(shkname(shkp)),
-                   shtypes[eshkp->shoptype - SHOPBASE].name);
+    livelog_printf(LL_ACHIEVE, "украл товара на %ld %s у %s",
+                   total, currency(total), shkname(shkp));
 
     if (!Role_if(PM_ROGUE)) /* stealing is unlawful */
         adjalign(-sgn(u.ualign.type));
@@ -814,7 +816,7 @@ u_entered_shop(char *enterstring)
         if (!Deaf && !muteshk(shkp)) {
             SetVoice(shkp, 0, 80, 0);
             verbalize("Итак, %s, вы посмели вернуться в %s %s?!", svp.plname,
-                      s_suffix(shkname(shkp)), shtypes[rt - SHOPBASE].name);
+                      ru_shop_acc(rt), shkname(shkp));
         } else {
             pline("%s, похоже, %s из-за вашего возвращения в %s %s!",
                   Shknam(shkp), ROLL_FROM(angrytexts),
@@ -827,8 +829,7 @@ u_entered_shop(char *enterstring)
                       svp.plname,
                       mbodypart_case(shkp, EYE, BP_GEN | BP_PLURAL));
         } else {
-            pline("Атмосфера в %s %s недружелюбная.",
-                      s_suffix(shkname(shkp)), shtypes[rt - SHOPBASE].name);
+            pline("Атмосфера у %s недружелюбная.", shkname(shkp));
         }
     } else if (eshkp->robbed) {
         if (!Deaf) {
@@ -844,11 +845,10 @@ u_entered_shop(char *enterstring)
             set_voice(shkp, 0, 80, 0);
             verbalize("%s, %s!  Добро пожаловать%s в %s %s!", Hello(shkp), svp.plname,
                       eshkp->visitct++ ? " снова" : "",
-                      s_suffix(shkname(shkp)), shtypes[rt - SHOPBASE].name);
+                      ru_shop_acc(rt), shkname(shkp));
         } else {
             You("вошли в %s %s%s!",
-                s_suffix(shkname(shkp)),
-                shtypes[rt - SHOPBASE].name,
+                ru_shop_acc(rt), shkname(shkp),
                 eshkp->visitct++ ? " снова" : "");
         }
     }
@@ -880,17 +880,26 @@ u_entered_shop(char *enterstring)
                 if (!Blind)
                     makeknown(DWARVISH_MATTOCK);
             }
+            char tool_acc[BUFSZ];
+
+            /* RU: "оставьте кирку снаружи"; cnt > 1 only meant plural */
+            if (cnt > 1) {
+                Strcpy(tool_acc, "все инструменты для копания");
+            } else {
+                Strcpy(tool_acc, tool);
+                ru_inan_acc(tool_acc);
+            }
             if (!Deaf && !muteshk(shkp)) {
                 SetVoice(shkp, 0, 80, 0);
                 verbalize(not_upset
-                              ? "Не оставите ли вы вашу %s%s снаружи?"
-                              : "Оставьте %s%s снаружи.",
-                          tool, plur(cnt));
+                              ? "Не оставите ли вы %s снаружи?"
+                              : "Оставьте %s снаружи.",
+                          tool_acc);
             } else {
-                pline("%s %s впускать вас с вашей %s%s.",
+                pline("%s %s впускать вас, пока у вас %s.",
                       Shknam(shkp),
                       not_upset ? "не решается" : "отказывается",
-                      tool, plur(cnt));
+                      tool);
             }
             should_block = TRUE;
         } else if (u.usteed) {
@@ -1023,9 +1032,8 @@ shopper_financial_report(void)
                 continue;
             eshkp = ESHK(shkp);
             if ((amt = eshkp->credit) != 0)
-                You("имеете кредит в %ld %s в %s %s.", amt, currency(amt),
-                    s_suffix(shkname(shkp)),
-                    shtypes[eshkp->shoptype - SHOPBASE].name);
+                pline("У вас кредит в %ld %s у %s.", amt, currency(amt),
+                      shkname(shkp));
             else if (shkp == this_shkp)
                 You("не имеете здесь кредита.");
             if ((amt = shop_debt(eshkp)) != 0)
@@ -1879,8 +1887,9 @@ dopay(void)
                 pline("Но у вас припрятано немного золота.");
         } else {
             if (umoney > ltmp) {
-                You("отдаёте %s %ld gold piece%s, как %s просил.",
-                    shkname(shkp), ltmp, plur(ltmp), noit_mhe(shkp));
+                You("отдаёте %s %ld %s, как %s просил%s.",
+                    shkname(shkp), ltmp, currency(ltmp), noit_mhe(shkp),
+                    shkp->female ? "а" : "");
                 pay(ltmp, shkp);
             } else {
                 You("отдаёте %s всё ваше золото%s.", shkname(shkp),
@@ -2290,8 +2299,8 @@ dopayobj(
         if (!unseen)
             shk_names_obj(shkp, obj,
                           consumed
-                              ? "заплатили за %s стоимостью %ld gold piece%s.%s"
-                              : "купили %s за %ld gold piece%s.%s",
+                              ? "заплатили за %s стоимостью %ld %s.%s"
+                              : "купили %s за %ld %s.%s",
                           ltmp, "");
     }
 
@@ -2403,7 +2412,7 @@ buy_container(
         if (unpaidcontainer)
             container->unpaid = container->no_charge = 1;
         shk_names_obj(shkp, container,
-                      "купили %s за %ld gold piece%s.%s",
+                      "купили %s за %ld %s.%s",
                       totalcost, "");
         container->unpaid = container->no_charge = 0;
     }
@@ -3121,9 +3130,10 @@ special_stock(
                     if (obj->spe < 7) {
                         SetVoice(shkp, 0, 80, 0);
                         verbalize(
-                             "Чтобы зажечь их, вам понадобится ещё %d%s candle%s.",
-                                (7 - obj->spe), (obj->spe > 0) ? "" : "",
-                                  plur(7 - obj->spe));
+                             "Чтобы зажечь их, вам понадобится ещё %d %s.",
+                                (7 - obj->spe),
+                                (7 - obj->spe == 1) ? "свеча"
+                                : (7 - obj->spe <= 4) ? "свечи" : "свечей");
                     }
                     /* [what if hero is already carrying enough candles?
                        should Izchak explain how to attach them instead?] */
@@ -3438,9 +3448,10 @@ shk_names_obj(
         Sprintf(fmtbuf, "%%s; вы %s", fmt);
         obj_name[0] = highc(obj_name[0]);
         pline(fmtbuf, obj_name, (obj->quan > 1L) ? "их" : "его", amt,
-              plur(amt), arg);
+              currency(amt), arg);
     } else {
-        You(fmt, obj_name, amt, plur(amt), arg);
+        ru_inan_acc(obj_name); /* "купили лампу" */
+        You(fmt, obj_name, amt, currency(amt), arg);
     }
 }
 
@@ -3556,7 +3567,7 @@ addtobill(
            add_one_tobill above */
 
         if (!ltmp) {
-            pline("%s не интересуется %s.", Shknam(shkp), the(xname(obj)));
+            pline("%s не интересует %s.", upstart(xname(obj)), Shknam(shkp));
             return;
         }
         if (!ininv) {
@@ -3565,37 +3576,84 @@ addtobill(
         } else {
             long save_quan = obj->quan;
 
-            Strcpy(buf, "\"Для вас,");
+            char nmbuf[BUFSZ];
+            char g;
+
+            /* RU: "Для вас, дорогая госпожа, всего 13 зоркмидов за эту лампу" */
+            Strcpy(buf, "\"Для вас");
             if (ANGRY(shkp)) {
-                Strcat(buf, ", негодяй;");
+                Strcat(buf, ", негодяй,");
             } else if (!ESHK(shkp)->surcharge) {
-                Strcat(buf, " ");
+                Strcat(buf, ", ");
                 append_honorific(buf);
-                Strcat(buf, "; только");
+                Strcat(buf, ", всего");
+            } else {
+                Strcat(buf, " —");
             }
             obj->quan = 1L; /* fool xname() into giving singular */
+            Strcpy(nmbuf, xname(obj));
+            g = ru_name_gender(nmbuf);
+            ru_inan_acc(nmbuf);
             set_voice(shkp, 0, 80, 0);
             pline("%s %ld %s %s %s%s.\"", buf, ltmp, currency(ltmp),
-                  (save_quan > 1L) ? "за штуку"
-                                   : (contentscount && !obj->unpaid)
-                                       ? "за содержимое этого"
-                                       : "за это",
-                  xname(obj),
+                  (contentscount && !obj->unpaid) ? "за содержимое:"
+                  : (save_quan > 1L)
+                      ? ((g == 'f') ? "за каждую" : (g == 'n') ? "за каждое"
+                                                              : "за каждый")
+                      : ((g == 'f') ? "за эту" : (g == 'n') ? "за это"
+                                                           : "за этот"),
+                  nmbuf,
                   (contentscount && obj->unpaid) ? and_its_contents : "");
             obj->quan = save_quan;
         }
     } else if (!silent) {
         if (ltmp) {
             set_voice(shkp, 0, 80, 0);
-            pline("Прейскурантная цена %s%s%s — %ld %s%s.",
+            char nmbuf[BUFSZ];
+
+            Strcpy(nmbuf, xname(obj));
+            ru_inan_acc(nmbuf);
+            pline("Цена по прейскуранту за %s%s%s — %ld %s%s.",
                       (contentscount && !obj->unpaid) ? the_contents_of : "",
-                      the(xname(obj)),
+                      nmbuf,
                       (contentscount && obj->unpaid) ? and_its_contents : "",
                       ltmp, currency(ltmp), (obj->quan > 1L) ? " За штуку" : "");
         } else {
             pline("%s не замечает.", Shknam(shkp));
         }
     }
+}
+
+/* RU: a shop type in the accusative: "магазин освещения", "лавку" */
+/* RU: xname() and simpleonames() in the accusative ("за вашу лампу"),
+   for safe_qbuf() */
+staticfn char *
+ru_xname_acc(struct obj *obj)
+{
+    char *s = xname(obj);
+
+    ru_inan_acc(s);
+    return s;
+}
+
+staticfn char *
+ru_simpleonames_acc(struct obj *obj)
+{
+    char *s = simpleonames(obj);
+
+    ru_inan_acc(s);
+    return s;
+}
+
+
+staticfn const char *
+ru_shop_acc(int rt)
+{
+    static char buf[BUFSZ];
+
+    Strcpy(buf, shtypes[rt - SHOPBASE].name);
+    ru_inan_acc(buf);
+    return buf;
 }
 
 staticfn void
@@ -3608,7 +3666,14 @@ append_honorific(char *buf)
         "всемирно почитаемый и священный"
     };
 
-    Strcat(buf, honored[rn2(SIZE(honored) - 1) + u.uevent.udemigod]);
+    /* RU: "дорогая госпожа", "почтенное создание" */
+    Strcat(buf, ru_color(honored[rn2(SIZE(honored) - 1) + u.uevent.udemigod],
+                         is_vampire(gy.youmonst.data)
+                             ? (flags.female ? 'f' : 'm')
+                         : (!maybe_polyd(is_elf(gy.youmonst.data),
+                                         Race_if(PM_ELF))
+                            && !is_human(gy.youmonst.data)) ? 'n'
+                         : flags.female ? 'f' : 'm', BP_NOM));
     if (is_vampire(gy.youmonst.data))
         Strcat(buf, (flags.female) ? " тёмная госпожа" : " тёмный господин");
     else if (maybe_polyd(is_elf(gy.youmonst.data), Race_if(PM_ELF)))
@@ -4067,8 +4132,8 @@ sellobj(
         if (c == 'y') {
             shk_names_obj(shkp, obj,
                           ((gs.sell_how != SELL_NORMAL)
-                           ? "обменяли %s на %ld zorkmid%s в %sкредит."
-                    : "отдаёте %s и получаете %ld zorkmid%s в %sкредит."),
+                           ? "обменяли %s на %ld %s в %sкредит."
+                    : "отдаёте %s и получаете %ld %s в %sкредит."),
                           tmpcr, (eshkp->credit > 0L) ? "дополнительный " : "");
             eshkp->credit += tmpcr;
             if (container)
@@ -4134,13 +4199,25 @@ sellobj(
                when container's contents are unknown, plural "items"
                should be used to not give away information.
              */
-            Sprintf(qbuf, "%s предлагает%s %ld gold piece%s за %s%s ",
-                    Shknam(shkp), short_funds ? " только" : "", offer,
-                    plur(offer),
-                    (cltmp && !ltmp)
-                        ? ((yourc == 1L) ? "ваш предмет в " : "ваши предметы в ")
-                        : "",
-                    obj->unpaid ? "этот" : "ваш");
+            {
+                char g = ru_name_gender(xname(obj));
+
+                /* RU: "предлагает 10 зоркмидов за ваш кинжал / вашу лампу" */
+                Sprintf(qbuf, "%s предлагает%s %ld %s за %s%s ",
+                        Shknam(shkp), short_funds ? " только" : "", offer,
+                        currency(offer),
+                        (cltmp && !ltmp)
+                            ? ((yourc == 1L) ? "ваш предмет внутри:"
+                                             : "ваши предметы внутри:")
+                            : "",
+                        (cltmp && !ltmp)
+                            ? ""
+                        : obj->unpaid
+                            ? ((g == 'f') ? "эту" : (g == 'n') ? "это"
+                               : (g == 'p') ? "эти" : "этот")
+                            : ((g == 'f') ? "вашу" : (g == 'n') ? "ваше"
+                               : (g == 'p') ? "ваши" : "ваш"));
+            }
             one = !ltmp ? (yourc == 1L) : (obj->quan == 1L && !cltmp);
             Sprintf(qsfx, "%s.  Продать %s?",
                     (cltmp && ltmp)
@@ -4151,7 +4228,9 @@ sellobj(
                         : "",
                     one ? "его" : "их");
             record_price_quote(obj->otyp, offer / obj->quan, FALSE);
-            (void) safe_qbuf(qbuf, qbuf, qsfx, obj, xname, simpleonames,
+            (void) safe_qbuf(qbuf, qbuf, qsfx, obj,
+                             (cltmp && !ltmp) ? xname : ru_xname_acc,
+                             ru_simpleonames_acc,
                              one ? "то" : "те");
         } else
             qbuf[0] = '\0'; /* just to pacify lint */
@@ -4182,9 +4261,9 @@ sellobj(
             shk_names_obj(shkp, obj,
                           (gs.sell_how != SELL_NORMAL)
                            ? ((!ltmp && cltmp && only_partially_your_contents)
-                         ? "продали предметы, что в %s, за %ld gold piece%s.%s"
-                         : "продали %s за %ld gold piece%s.%s")
-            : "отдаёте %s и получаете %ld gold piece%s в качестве компенсации.%s",
+                         ? "продали предметы, что в %s, за %ld %s.%s"
+                         : "продали %s за %ld %s.%s")
+            : "отдаёте %s и получаете %ld %s в качестве компенсации.%s",
                           offer, "");
             break;
         default:
@@ -5620,8 +5699,8 @@ kops_gone(boolean silent)
         }
     }
     if (cnt && !silent)
-        pline("КОп%s (разочарованные) растворя%sются в воздухе.",
-                  plur(cnt), (cnt == 1) ? "es" : "");
+        pline((cnt == 1) ? "Коп (разочарованный) растворяется в воздухе."
+                         : "Копы (разочарованные) растворяются в воздухе.");
 }
 
 staticfn long

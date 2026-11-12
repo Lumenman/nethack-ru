@@ -3692,7 +3692,8 @@ print_mapseen(
             atmp = mptr->feat.msalign;              /*    0,  1,  2,  3 */
             atmp = Msa2amask(atmp);                 /*    0,  1,  2,  4 */
             if (Amask2align(atmp) == u.ualign.type) /* -128, -1,  0, +1 */
-                Sprintf(eos(buf), " к %s", align_gname(u.ualign.type));
+                Sprintf(eos(buf), " к %s",
+                    ru_god_case(align_gname(u.ualign.type), BP_DAT));
         }
         ADDNTOBUF("трон", mptr->feat.nthrone);
         ADDNTOBUF("фонтан", mptr->feat.nfount);

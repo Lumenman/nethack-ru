@@ -4112,7 +4112,7 @@ dfeature_at(coordxy x, coordxy y, char *buf)
     else if (IS_ALTAR(ltyp)) {
         Sprintf(altbuf, "%sалтарь %s (%s)",
                 (lev->altarmask & AM_SANCTUM) ? "священный " : "",
-                a_gname(),
+                ru_god_case(a_gname(), BP_GEN),
                 align_str(Amask2align(lev->altarmask & ~AM_SHRINE)));
         dfeature = altbuf;
     } else if (stway) {
@@ -4315,8 +4315,13 @@ look_here(
         if (dfeature && !skip_dfeature)
             pline1(fbuf);
         read_engr_at(u.ux, u.uy); /* Eric Backus */
-        pline(Blind ? "Вы ощупываете здесь %s." : "Вы видите здесь %s.",
-              doname_with_price(otmp));
+        {
+            char *nm = doname_with_price(otmp);
+
+            ru_inan_acc(nm); /* "Вы видите здесь лампу" */
+            pline(Blind ? "Вы ощупываете здесь %s." : "Вы видите здесь %s.",
+                  nm);
+        }
         iflags.last_msg = PLNMSG_ONE_ITEM_HERE;
         if (otmp->otyp == CORPSE)
             feel_cockatrice(otmp, FALSE);

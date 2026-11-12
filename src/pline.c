@@ -435,10 +435,11 @@ void
 There(const char *line, ...)
 {
     va_list the_args;
-    char *tmp;
 
+    /* RU: no "There"; the translated text is a whole sentence ("Здесь
+       нечего подбирать", "Нет ни одного существа"), just capitalize it */
     va_start(the_args, line);
-    vpline(YouMessage(tmp, "Там ", line), the_args);
+    vpline_capitalized(line, the_args);
     va_end(the_args);
 }
 
@@ -446,19 +447,22 @@ void
 You_hear(const char *line, ...)
 {
     va_list the_args;
-    char *tmp;
 
     if ((Deaf && !Unaware) || !flags.acoustics)
         return;
-    va_start(the_args, line);
-    if (Underwater)
-        YouPrefix(tmp, "Вы едва слышите ", line);
-    else if (Unaware)
-        YouPrefix(tmp, "Вы во сне слышите ", line);
-    else
-        YouPrefix(tmp, "Вы слышите ", line);  /* Deaf-aware */
-    vpline(strcat(tmp, line), the_args);
-    va_end(the_args);
+    {
+        char buf[BUFSZ];
+        boolean kak;
+
+        /* RU: "Вы слышите, как открывается дверь" needs the comma */
+        va_start(the_args, line);
+        (void) vsnprintf(buf, sizeof buf, line, the_args);
+        va_end(the_args);
+        kak = !strncmp(buf, "как ", 4);
+        pline("%s%s%s", Underwater ? "Вы едва слышите"
+                        : Unaware ? "Вы во сне слышите" : "Вы слышите",
+              kak ? ", " : " ", buf);
+    }
 }
 
 void

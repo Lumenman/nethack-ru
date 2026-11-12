@@ -1813,9 +1813,9 @@ doname_base(
     case RING_CLASS:
  ring:  /* normal rings reach here 'naturally'; meat ring jumps here */
         if (obj->owornmask & W_RINGR)
-            Concat(bp, 0, " (на правой руке");
+            Concat(bp, 0, " (на правой руке)");
         if (obj->owornmask & W_RINGL)
-            Concat(bp, 0, " (на левой руке");
+            Concat(bp, 0, " (на левой руке)");
         if (known && objects[obj->otyp].oc_charged) {
             Sprintf(eos(prefix), "%+d ", obj->spe); /* sitoa(obj->spe)+" " */
         }
@@ -2933,6 +2933,35 @@ ru_obj_with(struct obj *obj)
     }
     return strprepend(s, (g == 'f') ? "своей " : (g == 'p') ? "своими "
                                                             : "своим ");
+}
+
+/* RU: accusative of an inanimate noun phrase, in place: "стена" ->
+   "стену", "больша€ стату€" -> "большую статую"; masculine and neuter
+   inanimates are unchanged */
+void
+ru_inan_acc(char *s)
+{
+    const char *h;
+    char *w, *p, *hd;
+    size_t l;
+
+    if (!(h = ru_head(s, &l)))
+        return;
+    hd = s + (h - s);
+    for (w = s; w < hd; w = p) { /* adjectives in front: -а€/-€€ */
+        for (p = w; *p && *p != ' '; p++)
+            ;
+        if (p - w >= 4 && !strncmp(p - 2, "а€", 2))
+            memcpy(p - 2, "ую", 2);
+        else if (p - w >= 4 && !strncmp(p - 2, "€€", 2))
+            memcpy(p - 2, "юю", 2);
+        while (*p == ' ')
+            p++;
+    }
+    if (l >= 2 && hd[l - 1] == 'а')
+        hd[l - 1] = 'у';
+    else if (l >= 2 && hd[l - 1] == '€')
+        hd[l - 1] = 'ю';
 }
 
 /* various singular words that vtense would otherwise categorize as plural;

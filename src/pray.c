@@ -730,8 +730,10 @@ angrygods(aligntyp resp_god)
     switch (rn2(maxanger)) {
     case 0:
     case 1:
-        You_feel("что %s %s.", align_gname(resp_god),
-                 Hallucination ? "обижен" : "недоволен");
+        pline("¬ы чувствуете, что %s %s.", align_gname(resp_god),
+                 ru_god_female(align_gname(resp_god))
+                     ? (Hallucination ? "обижена" : "недовольна")
+                     : (Hallucination ? "обижен" : "недоволен"));
         break;
     case 2:
     case 3:
@@ -1085,12 +1087,20 @@ pleased(aligntyp g_align)
     int trouble = in_trouble(); /* what's your worst difficulty? */
     int pat_on_head = 0, kick_on_butt;
 
-    You_feel("что %s %s.", align_gname(g_align),
-             (u.ualign.record >= DEVOUT)
-                 ? Hallucination ? "доволен как слон" : "весьма доволен"
-                 : (u.ualign.record >= STRIDENT)
-                       ? Hallucination ? "в игривом настроении" : "доволен"
-                       : Hallucination ? "сыт" : "удовлетворЄн");
+    {
+        boolean fem = ru_god_female(align_gname(g_align));
+
+        pline("¬ы чувствуете, что %s %s.", align_gname(g_align),
+              (u.ualign.record >= DEVOUT)
+                  ? Hallucination ? (fem ? "довольна как слониха"
+                                         : "доволен как слон")
+                                  : (fem ? "весьма довольна" : "весьма доволен")
+                  : (u.ualign.record >= STRIDENT)
+                        ? Hallucination ? "в игривом настроении"
+                                        : (fem ? "довольна" : "доволен")
+                        : Hallucination ? (fem ? "сыта" : "сыт")
+                                        : (fem ? "удовлетворена" : "удовлетворЄн"));
+    }
 
     /* not your deity */
     if (on_altar() && gp.p_aligntyp != u.ualign.type) {
@@ -1193,20 +1203,23 @@ pleased(aligntyp g_align)
                               ru_color(hcolor(NH_AMBER), 'n', BP_INS), repair_buf);
                         iflags.last_msg = PLNMSG_OBJ_GLOWS;
                     } else
-                        You_feel("власть %s над %s.", u_gname(),
-                                 yname(uwep));
+                        You_feel("власть %s над %s.",
+                                 ru_god_case(u_gname(), BP_GEN),
+                                 ru_obj_with(uwep));
                     uncurse(uwep);
                     uwep->bknown = 1; /* ok to bypass set_bknown() */
                     *repair_buf = '\0';
                 } else if (!uwep->blessed) {
                     if (!Blind) {
-                        pline("%s с аурой%s.",
+                        pline("%s %s аурой%s.",
                               Yobjnam2(uwep, "м€гко светитс€"),
+                              ru_color(hcolor(NH_LIGHT_BLUE), 'f', BP_INS),
                               repair_buf);
                         iflags.last_msg = PLNMSG_OBJ_GLOWS;
                     } else
-                        You_feel("благословение %s над %s.", u_gname(),
-                                 yname(uwep));
+                        You_feel("благословение %s над %s.",
+                                 ru_god_case(u_gname(), BP_GEN),
+                                 ru_obj_with(uwep));
                     bless(uwep);
                     uwep->bknown = 1; /* ok to bypass set_bknown() */
                     *repair_buf = '\0';
@@ -1432,14 +1445,15 @@ godvoice(aligntyp g_align, const char *words)
     else
         words = "";
 
-    pline("√олос %s %s: %s%s%s", align_gname(g_align),
+    pline("√олос %s %s: %s%s%s", god_gen(align_gname(g_align)),
               ROLL_FROM(godvoices), quot, words, quot);
 }
 
 staticfn void
 gods_angry(aligntyp g_align)
 {
-    godvoice(g_align, "“ы разгневал мен€.");
+    godvoice(g_align, flags.female ? "“ы разгневала мен€."
+                                   : "“ы разгневал мен€.");
 }
 
 /* The g_align god is upset with you. */
@@ -1550,7 +1564,8 @@ offer_real_amulet(struct obj *otmp, aligntyp altaralign)
     else
         useupf(otmp, 1L);
 
-    You("приносите јмулет …ендора в дар %s...", a_gname());
+    You("приносите јмулет …ендора в дар %s...",
+        ru_god_case(a_gname(), BP_DAT));
 
     if (altaralign == A_NONE) {
         /* Moloch's high altar at the bottom of Gehennom. */
@@ -1558,7 +1573,8 @@ offer_real_amulet(struct obj *otmp, aligntyp altaralign)
             u.ualign.record = -99;
         pline("Ќевидимый хор поЄт, и вас окутывает тьма...");
         /*[apparently shrug/snarl can be sensed without being seen]*/
-        pline("%s пожимает плечами и сохран€ет власть над %s,", Moloch, u_gname());
+        pline("%s пожимает плечами и сохран€ет власть над %s,", Moloch,
+              ru_god_case(u_gname(), BP_INS));
         pline("а затем безжалостно прерывает вашу жизнь.");
         Sprintf(svk.killer.name, "равнодушие %s", god_gen(Moloch));
         svk.killer.format = KILLED_BY;
@@ -1668,7 +1684,8 @@ offer_different_alignment_altar(
         }
     } else {
         consume_offering(otmp);
-        You("чувствуете конфликт между %s и %s.", u_gname(), a_gname());
+        You("чувствуете конфликт между %s и %s.",
+            ru_god_case(u_gname(), BP_INS), ru_god_case(a_gname(), BP_INS));
         if (rn2(8 + u.ulevel) > 5) {
             struct monst *pri;
             boolean shrine;
@@ -2148,7 +2165,8 @@ can_pray(boolean praying) /* false means no messages should be given */
     }
 
     if (praying)
-        You("начинаете молитьс€ %s.", align_gname(gp.p_aligntyp));
+        You("начинаете молитьс€ %s.",
+            ru_god_case(align_gname(gp.p_aligntyp), BP_DAT));
 
     if (u.ualign.type && u.ualign.type == -gp.p_aligntyp)
         alignment = -u.ualign.record; /* Opposite alignment altar */
@@ -2731,7 +2749,7 @@ altar_wrath(coordxy x, coordxy y)
     } else {
         pline("%s %s%s:",
               !Deaf ? "√олос (неужели это"
-                    : "Ќесмотр€ на глухоту, вы, кажетс€, слышите",
+                    : "Ќесмотр€ на глухоту, вы, кажетс€, слышите, как",
               align_gname(altaralign),
               !Deaf ? "?) шепчет" : " говорит");
         SetVoice((struct monst *) 0, 0, 80, voice_deity);

@@ -879,7 +879,12 @@ scrolltele(struct obj *scroll)
             Strcpy(whobuf, "вы");
             if (u.usteed)
                 Sprintf(eos(whobuf), " и %s", mon_nam(u.usteed));
-            pline("Куда %s хочет телепортироваться?", whobuf);
+            if (u.usteed)
+                pline("Куда вы хотите телепортироваться вместе с %s?",
+                      mon_nam_case(u.usteed, BP_INS));
+            else
+                pline("Куда вы хотите телепортироваться?");
+            nhUse(whobuf);
             if (scroll)
                 learnscroll(scroll);
             cc.x = u.ux;

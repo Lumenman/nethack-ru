@@ -1992,8 +1992,8 @@ encumber_msg(void)
                 stagger(gy.youmonst.data, "пошатываетесь"));
             break;
         default:
-            You("%s двигаетесь на ладонь с этой ношей!",
-                newcap == 4 ? "едва можете" : "даже не можете");
+            You("%s сдвинуться с такой ношей!",
+                newcap == 4 ? "едва можете" : "не можете даже");
             break;
         }
         disp.botl = TRUE;

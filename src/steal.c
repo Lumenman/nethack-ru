@@ -822,7 +822,8 @@ mdrop_obj(
     }
     /* obj_no_longer_held(obj); -- done by place_object */
     if (verbosely && cansee(omx, omy))
-        pline_mon(mon, "%s роняет %s.", Monnam(mon), obj_name);
+        pline_mon(mon, "%s роняет %s.", Monnam(mon),
+                  (ru_inan_acc(obj_name), obj_name)); /* "роняет книгу" */
     if (!flooreffects(obj, omx, omy, "падает")) {
         place_object(obj, omx, omy);
         stackobj(obj);

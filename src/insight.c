@@ -1902,13 +1902,14 @@ attributes_enlightenment(
         /* foreign shape (except were-form which is handled below) */
         if (!vampshifted(&gy.youmonst))
             Sprintf(buf, "превращены в %s",
-                    pmname(gy.youmonst.data,
-                              flags.female ? FEMALE : MALE));
+                    mon_gen_nom(pmname(gy.youmonst.data,
+                                       flags.female ? FEMALE : MALE), BP_ACC));
         else
-            Sprintf(buf, "превращены в %s, форма %s",
-                    pmname(&mons[gy.youmonst.cham],
-                              flags.female ? FEMALE : MALE),
-                    pmname(gy.youmonst.data, flags.female ? FEMALE : MALE));
+            Sprintf(buf, "превращены в %s, сейчас в облике %s",
+                    mon_gen_nom(pmname(&mons[gy.youmonst.cham],
+                                       flags.female ? FEMALE : MALE), BP_ACC),
+                    mon_gen_nom(pmname(gy.youmonst.data,
+                                       flags.female ? FEMALE : MALE), BP_GEN));
         if (wizard)
             Sprintf(eos(buf), " (%d)", u.mtimedone);
         you_are(buf, "");

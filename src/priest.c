@@ -317,42 +317,27 @@ priestname(
     /* for high priest(ess), "high" (or "grand" for poohbah) will be inserted
        [this was done near the end but we want 'what' to be updated sooner] */
     if (mon->ispriest || aligned_priest || high_priest)
-        what = do_hallu ? "poohbah" : mon->female ? "priestess" : "priest";
+        what = do_hallu ? "пу-ба" : mon->female ? "жрица" : "жрец";
 
+    /* RU: no articles; "невидимый жрец Локи", "верховная жрица Одина" */
+    nhUse(article);
+    nhUse(whatcode);
     *pname = '\0';
-    if (article != ARTICLE_NONE && (!do_hallu || !bogon_is_pname(whatcode))) {
-        if (article == ARTICLE_YOUR || (article == ARTICLE_A && high_priest))
-            article = ARTICLE_THE;
-        if (article == ARTICLE_THE) {
-            Strcpy(pname, "the ");
-        } else if (!strcmp(what, "Angel")) {
-            /* bypass just_an(); it would yield "" due to treating capital A
-               as indicating a personal name */
-            Strcpy(pname, "an ");
-        } else {
-            (void) just_an(pname, what);
-        }
-    }
-    /* pname[] contains "" or {"a ","an ","the "} */
-    if (mon->minvis) {
-        /* avoid "a invisible priest" */
-        if (!strcmp(pname, "a "))
-            Strcpy(pname, "an ");
-        Strcat(pname, "invisible ");
-    }
-    if (mon->isminion && EMIN(mon)->renegade) {
-        /* avoid "an renegade Angel" */
-        if (!strcmp(pname, "an ") && !mon->minvis)
-            Strcpy(pname, "a ");
-        Strcat(pname, "renegade ");
-    }
+    {
+        boolean fem = (mon_name_gender(what) == 'f');
 
-    if (mon->ispriest || aligned_priest) {
-        if (high_priest)
-            Strcat(pname, do_hallu ? "grand " : "high ");
-    } else {
-        if (mon->mtame && !strcmpi(what, "Angel"))
-            Strcat(pname, "guardian ");
+        if (mon->minvis)
+            Strcat(pname, fem ? "невидимая " : "невидимый ");
+        if (mon->isminion && EMIN(mon)->renegade)
+            Strcat(pname, fem ? "мятежная " : "мятежный ");
+        if (mon->ispriest || aligned_priest) {
+            if (high_priest)
+                Strcat(pname, do_hallu ? (fem ? "великая " : "великий ")
+                                       : (fem ? "верховная " : "верховный "));
+        } else {
+            if (mon->mtame && mon->data == &mons[PM_ANGEL])
+                Strcat(pname, "хранитель-");
+        }
     }
 
     Strcat(pname, what);
@@ -360,8 +345,8 @@ priestname(
     if (do_hallu || !high_priest || reveal_high_priest
         || !Is_astralevel(&u.uz)
         || m_next2u(mon) || program_state.gameover) {
-        Strcat(pname, " of ");
-        Strcat(pname, halu_gname(mon_aligntyp(mon)));
+        Strcat(pname, " ");
+        Strcat(pname, god_gen(halu_gname(mon_aligntyp(mon))));
     }
     return pname;
 }

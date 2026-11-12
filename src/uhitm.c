@@ -5373,28 +5373,29 @@ mhitm_knockback(
     }
 
     /* subtly vary the message text if monster won't actually move */
-    knockedhow = dismount ? "из вашего седла"
+    knockedhow = dismount ? "из седла"
                  : will_hurtle(mdef, defx + dx, defy + dy) ? "назад"
-                   : "обратно";
+                   : "в сторону";
 
     /* give the message */
     if (u_def || canseemon(mdef)) {
         Strcpy(magrbuf, u_agr ? "Вы" : Monnam(magr));
-        Strcpy(mdefbuf, (u_def || was_u) ? "вы" : y_monnam(mdef));
+        Strcpy(mdefbuf, (u_def || was_u) ? "вас" : y_monnam_case(mdef, BP_ACC));
         if (was_u)
             Snprintf(eos(mdefbuf), sizeof mdefbuf - strlen(mdefbuf),
-                     " и %s", y_monnam(u.usteed));
+                     " и %s", y_monnam_case(u.usteed, BP_ACC));
         /*
          * uhitm: You knock the gnome back with a powerful blow!
          * mhitu: The red dragon knocks you back with a forceful blow!
          * mhitm: The fire giant knocks the gnome back with a forceful strike!
          */
-        pline("%s %s %s %s с %s %s!",
-              magrbuf, vtense(magrbuf, "сбивает"), mdefbuf, knockedhow,
+        /* RU: "Вы отбрасываете гнома назад мощным ударом!" */
+        pline("%s %s %s %s %s %s!", magrbuf,
+              u_agr ? "отбрасываете" : "отбрасывает", mdefbuf, knockedhow,
               rn2(2) ? "сильным" : "мощным", rn2(2) ? "ударом" : "толчком");
     } else if (u_agr) {
         /* hero knocks unseen foe back; noticed by touch */
-        You_feel("как %s отброшен %s!", some_mon_nam(mdef), knockedhow);
+        You_feel("как %s отлетает %s!", some_mon_nam(mdef), knockedhow);
     }
 
     if (u.ustuck && (u_def || u_agr))

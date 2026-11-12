@@ -1695,6 +1695,8 @@ meatcorpse(
                the result won't be printed */
             char *otmpname = distant_name(otmp, doname);
 
+                ru_inan_acc(otmpname); /* "подбирает книгу" */
+
             if (flags.verbose)
                 pline_mon(mtmp, "%s ест %s!",
                           Monnam(mtmp), otmpname);
@@ -1891,6 +1893,8 @@ mpickstuff(struct monst *mtmp)
                    if the result won't be printed; do it before the extract
                    from floor and subsequent pickup by mtmp */
                 char *otmpname = distant_name(otmp, doname);
+
+                ru_inan_acc(otmpname); /* "подбирает книгу" */
 
                 if (flags.verbose)
                     pline_mon(mtmp, "%s подбирает %s.",

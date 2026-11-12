@@ -218,7 +218,7 @@ const struct shclass shtypes[] = {
         { 0, 0 },
         { 0, 0 } },
       shkgeneral },
-    { "торговля подержанной бронёй", "лавка брони",
+    { "лавка подержанной брони", "лавка брони",
       ARMOR_CLASS,
       14,
       D_SHOP,
@@ -262,7 +262,7 @@ const struct shclass shtypes[] = {
         { 0, 0 },
         { 0, 0 } },
       shkweapons },
-    { "деликатесы", "лавка еды",
+    { "магазин деликатесов", "лавка еды",
       FOOD_CLASS,
       5,
       D_SHOP,
@@ -284,7 +284,7 @@ const struct shclass shtypes[] = {
         { 0, 0 },
         { 0, 0 } },
       shkrings },
-    { "качественная одежда и аксессуары", "лавка жезлов",
+    { "магазин одежды и аксессуаров", "лавка жезлов",
       WAND_CLASS,
       3,
       D_SHOP,
@@ -304,7 +304,7 @@ const struct shclass shtypes[] = {
         { 0, 0 },
         { 0, 0 } },
       shktools },
-    { "редкие книги", "книжный магазин",
+    { "магазин редких книг", "книжный магазин",
       SPBOOK_CLASS,
       3,
       D_SHOP,
@@ -458,7 +458,7 @@ mkshobj_at(const struct shclass *shp, int sx, int sy, boolean mkspecl)
     int atype;
 
     /* 3.6 tribute */
-    if (mkspecl && (!strcmp(shp->name, "редкие книги")
+    if (mkspecl && (!strcmp(shp->name, "магазин редких книг")
                     || !strcmp(shp->name, "букинистический магазин"))) {
         struct obj *novel = mksobj_at(SPE_NOVEL, sx, sy, FALSE, FALSE);
 

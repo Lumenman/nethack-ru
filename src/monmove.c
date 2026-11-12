@@ -1584,9 +1584,9 @@ postmov(
                         if (canseeit && canspotmon(mtmp)) {
                             pline_mon(mtmp, "%s открывает дверь.", Monnam(mtmp));
                         } else if (canseeit) {
-                            You_see("дверь открывается.");
+                            pline("Дверь открывается.");
                         } else if (!Deaf) {
-                            You_hear("дверь открывается.");
+                            You_hear("как открывается дверь.");
                         }
                     }
                 }

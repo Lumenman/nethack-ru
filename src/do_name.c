@@ -31,7 +31,9 @@ nextmbuf(void)
 staticfn const char *
 ru_gender_adj(struct monst *mtmp, const char *m_form, const char *f_form)
 {
-    return (Mgender(mtmp) == FEMALE) ? f_form : m_form;
+    /* RU: grammatical gender of the displayed name, not the creature's sex:
+       "мирный стражник" even for a female watchman, "мирная жрица" */
+    return (mon_name_gender(mon_pmname(mtmp)) == 'f') ? f_form : m_form;
 }
 
 /* allocate space for a monster's name; removes old name if there is one */
@@ -1659,6 +1661,89 @@ const char *
 mon_gen(struct monst *mon, int cse)
 {
     return mon_gen_nom(mon_pmname(mon), cse);
+}
+
+/* RU: goddesses of the role pantheons (align_gname() strips the '_') */
+boolean
+ru_god_female(const char *name)
+{
+    static const char *const f[] = {
+        "Бригитта", "Иштар", "Афина", "Венера", "Аматэрасу Омиками", "Леди",
+    };
+    int i;
+
+    for (i = 0; i < SIZE(f); i++)
+        if (!strcmp(name, f[i]))
+            return TRUE;
+    return FALSE;
+}
+
+/* RU: a god's name in case cse: "молиться Одину", "власть Кецалькоатля",
+   "между Митрой и Сетом".  Names ending in a vowel ("Локи", "Ану",
+   "Хуан-ди"), feminine names ending in a consonant ("Иштар") and Chinese
+   names stay as they are; of a hyphenated or two-word name the last word
+   declines, an adjective in front agrees ("Слепому Ио") */
+const char *
+ru_god_case(const char *name, int cse)
+{
+    static const char *const keep[] = { "Шан Лай Чин", "Чхи Сун-цзу",
+                                        "Аматэрасу Омиками" };
+    int cs = cse & BP_CASE_MASK, i;
+    char *out = nextmbuf(), *w;
+    const char *e;
+    size_t l;
+    boolean fem = ru_god_female(name);
+
+    Strcpy(out, name);
+    if (cs <= BP_NOM || cs > BP_PREP)
+        return out;
+    if (cs == BP_GEN) /* the hand-made table in pray.c */
+        return strcpy(out, god_gen(name));
+    for (i = 0; i < SIZE(keep); i++)
+        if (!strcmp(name, keep[i]))
+            return out;
+    /* "Слепой Ио": the adjective declines, the name does not */
+    if ((e = strchr(name, ' ')) != 0 && e - name > 3
+        && (!strncmp(e - 2, "ой", 2) || !strncmp(e - 2, "ый", 2))) {
+        char adj[BUFSZ];
+
+        Sprintf(adj, "%.*s", (int) (e - name), name);
+        Sprintf(out, "%s%s", ru_color(adj, 'm', cs), e);
+        return out;
+    }
+    w = strrchr(out, ' ');
+    if (!w || strrchr(out, '-') > w)
+        w = strrchr(out, '-');
+    w = w ? w + 1 : out;
+    l = strlen(w);
+    if (l < 2 || strchr("оеиуюэы", w[l - 1]))
+        return out;
+    if (w[l - 1] == 'а' || w[l - 1] == 'я') { /* "Митра", "Афина" */
+        static const char *const a[6] = { "а", "ы", "е", "у", "ой", "е" };
+        static const char *const ia[6] = { "я", "и", "е", "ю", "ей", "е" };
+        boolean soft = (w[l - 1] == 'я'),
+                velar = !!strchr("гкхжшчщ", w[l - 2]);
+
+        w[l - 1] = '\0';
+        Strcat(out, soft ? ia[cs] : (cs == BP_GEN && velar) ? "и" : a[cs]);
+        return out;
+    }
+    if (fem) /* "Иштар" */
+        return out;
+    if (w[l - 1] == 'ь' || w[l - 1] == 'й') { /* "Кецалькоатль", "Меркурий" */
+        boolean ij = (l >= 2 && w[l - 2] == 'и' && w[l - 1] == 'й');
+        static const char *const s[6] = { "", "я", "ю", "я", "ем", "е" };
+
+        w[l - 1] = '\0';
+        Strcat(out, (cs == BP_PREP && ij) ? "и" : s[cs]);
+        return out;
+    }
+    {
+        static const char *const c[6] = { "", "а", "у", "а", "ом", "е" };
+
+        Strcat(out, c[cs]); /* "Одину", "Тюра", "Сетом" */
+    }
+    return out;
 }
 
 /* RU: grammatical gender of a monster name, 'm', 'f' or 'n', for
