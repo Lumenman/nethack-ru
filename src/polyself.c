@@ -1685,7 +1685,7 @@ dogaze(void)
                 looked--;
                 continue;
             } else if (flags.safe_dog && mtmp->mtame && !Confusion) {
-                You("избегаете смотреть на %s.", y_monnam(mtmp));
+                You("избегаете смотреть на %s.", y_monnam_case(mtmp, BP_ACC));
             } else {
                 if (flags.confirm && mtmp->mpeaceful && !Confusion) {
                     Sprintf(qbuf, "Действительно %s %s?",

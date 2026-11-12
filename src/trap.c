@@ -1468,7 +1468,7 @@ trapeffect_sqky_board(
                 }
                 pline_mon(mtmp,
                       "Доска под %s громко скрипит%s.",
-                      mon_nam(mtmp), trapnote(trap, TRUE));
+                      mon_nam_case(mtmp, BP_INS), trapnote(trap, TRUE));
                 seetrap(trap);
             } else if (!mindless(mtmp->data)) {
                 pline_mon(mtmp,
@@ -2634,7 +2634,7 @@ trapeffect_landmine(
             if (in_sight && !already_seen) {
                 pline_mon(mtmp,
                      "Под %s в куче земли появляется взводитель.",
-                      mon_nam(mtmp));
+                      mon_nam_case(mtmp, BP_INS));
                 seetrap(trap);
             }
             if (rn2(3))
@@ -4017,7 +4017,7 @@ float_up(void)
         if (Lev_at_will) {
             pline("%s магически взлетает вверх!", Monnam(u.usteed));
         } else {
-            You("не можете удержаться на %s.", mon_nam(u.usteed));
+            You("не можете удержаться на %s.", mon_nam_case(u.usteed, BP_PREP));
             dismount_steed(DISMOUNT_GENERIC);
         }
     }

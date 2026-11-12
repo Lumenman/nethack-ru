@@ -279,7 +279,7 @@ cannot_push(struct obj *otmp, coordxy sx, coordxy sy)
         if (u.usteed && P_SKILL(P_RIDING) < P_BASIC) {
             You("недостаточно опытны, чтобы %s %s из %s.",
                 willpickup ? "поднять" : "отодвинуть",
-                the(xname(otmp)), y_monnam(u.usteed));
+                the(xname(otmp)), y_monnam_case(u.usteed, BP_GEN));
         } else {
             /*
              * will pick up:  you easily pick it up
@@ -1994,7 +1994,7 @@ domove_bump_mon(struct monst *mtmp, int glyph)
             /* m_monnam(): "dog" или "Fido", no "invisible dog" или "it" */
             pline("Извините, %s.", m_monnam(mtmp));
         else
-            You("двигаетесь прямо на %s.", mon_nam(mtmp));
+            You("двигаетесь прямо на %s.", mon_nam_case(mtmp, BP_ACC));
         return TRUE;
     }
     return FALSE;
@@ -2705,7 +2705,7 @@ escape_from_sticky_mon(coordxy x, coordxy y)
              */
             mtmp = u.ustuck;
             set_ustuck((struct monst *) 0);
-            You("отпускаете %s.", y_monnam(mtmp));
+            You("отпускаете %s.", y_monnam_case(mtmp, BP_ACC));
         } else {
             /* If holder is asleep or paralyzed:
              *      37.5% chance of getting away,
@@ -2727,7 +2727,7 @@ escape_from_sticky_mon(coordxy x, coordxy y)
                 /*FALLTHRU*/
             default:
                 if (Conflict || u.ustuck->mconf || !u.ustuck->mtame) {
-                    You("не можете вырваться от %s!", y_monnam(u.ustuck));
+                    You("не можете вырваться от %s!", y_monnam_case(u.ustuck, BP_GEN));
                     nomul(0);
                     return TRUE;
                 }
@@ -2738,7 +2738,7 @@ escape_from_sticky_mon(coordxy x, coordxy y)
             case 2:
                 mtmp = u.ustuck;
                 set_ustuck((struct monst *) 0);
-                You("вырываетесь от %s.", y_monnam(mtmp));
+                You("вырываетесь от %s.", y_monnam_case(mtmp, BP_GEN));
                 break;
             }
         }
@@ -3125,7 +3125,7 @@ invocation_message(void)
 
         nomul(0); /* stop running or travelling */
         if (u.usteed)
-            Sprintf(buf, "под %s", y_monnam(u.usteed));
+            Sprintf(buf, "под %s", y_monnam_case(u.usteed, BP_INS));
         else if (Levitation || Flying)
             Strcpy(buf, "под вами");
         else

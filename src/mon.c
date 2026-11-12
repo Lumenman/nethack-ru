@@ -3379,11 +3379,14 @@ monkilled(
     struct permonst *mptr = mdef->data;
 
     if (fltxt && (mdef->wormno ? worm_known(mdef)
-                               : cansee(mdef->mx, mdef->my)))
-        pline_mon(mdef, "%s %s%s%s!", Monnam(mdef),
+                               : cansee(mdef->mx, mdef->my))) {
+        char g = mon_name_gender(mon_pmname(mdef));
+
+        pline_mon(mdef, "%s %s%s%s%s!", Monnam(mdef),
               nonliving(mptr) ? "уничтожен" : "убит",
+              (g == 'f') ? "а" : (g == 'n') ? "о" : "",
               *fltxt ? " от " : "", fltxt);
-    else
+    } else
         /* sad feeling is deferred until after potential life-saving */
         iflags.sad_feeling = mdef->mtame ? TRUE : FALSE;
 

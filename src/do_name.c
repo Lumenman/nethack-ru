@@ -1661,6 +1661,49 @@ mon_gen(struct monst *mon, int cse)
     return mon_gen_nom(mon_pmname(mon), cse);
 }
 
+/* RU: grammatical gender of a monster name, 'm', 'f' or 'n', for
+   participles ("летучая мышь убита"): the first word that changes in the
+   instrumental ends in "-ой/-ей/-ью" for a feminine ("летучей мышью",
+   "гном-королевой"); a neuter ends in "-о"/"-е" ("облако", "чудовище") */
+char
+mon_name_gender(const char *nom)
+{
+    const char *ins = mon_gen_nom(nom, BP_INS), *a = nom, *b = ins, *e;
+
+    while (*a && *a == *b) /* skip the unchanged words */
+        a++, b++;
+    while (a > nom && a[-1] != ' ')
+        a--, b--;
+    if (!*b)
+        return 'm'; /* not declined: "зомби гнома", unknown names */
+    for (e = b; *e && *e != ' '; e++)
+        ;
+    if (e - b >= 3 && (!strncmp(e - 2, "ой", 2) || !strncmp(e - 2, "ей", 2)
+                       || !strncmp(e - 2, "ью", 2) || !strncmp(e - 2, "ою", 2)))
+        return 'f';
+    for (e = a; *e && *e != ' '; e++)
+        ;
+    if (e > a && strchr("ое", e[-1]) && strncmp(e - 2, "ой", 2))
+        return 'n'; /* "облако", "ржавое" (not "золотой") */
+    return 'm';
+}
+
+/* RU: the nominative of a monster name given in any case form ("летучей
+   мыши" -> "летучая мышь"), for wishes; null if it is not in the table */
+const char *
+mon_case_to_nom(const char *str)
+{
+    int i, k;
+
+    for (i = 0; i < SIZE(mon_paradigms); i++)
+        for (k = 0; k < 6; k++)
+            if ((mon_paradigms[i].s[k] && !strcmpi(str, mon_paradigms[i].s[k]))
+                || (mon_paradigms[i].p[k]
+                    && !strcmpi(str, mon_paradigms[i].p[k])))
+                return mon_paradigms[i].key;
+    return (const char *) 0;
+}
+
 /* RU: one adjective-like word ("невидимый", "ваша", "осёдланная") in case
    cse; anim decides the masculine accusative.  Unknown words are copied */
 staticfn void
@@ -1715,10 +1758,10 @@ ru_adj_case(char *out, const char *w, size_t l, int cse, boolean anim)
    The species name is taken from the paradigm table, the words in front
    of it ("ваш", "невидимый") are declined by their endings, the rest
    ("по имени Фидо") is kept.  Given names alone stay nominative. */
-char *
-mon_nam_case(struct monst *mtmp, int cse)
+staticfn char *
+ru_mnam_case(char *nm, struct monst *mtmp, int cse)
 {
-    char *nm = mon_nam(mtmp), *out, *p, *w;
+    char *out, *p, *w;
     const char *sp = mon_pmname(mtmp), *form, *acc, *gen;
     int cs = cse & BP_CASE_MASK;
     size_t l;
@@ -1756,6 +1799,19 @@ mon_nam_case(struct monst *mtmp, int cse)
     Strcat(out, form);
     Strcat(out, p + strlen(sp));
     return out;
+}
+
+char *
+mon_nam_case(struct monst *mtmp, int cse)
+{
+    return ru_mnam_case(mon_nam(mtmp), mtmp, cse);
+}
+
+/* y_monnam() ("ваш котёнок" for a pet) in case cse */
+char *
+y_monnam_case(struct monst *mtmp, int cse)
+{
+    return ru_mnam_case(y_monnam(mtmp), mtmp, cse);
 }
 
 /* mons[]->pmname for a corpse or statue or figurine */

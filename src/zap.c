@@ -6425,7 +6425,9 @@ makewish(void)
                                  : "Осторожно! %s на полу!");
 
     /* The(aobjnam()) is safe since otmp is unidentified -dlc */
-    (void) hold_another_object(otmp, oops_msg, The(aobjnam(otmp, verb)),
+    /* RU: the messages carry their own verb ("оказывается на полу") */
+    nhUse(verb);
+    (void) hold_another_object(otmp, oops_msg, The(aobjnam(otmp, (char *) 0)),
                                (const char *) 0);
     u.ublesscnt += rn1(100, 50); /* the gods take notice */
 }

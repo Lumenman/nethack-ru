@@ -83,6 +83,8 @@ def boot(maxwait=25):
 
 
 def K(keys, title=None, quiet=0.4):
+    if keys is None:  # e.g. a wish that did not report an inventory letter
+        return b.screen()
     b.send(keys, quiet)
     if title:
         S(title)

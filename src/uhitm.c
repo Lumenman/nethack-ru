@@ -2175,7 +2175,7 @@ theft_petrifies(struct obj *otmp)
 #endif
 
     /* stealing this corpse is fatal... */
-    instapetrify(corpse_xname(otmp, "украденного", CXN_ARTICLE));
+    instapetrify(corpse_xname(otmp, "украденный", CXN_ARTICLE));
     /* apparently wasn't fatal after all... */
     return TRUE;
 }
@@ -3330,7 +3330,7 @@ mhitm_ad_stck(
         if (!negated && !sticks(pd) && m_next2u(mdef)) {
             set_ustuck(mdef); /* it's now stuck to you */
             if (barbs)
-                Your("шипы впиваются в %s!", y_monnam(mdef));
+                Your("шипы впиваются в %s!", y_monnam_case(mdef, BP_ACC));
         }
     } else if (mdef == &gy.youmonst) {
         /* mhitu */
@@ -5223,7 +5223,7 @@ missum(
         Your("броня довольно громоздкая...");
 
     if (could_seduce(&gy.youmonst, mdef, mattk))
-        You("притворяетесь дружелюбным с %s.", mon_nam(mdef));
+        You("притворяетесь дружелюбным с %s.", mon_nam_case(mdef, BP_INS));
     else if (canspotmon(mdef) && flags.verbose)
         You("промахиваетесь по %s.", mon_nam_case(mdef, BP_DAT));
     else

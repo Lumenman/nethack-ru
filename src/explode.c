@@ -507,7 +507,8 @@ explode(
                 } else if (cansee(xx, yy)) {
                     if (mtmp->m_ap_type)
                         seemimic(mtmp);
-                    pline("%s попадает в %s!", Monnam(mtmp), str);
+                    pline("%s попадает %s %s!", Monnam(mtmp),
+                          !strncmp(str, "взр", 3) ? "во" : "в", str); /* во взрыв */
                 }
 
                 itemdmg = destroy_items(mtmp, (int) adtyp, dam);
@@ -599,7 +600,7 @@ explode(
                         mon_gen_nom(rndmonnam((char *) 0), BP_GEN));
                 str = hallu_buf;
             }
-            You("попали в %s!", str);
+            You("попали %s %s!", !strncmp(str, "взр", 3) ? "во" : "в", str);
             iflags.last_msg = PLNMSG_CAUGHT_IN_EXPLOSION;
         }
         /* do property damage first, in case we end up leaving bones */

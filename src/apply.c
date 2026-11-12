@@ -2880,7 +2880,7 @@ use_trap(struct obj *otmp)
             chance = (rnl(10) > 3);
         else
             chance = (rnl(10) > 5);
-        You("не очень умелы в доставании с %s.", mon_nam(u.usteed));
+        You("не очень умелы в доставании с %s.", mon_nam_case(u.usteed, BP_GEN));
         Sprintf(buf, "Продолжить попытку установить %s?",
                 the(trapname(ttyp, FALSE)));
         if (y_n(buf) == 'y') {
