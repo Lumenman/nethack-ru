@@ -1,0 +1,6 @@
+M()
+S('game')
+K('i', 'inventory', quiet=1.0)
+K('\x1b')
+wish('blessed +2 magic whistle')
+K('\x17'); S('wish prompt'); K('\x1b'); M()

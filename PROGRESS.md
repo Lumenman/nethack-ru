@@ -195,6 +195,10 @@
   obj_case(), «я» (0xFF) как EOF при вводе, Your() с маленькой буквы,
   английские пояснения классов монстров, итоги игры и др.
 
+Бот для проверки: tools/bot (pywinpty + pyte), запуск
+`python -X utf8 tools/bot/run.py tools/bot/sc/<сценарий>.py`; игра берётся
+из binary/Release/x64, логи — tools/bot/logs/ (не в git).
+
 Исправлено 2026-11-12: role/race/gender/align английскими словами
 (valkyrie, lawful — по первым трём буквам), род описаний (ru_dn_noun),
 «(конец)», «Жезлы», «не имеете этого предмета», «себя лучше»,

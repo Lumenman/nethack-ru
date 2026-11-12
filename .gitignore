@@ -43,3 +43,9 @@ eat_apply_report.txt
 *.bak_nkp
 *.bak_svk
 *.bak_losehp
+*.log
+*.idb
+tools/Debug/
+tools/Release/
+tools/bot/logs/
+__pycache__/
