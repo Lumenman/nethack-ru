@@ -411,7 +411,7 @@ fix_worst_trouble(int trouble)
         disp.botl = TRUE;
         break;
     case TROUBLE_SICK:
-        You_feel("лучше.");
+        You_feel("себя лучше.");
         make_sick(0L, (char *) 0, FALSE, SICK_ALL);
         break;
     case TROUBLE_REGION:
@@ -422,7 +422,7 @@ fix_worst_trouble(int trouble)
         /* "fix all troubles" will keep trying if hero has
            5 or less hit points, so make sure they're always
            boosted to be more than that */
-        You_feel("гораздо лучше.");
+        You_feel("себя гораздо лучше.");
         if (Upolyd) {
             maxhp = u.mhmax + rnd(5);
             setuhpmax(max(maxhp, 5 + 1), FALSE); /* acts as setmhmax() */
@@ -439,7 +439,7 @@ fix_worst_trouble(int trouble)
         break;
     case TROUBLE_COLLAPSING:
         /* override Fixed_abil; uncurse that if feasible */
-        You_feel("%sсильнее.",
+        You_feel("себя %sсильнее.",
                  (AMAX(A_STR) - ABASE(A_STR) > 6) ? "гораздо " : "");
         ABASE(A_STR) = AMAX(A_STR);
         disp.botl = TRUE;

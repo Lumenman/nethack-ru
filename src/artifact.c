@@ -1812,7 +1812,7 @@ invoke_healing(struct obj *obj)
     if (healamt || Sick || Slimed || Blinded > creamed)
         You_feel("себя лучше.");
     if (healamt || Sick || Slimed || BlindedTimeout > creamed)
-        You_feel("%sлучше.",
+        You_feel("себя %sлучше.",
                  (!healamt && !Sick && !Slimed
                   /* when healing temporary blindness (aside from
                      goop covering face), might still be blind

@@ -1090,7 +1090,7 @@ done(int how)
         Your("медальон %s!", !Blind ? "начинает светиться" : "кажется тёплым");
         if (how == CHOKING)
             You("вырвало...");
-        You_feel("намного лучше!");
+        You_feel("себя намного лучше!");
         pline("Медальон рассыпается в прах!");
         if (uamul)
             useup(uamul);
@@ -1189,7 +1189,7 @@ really_done(int how)
      * smiling... :-)  -3.
      */
     if (svm.moves <= 1 && how < PANICKED && !done_stopprint)
-        pline("Не проходите через Старт.  Не получайте 200 %s.", currency(200L));
+        pline("Не проходите поле «Вперёд».  Не получайте 200 %s.", currency(200L));
 
     if (have_windows)
         wait_synch(); /* flush screen output */
@@ -1513,7 +1513,7 @@ really_done(int how)
                     otmp->quan = count;
                     Sprintf(pbuf, "%8ld %s (стоимостью %ld %s),", count,
                             xname(otmp), count * (long) objects[typ].oc_cost,
-                            currency(2L));
+                            currency(count * (long) objects[typ].oc_cost));
                     obfree(otmp, (struct obj *) 0);
                 } else {
                     Sprintf(pbuf, "%8ld шт. никчёмного цветного стекла,",

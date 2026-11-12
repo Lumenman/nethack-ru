@@ -2768,7 +2768,7 @@ tty_end_menu(
         len = strlen(buf);
         cw->morestr = dupstr("");
     } else {
-        cw->morestr = dupstr("(end) ");
+        cw->morestr = dupstr("(конец) ");
         len = strlen(cw->morestr);
     }
 

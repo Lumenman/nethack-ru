@@ -387,7 +387,7 @@ gold_detect(struct obj *sobj)
         char buf[BUFSZ];
 
         if (gy.youmonst.data == &mons[PM_GOLD_GOLEM])
-            Sprintf(buf, "Вы чувствуете себя на миллион %s!", currency(2L));
+            Sprintf(buf, "Вы чувствуете себя на миллион %s!", currency(5L));
         else if (money_cnt(gi.invent) || hidden_gold(TRUE))
             Strcpy(buf,
                "Вы чувствуете беспокойство о своём будущем финансовом положении.");

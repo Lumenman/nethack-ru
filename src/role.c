@@ -762,7 +762,8 @@ str2role(const char *str)
         if (roles[i].name.f && !strncmpi(str, roles[i].name.f, len))
             return i;
         /* Or the filecode? */
-        if (!strcmpi(str, roles[i].filecode))
+        /* shortcut: English names begin with the filecode ("valkyrie", "lawful"); the rest is not checked */
+        if (len >= 3 && !strncmpi(str, roles[i].filecode, 3))
             return i;
     }
 
@@ -828,7 +829,8 @@ str2race(const char *str)
         if (races[i].adj && !strncmpi(str, races[i].adj, len))
             return i;
         /* Or the filecode? */
-        if (!strcmpi(str, races[i].filecode))
+        /* shortcut: English names begin with the filecode ("valkyrie", "lawful"); the rest is not checked */
+        if (len >= 3 && !strncmpi(str, races[i].filecode, 3))
             return i;
     }
 
@@ -892,7 +894,8 @@ str2gend(const char *str)
         if (!strncmpi(str, genders[i].adj, len))
             return i;
         /* Or the filecode? */
-        if (!strcmpi(str, genders[i].filecode))
+        /* shortcut: English names begin with the filecode ("valkyrie", "lawful"); the rest is not checked */
+        if (len >= 3 && !strncmpi(str, genders[i].filecode, 3))
             return i;
     }
     if ((len == 1 && (*str == '*' || *str == '@'))
@@ -955,7 +958,8 @@ str2align(const char *str)
         if (!strncmpi(str, aligns[i].adj, len))
             return i;
         /* Or the filecode? */
-        if (!strcmpi(str, aligns[i].filecode))
+        /* shortcut: English names begin with the filecode ("valkyrie", "lawful"); the rest is not checked */
+        if (len >= 3 && !strncmpi(str, aligns[i].filecode, 3))
             return i;
     }
     if ((len == 1 && (*str == '*' || *str == '@'))

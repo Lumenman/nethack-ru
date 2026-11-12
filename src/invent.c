@@ -1553,7 +1553,13 @@ currency(long amount)
 
         res = currencies[i + (amount != 1L)];
     } else {
-        res = (amount == 1L) ? "зоркмид" : "зоркмиды";
+        long n = amount % 100L;
+
+        /* RU: number agreement — 1/21 зоркмид, 2-4 зоркмида, 5-20 зоркмидов */
+        res = (n % 10L == 1L && n != 11L) ? "зоркмид"
+              : (n % 10L >= 2L && n % 10L <= 4L && (n < 12L || n > 14L))
+                    ? "зоркмида"
+                    : "зоркмидов";
     }
     return res;
 }
@@ -2067,7 +2073,7 @@ getobj(
            that's been moved above so that otmp can be checked earlier] */
         /* verify the chosen object */
         if (!otmp) {
-            You("нет этого предмета.");
+            You("не имеете этого предмета.");
             if (gi.in_doagain)
                 return (struct obj *) 0;
             continue;
@@ -4816,7 +4822,7 @@ useupf(struct obj *obj, long numused)
  */
 static NEARDATA const char *names[] = {
     0, "Загрязненные объекты", "Оружие", "Доспехи", "Кольца", "Амулеты", "Инструменты",
-    "Пища", "Зелья", "Свитки", "Книги заклинаний", "Палочки", "Монеты",
+    "Пища", "Зелья", "Свитки", "Книги заклинаний", "Жезлы", "Монеты",
     "Драгоценности/камни", "Булыжники/статуи", "Железные ядра", "Цепи", "Яды"
 };
 static NEARDATA const char oth_symbols[] = { CONTAINED_SYM, '\0' };

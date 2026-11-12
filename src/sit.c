@@ -81,7 +81,7 @@ throne_sit_effect(void)
             exercise(A_CON, FALSE);
             break;
         case 4:
-            You_feel("намного, намного лучше!");
+            You_feel("себя намного, намного лучше!");
             if (Upolyd) {
                 if (u.mh >= (u.mhmax - 5))
                     u.mhmax += 4;

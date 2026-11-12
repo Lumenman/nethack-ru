@@ -165,7 +165,7 @@ make_sick(long xtime,
         u.usick_type &= ~type;
         if (u.usick_type) { /* only partly cured */
             if (talk)
-                You_feel("чуть лучше.");
+                You_feel("себя чуть лучше.");
             set_itimeout(&Sick, Sick * 2); /* approximation */
         } else {
             if (talk)
@@ -1119,7 +1119,7 @@ peffect_gain_level(struct obj *otmp)
 staticfn void
 peffect_healing(struct obj *otmp)
 {
-    You_feel("лучше.");
+    You_feel("себя лучше.");
     healup(8 + d(4 + 2 * bcsign(otmp), 4), !otmp->cursed ? 1 : 0,
            !!otmp->blessed, !otmp->cursed);
     exercise(A_CON, TRUE);
@@ -1128,7 +1128,7 @@ peffect_healing(struct obj *otmp)
 staticfn void
 peffect_extra_healing(struct obj *otmp)
 {
-    You_feel("намного лучше.");
+    You_feel("себя намного лучше.");
     healup(16 + d(4 + 2 * bcsign(otmp), 8),
            otmp->blessed ? 5 : !otmp->cursed ? 2 : 0, !otmp->cursed,
            TRUE);
