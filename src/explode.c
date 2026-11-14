@@ -648,6 +648,9 @@ explode(
                         ; /* svk.killer.name=="gas spore's explosion". */
                     else if (str != svk.killer.name && str != hallu_buf)
                         Strcpy(svk.killer.name, str);
+                    /* RU: "погиб от взрыва газовой споры" */
+                    if (!strncmp(svk.killer.name, "взрыв ", 6))
+                        (void) strsubst(svk.killer.name, "взрыв ", "взрыва ");
                     svk.killer.format = KILLED_BY_AN;
                 } else if (olet == TRAP_EXPLODE) {
                     svk.killer.format = NO_KILLER_PREFIX;

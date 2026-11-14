@@ -46,7 +46,7 @@ static NEARDATA const char *deaths[] = {
     /* RU: fallback killer names, appended to killed_by_prefix[] in
        topten.c; "quit", "escaped", "ascended" stay English: topten.c and
        xlogfile readers match them */
-    "неизвестной причины", "еды", "€дом", "голода", "воде", "огне",
+    "неизвестной причины", "еды", "неизвестного происхождени€", "голода", "воде", "огне",
     "лаве", "насмерть", "чего-то", "чем-то", "уничтожен геноцидом", "паника",
     "обман", "quit",
     "escaped", "ascended"
@@ -193,7 +193,9 @@ done_in_by(struct monst *mtmp, int how)
                                                   : mptr;
     boolean distorted = (boolean) (Hallucination && canspotmon(mtmp)),
             mimicker = (M_AP_TYPE(mtmp) == M_AP_MONSTER),
-            imitator = (mptr != champtr || mimicker);
+            imitator = (mptr != champtr || mimicker),
+            /* RU: the killer goes after "погиб от": genitive throughout */
+            fem = (mon_name_gender(pmname(champtr, Mgender(mtmp))) == 'f');
 
     You((how == STONING) ? "каменеете..." : "умираете...");
     mark_synch(); /* flush buffered screen output */
@@ -219,10 +221,10 @@ done_in_by(struct monst *mtmp, int how)
     }
     (void) monhealthdescr(mtmp, TRUE, eos(buf));
     if (mtmp->minvis)
-        Strcat(buf, mtmp->female ? "невидима€ " : "невидимый ");
+        Strcat(buf, fem ? "невидимой " : "невидимого ");
     if (distorted)
-        Strcat(buf, mtmp->female ? "искажЄнна€ галлюцинацией "
-                                 : "искажЄнный галлюцинацией ");
+        Strcat(buf, fem ? "искажЄнной галлюцинацией "
+                        : "искажЄнного галлюцинацией ");
 
     if (imitator) {
         char shape[BUFSZ];
@@ -255,30 +257,30 @@ done_in_by(struct monst *mtmp, int how)
                 alt ? "%s в облике Ђ%sї"
                     : mimicker ? "%s под видом Ђ%sї"
                                : "%s под личиной Ђ%sї",
-                realnm, shape);
+                mon_gen_nom(realnm, BP_GEN), shape);
         mptr = mtmp->data; /* reset for mimicker case */
 #if 0  /* hardfought */
     } else if (has_ebones(mtmp)) {
         Strcpy(buf, m_monnam(mtmp));
 #endif
     } else if (mptr == &mons[PM_GHOST]) {
-        Strcat(buf, "призрак");
+        Strcat(buf, "призрака");
         if (has_mgivenname(mtmp))
             Sprintf(eos(buf), " по имени %s", MGIVENNAME(mtmp));
     } else if (mtmp->isshk) {
         const char *shknm = shkname(mtmp),
                    *honorific = shkname_is_pname(mtmp) ? ""
-                                   : mtmp->female ? "госпожа " : "господин ";
+                                   : mtmp->female ? "госпожи " : "господина ";
 
         Sprintf(eos(buf), "%s%s, %s магазина", honorific, shknm,
-                mtmp->female ? "владелица" : "владелец");
+                mtmp->female ? "владелицы" : "владельца");
         svk.killer.format = KILLED_BY;
     } else if (mtmp->ispriest || mtmp->isminion) {
         /* m_monnam() suppresses "the" prefix plus "invisible", and
            it overrides the effect of Hallucination on priestname() */
-        Strcat(buf, m_monnam(mtmp));
+        Strcat(buf, m_monnam_case(mtmp, BP_GEN));
     } else {
-        Strcat(buf, pmname(mptr, Mgender(mtmp)));
+        Strcat(buf, mon_gen_nom(pmname(mptr, Mgender(mtmp)), BP_GEN));
         if (has_mgivenname(mtmp)) {
             Sprintf(eos(buf), " %s %s",
                     has_ebones(mtmp) ? "Ч бывший" : "по имени",

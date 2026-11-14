@@ -95,16 +95,29 @@ formatkiller(
 {
     static NEARDATA const char *const killed_by_prefix[] = {
         /* DIED, CHOKING, POISONING, STARVING, */
-        "погиб от ", "задохнулс€ от ", "отравлен ", "умер от ",
+        "погиб от ", "задохнулс€ от ", "отравлен €дом ", "умер от ",
         /* DROWNING, BURNING, DISSOLVED, CRUSHING, */
         "утонул в ", "сгорел в ", "растворЄн в ", "раздавлен ",
         /* STONING, TURNED_SLIME, GENOCIDED, */
         "окаменел от ", "превращЄн в слизь ", "погиб от ",
         /* PANICKED, TRICKED, QUIT, ESCAPED, ASCENDED */
         "", "", "", "", ""
+    }, *const killed_by_prefix_fem[] = {
+        "погибла от ", "задохнулась от ", "отравлена €дом ", "умерла от ",
+        "утонула в ", "сгорела в ", "растворена в ", "раздавлена ",
+        "окаменела от ", "превращена в слизь ", "погибла от ",
+        "", "", "", "", ""
+    };
+    /* RU: reasons without a prefix start with a masculine verb */
+    static const char *const fem_verbs[][2] = {
+        { "упал ", "упала " }, { "ступил ", "ступила " },
+        { "нырнул ", "нырнула " }, { "споткнулс€ ", "споткнулась " },
+        { "ушибс€ ", "ушиблась " }, { "раздавлен ", "раздавлена " },
+        { "уволочен ", "уволочена " }, { "съел ", "съела " },
+        { "попыталс€ ", "попыталась " },
     };
     unsigned l;
-    char c, *kname = svk.killer.name;
+    char c, *kname = svk.killer.name, kbuf[BUFSZ];
 
     buf[0] = '\0'; /* lint suppression */
     switch (svk.killer.format) {
@@ -113,13 +126,19 @@ formatkiller(
         FALLTHROUGH;
         /*FALLTHRU*/
     case NO_KILLER_PREFIX:
+        if (flags.female) {
+            kname = strcpy(kbuf, kname);
+            for (l = 0; l < SIZE(fem_verbs); l++)
+                (void) strsubst(kname, fem_verbs[l][0], fem_verbs[l][1]);
+        }
         break;
     case KILLED_BY_AN:
         kname = an(kname);
         FALLTHROUGH;
         /*FALLTHRU*/
     case KILLED_BY:
-        (void) strncat(buf, killed_by_prefix[how], siz - 1);
+        (void) strncat(buf, (flags.female ? killed_by_prefix_fem
+                                           : killed_by_prefix)[how], siz - 1);
         l = Strlen(buf);
         buf += l, siz -= l;
         break;
@@ -729,7 +748,7 @@ topten(int how, time_t when)
 
                 topten_print("");
                 Sprintf(pbuf,
-             "ѕоскольку вы играли в режиме %s, список результатов провер€тьс€ не будет.",
+             "¬ы играли в режиме %s Ч список рекордов не провер€етс€.",
                         wizard ? "волшебника" : "исследовател€");
                 topten_print(pbuf);
             }
@@ -989,10 +1008,12 @@ outentry(int rank, struct toptenentry *t1, boolean so)
             Strcat(linebuf, fem ? "вышла из игры" : "вышел из игры");
             second_line = FALSE;
         } else if (!strncmp(t1->death, "умер от голода", 14)
-                   || !strncmp(t1->death, "умер от истощ", 13)) {
+                   || !strncmp(t1->death, "умерла от голода", 16)
+                   || !strncmp(t1->death, "умер от истощ", 13)
+                   || !strncmp(t1->death, "умерла от истощ", 15)) {
             Sprintf(eos(linebuf), "умер%s от голода", fem ? "ла" : "");
             second_line = FALSE;
-        } else if (!strncmp(t1->death, "задохнулс€", 10)) {
+        } else if (!strncmp(t1->death, "задохнул", 8)) {
             Sprintf(eos(linebuf), "подавил%s едой", fem ? "ась" : "с€");
         } else if (!strncmp(t1->death, "отравлен", 8)) {
             Sprintf(eos(linebuf), "был%s отравлен%s", fem ? "а" : "",

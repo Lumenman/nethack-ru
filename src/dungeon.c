@@ -3790,7 +3790,7 @@ print_mapseen(
                 (void) strsubst(tmpbuf, " herself", " yourself");
                 (void) strsubst(tmpbuf, " his ", " your ");
                 (void) strsubst(tmpbuf, " her ", " your ");
-                Snprintf(buf, sizeof(buf), "%s%sâû, %s%c", PREFIX, TAB,
+                Snprintf(buf, sizeof(buf), "%s%s%s, %s%c", PREFIX, TAB, svp.plname,
                          tmpbuf, --kncnt ? ',' : '.');
                 add_menu_str(win, buf);
             }

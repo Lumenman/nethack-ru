@@ -329,7 +329,7 @@ touch_of_death(struct monst *mtmp)
     /* if we get here, we know that hero isn't magic resistant and isn't
        poly'd into an undead or demon */
     You_feel("истощённым...");
-    (void) death_inflicted_by(kbuf, "прикосновение смерти", mtmp);
+    (void) death_inflicted_by(kbuf, "прикосновения смерти", mtmp);
 
     if (Upolyd) {
         u.mh = 0;
@@ -371,12 +371,11 @@ death_inflicted_by(
            reason for death due to 'touch of death' spell; if mtmp is
            shape changed, it won't be a vampshifter or mimic since they
            can't cast spells */
-        if (!type_is_pname(champtr) && !the_unique_pm(mptr))
-            realnm = an(realnm);
-        Sprintf(eos(outbuf), " inflicted by %s%s",
-                the_unique_pm(mptr) ? "the " : "", realnm);
+        /* RU: "погиб от прикосновения смерти (заклинание лича)" */
+        Sprintf(eos(outbuf), " (заклинание %s", mon_gen_nom(realnm, BP_GEN));
         if (champtr != mptr)
-            Sprintf(eos(outbuf), " imitating %s", an(fakenm));
+            Sprintf(eos(outbuf), " в облике «%s»", fakenm);
+        Strcat(outbuf, ")");
     }
     return outbuf;
 }
@@ -479,7 +478,7 @@ mcast_weaken_you(struct monst *mtmp, int dmg)
         if (Half_spell_damage)
             dmg = (dmg + 1) / 2;
         losestr(rnd(dmg),
-                death_inflicted_by(kbuf, "strength loss", mtmp),
+                death_inflicted_by(kbuf, "потери силы", mtmp),
                 KILLED_BY);
         svk.killer.name[0] = '\0'; /* not killed if we get here... */
         monstunseesu(M_SEEN_MAGR);

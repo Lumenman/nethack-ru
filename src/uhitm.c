@@ -3171,7 +3171,7 @@ mhitm_ad_drst(
         if (!negated && !rn2(8)) {
             Sprintf(buf, "%s %s", mpoisons_subj(magr, mattk),
                     mon_gen(magr, BP_GEN));
-            poisoned(buf, ptmp, pmname(pa, Mgender(magr)), 30, FALSE);
+            poisoned(buf, ptmp, mon_gen(magr, BP_GEN), 30, FALSE);
         }
     } else {
         /* mhitm */
@@ -4132,7 +4132,7 @@ mhitm_ad_phys(
                      * strength-based. With hpdamchance = 10, HP damage occurs
                      * 1/2 of the time and it will hit Str rest of the time.
                      * (This is the same as poisoned ammo.) */
-                    poisoned(buf, A_STR, pmname(magr->data, Mgender(magr)),
+                    poisoned(buf, A_STR, mon_gen(magr, BP_GEN),
                              10, FALSE);
                 }
             } else if (mattk->aatyp != AT_TUCH || mhm->damage != 0
@@ -5058,7 +5058,7 @@ gulpum(struct monst *mdef, struct attack *mattk)
                     pline("К сожалению, переварить любую его часть смертельно.");
                     end_engulf();
                     Sprintf(svk.killer.name, "неразумно попытался съесть %s",
-                            pmname(pd, Mgender(mdef)));
+                            mon_gen(mdef, BP_ACC));
                     svk.killer.format = NO_KILLER_PREFIX;
                     done(DIED);
                     return M_ATTK_MISS; /* lifesaved */

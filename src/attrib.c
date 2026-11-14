@@ -8,11 +8,11 @@
 
 /* part of the output on gain or loss of attribute */
 static const char
-    *const plusattr[] = { "strong", "smart", "wise",
-                          "agile",  "tough", "charismatic" },
-    *const minusattr[] = { "weak",    "stupid",
-                           "foolish", "clumsy",
-                           "fragile", "repulsive" };
+    *const plusattr[] = { "сильнее", "умнее", "мудрее",
+                          "ловчее",  "крепче", "обаятельнее" },
+    *const minusattr[] = { "слабее",    "глупее",
+                           "неразумнее", "неуклюжее",
+                           "болезненнее", "отвратительнее" };
 /* also used by enlightenment in insight.c for non-abbreviated status info */
 extern const char *const attrname[6];
 
@@ -175,8 +175,12 @@ adjattrib(
     if (ACURR(ndx) == old_acurr) {
         if (msgflg == 0 && flags.verbose) {
             if (ABASE(ndx) == old_abase && AMAX(ndx) == old_amax) {
-                pline("Вы %s, насколько %s возможно.",
-                      abonflg ? "сейчас" : "уже", attrstr);
+                char abuf[BUFSZ];
+
+                /* RU: "Сильнее вам уже не стать." */
+                Sprintf(abuf, "%s вам %s не стать.", attrstr,
+                        abonflg ? "сейчас" : "уже");
+                pline("%s", upstart(abuf));
             } else {
                 /* current stayed the same but base value changed, or
                    base is at minimum and reduction caused max to drop */
@@ -192,7 +196,7 @@ adjattrib(
 
     disp.botl = TRUE;
     if (msgflg <= 0)
-        You_feel("%s%s!", (incr > 1 || incr < -1) ? "very " : "", attrstr);
+        You_feel("себя %s%s!", (incr > 1 || incr < -1) ? "намного " : "", attrstr);
     if (program_state.in_moveloop && (ndx == A_STR || ndx == A_CON))
         encumber_msg();
     return TRUE;
@@ -238,7 +242,7 @@ losestr(int num, const char *knam, schar k_format)
     if (dmg) {
         /* in case damage is fatal and caller didn't supply killer reason */
         if (!knam || !*knam) {
-            knam = "terminal frailty";
+            knam = "смертельной слабости";
             k_format = KILLED_BY;
         }
         losehp(dmg, knam, k_format);
@@ -322,7 +326,7 @@ poisoned(
     boolean thrown_weapon) /* thrown weapons are less deadly */
 {
     int i, loss, kprefix = KILLED_BY_AN;
-    boolean blast = !strcmp(reason, "blast");
+    boolean blast = !strcmp(reason, "взрыв");
 
     /* inform player about being poisoned unless that's already been done;
        "blast" has given a "blast of poison gas" message; "poison arrow",
@@ -388,7 +392,7 @@ poisoned(
                 poisontell(typ, TRUE);
         }
     } else if (i > 5) {
-        boolean cloud = !strcmp(reason, "gas cloud");
+        boolean cloud = !strcmp(reason, "облако ядовитого газа");
 
         /* HP damage; more likely--but less severe--with missiles */
         loss = thrown_weapon ? rnd(6) : rn1(10, 6);
@@ -408,7 +412,9 @@ poisoned(
         svk.killer.format = kprefix;
         Strcpy(svk.killer.name, pkiller);
         /* "Poisoned by a poisoned ___" is redundant */
-        done(strstri(pkiller, "poison") ? DIED : POISONING);
+        /* RU: "погиб от отравленного дротика", "отравлен ядом кобры" */
+        done((strstri(pkiller, "отравленн") || strstri(pkiller, "ядовит"))
+             ? DIED : POISONING);
     }
     encumber_msg();
 }

@@ -307,7 +307,7 @@ do_pit(coordxy x, coordxy y, unsigned tu_pit)
             You("падаете в пропасть!");
             set_utrap(rn1(6, 2), TT_PIT);
             losehp(Maybe_Half_Phys(rnd(6)),
-                   "упали в расщелину", NO_KILLER_PREFIX);
+                   "упал в расщелину", NO_KILLER_PREFIX);
             selftouch("ѕада€, вы");
         } else if (u.utrap && u.utraptype == TT_PIT) {
             boolean keepfooting =
@@ -318,7 +318,7 @@ do_pit(coordxy x, coordxy y, unsigned tu_pit)
             You("€ростно швыр€ет из стороны в сторону!");
             set_utrap(rn1(6, 2), TT_PIT);
             losehp(Maybe_Half_Phys(rnd(keepfooting ? 2 : 4)),
-                   "ушиблись в расщелине", NO_KILLER_PREFIX);
+                   "ушибс€ в расщелине", NO_KILLER_PREFIX);
             if (keepfooting)
                 exercise(A_DEX, TRUE);
             else

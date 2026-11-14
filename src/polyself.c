@@ -1425,7 +1425,7 @@ rehumanize(void)
         /* can only happen if some bit of code reduces u.uhp
            instead of u.mh while poly'd */
         Your("старая форма была недостаточно здорова, чтобы выжить.");
-        Sprintf(svk.killer.name, "возврат к нездоровой %s форме",
+        Sprintf(svk.killer.name, "возврата к нездоровой %s форме",
                 gu.urace.adj);
         svk.killer.format = KILLED_BY;
         done(DIED);

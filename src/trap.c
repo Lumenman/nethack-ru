@@ -1297,7 +1297,7 @@ trapeffect_dart_trap(
         } else if (thitu(7, Maybe_Half_Phys(dam), &otmp, "дротик")) {
             if (otmp) {
                 if (otmp->opoisoned)
-                    poisoned("дротик", A_CON, "отравленный дротик",
+                    poisoned("дротик", A_CON, "отравленного дротика",
                              /* if damage triggered life-saving,
                                 poison is limited to attrib loss */
                              (u.umortality > oldumort) ? 0 : 10, TRUE);
@@ -1962,8 +1962,8 @@ trapeffect_pit(
                 if (!rn2(6))
                     poisoned("шипы", A_STR,
                              (conj_pit || adj_pit || deliberate)
-                             ? "наступив на ядовитые шипы"
-                             : "упав на ядовитые шипы",
+                             ? "ядовитых шипов"
+                             : "ядовитых шипов в яме",
                              /* if damage triggered life-saving,
                                 poison is limited to attrib loss */
                              (u.umortality > oldumort) ? 0 : 8, FALSE);
@@ -3913,8 +3913,9 @@ selftouch(const char *arg)
     if (uwep && uwep->otyp == CORPSE && touch_petrifies(&mons[uwep->corpsenm])
         && !Stone_resistance) {
         corpse_pmname = obj_pmname(uwep);
+        corpse_pmname = mon_gen_nom(corpse_pmname, BP_GEN);
         pline("%s касаетесь трупа %s.", arg, corpse_pmname);
-        Sprintf(kbuf, "труп %s", an(corpse_pmname));
+        Sprintf(kbuf, "трупа %s", corpse_pmname);
         instapetrify(kbuf);
         /* life-saved; unwield the corpse if we can't handle it */
         if (!uarmg && !Stone_resistance)
@@ -3925,8 +3926,9 @@ selftouch(const char *arg)
     if (u.twoweap && uswapwep && uswapwep->otyp == CORPSE
         && touch_petrifies(&mons[uswapwep->corpsenm]) && !Stone_resistance) {
         corpse_pmname = obj_pmname(uswapwep);
+        corpse_pmname = mon_gen_nom(corpse_pmname, BP_GEN);
         pline("%s касаетесь трупа %s.", arg, corpse_pmname);
-        Sprintf(kbuf, "труп %s", an(corpse_pmname));
+        Sprintf(kbuf, "трупа %s", corpse_pmname);
         instapetrify(kbuf);
         /* life-saved; unwield the corpse */
         if (!uarmg && !Stone_resistance)
@@ -6441,7 +6443,7 @@ chest_trap(
         case 17:
             pline("Облако ядовитого газа валит из %s.", the(xname(obj)));
             if (rn2(3))
-                poisoned("облако ядовитого газа", A_STR, "облако ядовитого газа", 15,
+                poisoned("облако ядовитого газа", A_STR, "облака ядовитого газа", 15,
                          FALSE);
             else
                 create_gas_cloud(obj->ox, obj->oy, 1, 8);
@@ -6453,7 +6455,7 @@ chest_trap(
         case 13:
             You_feel("укол иглы в вашу %s.",
                      body_part_case(bodypart, BP_ACC));
-            poisoned("игла", A_CON, "отравленная игла", 10, FALSE);
+            poisoned("игла", A_CON, "отравленной иглы", 10, FALSE);
             exercise(A_CON, FALSE);
             break;
         case 12:

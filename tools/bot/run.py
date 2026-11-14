@@ -106,7 +106,7 @@ def ext(cmd):
 
 
 g = dict(boot=boot, b=b, S=S, K=K, M=M, wish=wish, ext=ext, msgs=msgs,
-         time=time, CR=CR)
+         time=time, CR=CR, is_pause=is_pause)
 try:
     boot()
     runpy.run_path(scen, init_globals=g)
