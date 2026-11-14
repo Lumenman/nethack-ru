@@ -2964,6 +2964,51 @@ ru_inan_acc(char *s)
         hd[l - 1] = 'ю';
 }
 
+/* RU: genitive singular of an item name, for "погиб от ...": "большой
+   меч" -> "большого меча", "серебр€на€ сабл€" -> "серебр€ной сабли".
+   Returns s itself if the head noun is not in objnum_ru.h */
+char *
+ru_name_gen(char *s)
+{
+    const struct ru_num_name *e;
+    const char *h, *w, *p, *end;
+    char *out;
+    size_t l, n;
+
+    if (!(h = ru_head(s, &l)) || !(e = ru_num_lookup(h, l)))
+        return s;
+    out = nextobuf();
+    *out = '\0';
+    for (w = s; w < h; w = p) {
+        for (p = w; *p && *p != ' '; p++)
+            ;
+        n = (size_t) (p - w);
+        end = (const char *) 0;
+        if (n >= 4) {
+            if (!strncmp(p - 2, "ый", 2) || !strncmp(p - 2, "ой", 2)
+                || !strncmp(p - 2, "ое", 2))
+                end = "ого";
+            else if (!strncmp(p - 2, "ий", 2) || !strncmp(p - 2, "ее", 2))
+                end = strchr("гкх", p[-3]) ? "ого" : "его";
+            else if (!strncmp(p - 2, "а€", 2))
+                end = strchr("чщ", p[-3]) ? "ей" : "ой";
+            else if (!strncmp(p - 2, "€€", 2))
+                end = "ей";
+        }
+        if (end)
+            Sprintf(eos(out), "%.*s%s", (int) (n - 2), w, end);
+        else
+            Sprintf(eos(out), "%.*s", (int) n, w);
+        while (*p == ' ') {
+            Strcat(out, " ");
+            p++;
+        }
+    }
+    Strcat(out, e->gen_sg);
+    Strcat(out, h + l);
+    return out;
+}
+
 /* various singular words that vtense would otherwise categorize as plural;
    also used by makesingular() to catch some special cases */
 static const char *const special_subjs[] = {

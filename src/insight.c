@@ -104,8 +104,8 @@ static struct ll_achieve_msg achieve_msg [] = {
    conduct and achievements */
 #define enl_msg(prefix, present, past, suffix, ps) \
     enlght_line((prefix), final ? (past) : (present), (suffix), (ps))
-#define you_are(attr, ps) enl_msg(You_, are, were, (attr), (ps))
-#define you_have(attr, ps) enl_msg(You_, have, had, (attr), (ps))
+#define you_are(attr, ps) enl_pred((attr), (ps), final, FALSE)
+#define you_have(attr, ps) enl_pred((attr), (ps), final, TRUE)
 #define you_can(attr, ps) enl_msg(You_, can, could, (attr), (ps))
 #define you_have_been(goodthing) \
     enl_msg(You_, have_been, have_been, (goodthing), "")
@@ -169,6 +169,55 @@ enlght_line(
     }
 #endif
     enlght_out(buf);
+}
+
+/* RU: "Вы <сказуемое>" (you_are) and "Вы <глагол>"/"У вас <что-то>"
+   (you_have).  For the final disclosure the predicate goes into the past:
+   a verb from the table below is replaced, anything else gets "были "
+   ("были устойчивы к огню"); "— <существительное>" stays as is.  A new
+   predicate with a verb needs a table entry */
+staticfn void
+enl_pred(const char *attr, const char *ps, int final, boolean have)
+{
+    static const char *const verbs[][2] = {
+        { "левитируете", "левитировали" }, { "плывёте", "плыли" },
+        { "идёте", "шли" }, { "превращаетесь", "превращались" },
+        { "испытываете", "испытывали" },
+        { "галлюцинируете", "галлюцинировали" }, { "тонете", "тонули" },
+        { "держите", "держали" }, { "носите", "носили" },
+        { "сражаетесь", "сражались" }, { "владеете", "владели" },
+        { "имеете", "имели" }, { "ощущаете", "ощущали" },
+        { "слепнете", "слепли" }, { "страдаете", "страдали" },
+        { "двигаетесь", "двигались" }, { "работаете", "работали" },
+        { "обладаете", "обладали" }, { "вас душат", "вас душили" },
+        /* already past, or the same in the past */
+        { "вас проглотил", "вас проглотил" },
+        { "вас поглотил", "вас поглотил" }, { "застряли", "застряли" },
+        { "прилипли", "прилипли" }, { "начали", "начали" },
+        { "мертвы", "мертвы" },
+    };
+    char buf[BUFSZ];
+    boolean verb = FALSE;
+    int i;
+
+    Strcpy(buf, attr);
+    for (i = 0; i < SIZE(verbs); i++)
+        if (strstr(buf, verbs[i][0])) {
+            verb = TRUE;
+            if (final)
+                (void) strsubst(buf, verbs[i][0], verbs[i][1]);
+        }
+    if (have && !verb) { /* "У вас [был] умеренный бонус к попаданию" */
+        char g = digit(*buf) ? 'n' : ru_name_gender(buf);
+
+        enlght_line("У вас ",
+                    !final ? "" : (g == 'f') ? "была " : (g == 'n') ? "было "
+                                  : (g == 'p') ? "были " : "был ",
+                    buf, ps);
+        return;
+    }
+    enlght_line(You_, (final && !verb && strncmp(buf, "—", 1)) ? "были " : "",
+                buf, ps);
 }
 
 /* format increased chance to hit or damage or defense (Protection) */
@@ -615,10 +664,10 @@ background_enlightenment(int unused_mode UNUSED, int final)
 
     /* "You are left-handed." won't work well if polymorphed into something
        without hands; use "You are normally left-handed." in that situation */
-    Sprintf(buf, "%s%sша",
+    Sprintf(buf, "%s%sш%s",
             /* the literal must match HANDED in humanoid_parts[] (polyself.c) */
-            !strcmp(body_part(HANDED), "ладонный") ? "обычно " : "",
-            URIGHTY ? "прав" : "лев");
+            !strcmp(body_part(HANDED), "ладонный") ? "" : "обычно ",
+            URIGHTY ? "прав" : "лев", final ? "ой" : "а");
     you_are(buf, "");
 
     /* As of 3.6.2: dungeon level, so that ^X really has all status info as
@@ -672,7 +721,11 @@ background_enlightenment(int unused_mode UNUSED, int final)
         you_have("только что начали приключение", "");
     } else {
         /* 'turns' grates on the nerves in this context... */
-        Sprintf(buf, "%ld ходов назад", svm.moves);
+        Sprintf(buf, "%ld %s назад", svm.moves,
+                (svm.moves % 10L == 1L && svm.moves % 100L != 11L) ? "ход"
+                : (svm.moves % 10L >= 2L && svm.moves % 10L <= 4L
+                   && (svm.moves % 100L < 12L || svm.moves % 100L > 14L))
+                  ? "хода" : "ходов");
         /* same phrasing for current and final: "entered" is unconditional */
         enlght_line(You_, "вошли в подземелье ", buf, "");
     }
@@ -774,18 +827,18 @@ basics_enlightenment(int mode UNUSED, int final)
         Sprintf(buf, "все %d %s здоровья", hpmax, ru_points(hpmax));
     else
         Sprintf(buf, "%d из %d %s здоровья", hp, hpmax, ru_points(hpmax));
-    enl_msg("У вас ", "", "", buf, "");
+    enl_msg("У вас ", "", "было ", buf, "");
 
     /* low max energy is feasible, so handle couple of extra special cases */
     if (pwmax == 0)
-        Sprintf(buf, "нет %s", Power);
+        Sprintf(buf, "%s %s", final ? "не было" : "нет", Power);
     else if (pw == pwmax && pwmax == 2) /* both: not "all 2" */
         Sprintf(buf, "оба очка %s", Power);
     else if (pw == pwmax && pwmax > 2)
         Sprintf(buf, "все %d %s %s", pwmax, ru_points(pwmax), Power);
     else
         Sprintf(buf, "%d из %d %s %s", pw, pwmax, ru_points(pwmax), Power);
-    enl_msg("У вас ", "", "", buf, "");
+    enl_msg("У вас ", "", pwmax ? "было " : "", buf, "");
 
     if (Upolyd) {
         switch (mons[u.umonnum].mlevel) {
@@ -1018,9 +1071,10 @@ status_enlightenment(int mode, int final)
         if (Lev_at_will && magic)
             you_are("левитируете, когда захотите", "");
         else
-            enl_msg(youtoo, are, were, "левитируете", from_what(LEVITATION));
+            enl_msg(youtoo, "левитируете", "левитировали", "",
+                    from_what(LEVITATION));
     } else if (Flying) { /* can only fly when not levitating */
-        enl_msg(youtoo, are, were, "летите", from_what(FLYING));
+        enl_msg(youtoo, "летите", "летели", "", from_what(FLYING));
     }
     if (Underwater) {
         you_are("под водой", "");
@@ -1417,10 +1471,8 @@ weapon_insight(int final)
             }
             if (*pfx)
                 enl_msg(pfx, "", "", sfx, "");
-            else if (hav)
-                you_have(buf, "");
             else
-                you_are(buf, "");
+                you_have(buf, "");
 
             /* skip comparison between secondary and two-weapons if it is
                identical to the comparison between primary and twoweap */
@@ -1460,10 +1512,8 @@ weapon_insight(int final)
                 }
                 if (*pfx)
                     enl_msg(pfx, verb_present, verb_past, sfx, "");
-                else if (hav2)
-                    you_have(buf, "");
                 else
-                    you_are(buf, "");
+                    you_have(buf, "");
             } /* wtype2 != wtype */
 
             /* if training and available skill credits already allow
@@ -1540,14 +1590,12 @@ attributes_enlightenment(
         static const char *const hofe_titles[3] = { "Рука Элберета",
                                                     "Посланник Равновесия",
                                                     "Слава Ариоха" };
-        you_are(hofe_titles[u.uevent.uhand_of_elbereth - 1], "");
+        enl_msg(You_, "— ", "— ",
+                hofe_titles[u.uevent.uhand_of_elbereth - 1], "");
     }
 
     Sprintf(buf, "%s", piousness(TRUE, "привержены своему мировоззрению"));
-    if (u.ualign.record >= 0)
-        you_are(buf, "");
-    else
-        you_have(buf, "");
+    you_are(buf, "");
 
     if (wizard) {
         Sprintf(buf, " %d", u.ualign.record);
@@ -1616,7 +1664,7 @@ attributes_enlightenment(
                     " невидимое, если бы не были слепы", "");
     }
     if (Blind_telepat)
-        you_are("телепат", from_what(TELEPAT));
+        you_are("обладаете телепатией", from_what(TELEPAT));
     if (Warning)
         you_are("предупреждены", from_what(WARNING));
     if (Warn_of_mon && svc.context.warntype.obj) {
@@ -1649,7 +1697,7 @@ attributes_enlightenment(
     if (Searching)
         you_have("имеете автоматический поиск", from_what(SEARCHING));
     if (Clairvoyant) {
-        you_are("ясновидящий", from_what(CLAIRVOYANT));
+        you_are("обладаете ясновидением", from_what(CLAIRVOYANT));
     } else if ((HClairvoyant || EClairvoyant) && BClairvoyant) {
         Strcpy(buf, from_what(-CLAIRVOYANT));
         (void) strsubst(buf, " because of ", " if not for ");
@@ -1711,10 +1759,11 @@ attributes_enlightenment(
         enl_msg(You_, "были бы", "были бы", buf, "");
     }
     if (Aggravate_monster)
-        enl_msg("Вы раздражаете", "", "", " монстров",
+        enl_msg(You_, "раздражаете", "раздражали", " монстров",
                 from_what(AGGRAVATE_MONSTER));
     if (Conflict)
-        enl_msg("Вы провоцируете", "", "", " конфликт", from_what(CONFLICT));
+        enl_msg(You_, "провоцируете", "провоцировали", " конфликт",
+                from_what(CONFLICT));
 
     /*** Transportation ***/
     if (Jumping)
@@ -1803,9 +1852,10 @@ attributes_enlightenment(
 
     /*** Physical attributes ***/
     if (Regeneration)
-        enl_msg("Вы регенерируете", "", "", "", from_what(REGENERATION));
+        enl_msg(You_, "регенерируете", "регенерировали", "",
+                from_what(REGENERATION));
     if (Slow_digestion)
-        you_have("медленное переваривание", from_what(SLOW_DIGESTION));
+        you_have("имеете медленное переваривание", from_what(SLOW_DIGESTION));
     if (u.uhitinc) {
         (void) enlght_combatinc("to hit", u.uhitinc, final, buf);
         if (iflags.tux_penalty && !Upolyd)
@@ -1837,7 +1887,7 @@ attributes_enlightenment(
     if ((armpro = magic_negation(&gy.youmonst)) > 0) {
         /* magic cancellation factor, conferred by worn armor */
         static const char *const mc_types[] = {
-            "" /*обычный*/, "защищён", "усиленно защищён", "полностью защищён",
+            "" /*обычный*/, "защищены", "усиленно защищены", "полностью защищены",
         };
         /* sanity check */
         if (armpro >= SIZE(mc_types))
@@ -1918,8 +1968,8 @@ attributes_enlightenment(
         you_can("откладывать яйца", "");
     if (ismnum(u.ulycn)) {
         /* "you are a werecreature [in beast form]" */
-        Strcpy(buf, an(pmname(&mons[u.ulycn],
-               flags.female ? FEMALE : MALE)));
+        Sprintf(buf, "— %s", pmname(&mons[u.ulycn],
+                                     flags.female ? FEMALE : MALE));
         if (u.umonnum == u.ulycn) {
             Strcat(buf, " в звериной форме");
             if (wizard)
@@ -1984,11 +2034,13 @@ attributes_enlightenment(
             Sprintf(buf, "%s%ssafely pray%s", can_pray(FALSE) ? "" : "not ",
                     final ? "have " : "", final ? "ed" : "");
 #else
-            Sprintf(buf, "%sмолиться", can_pray(FALSE) ? "безопасно " : "не ");
+            Strcpy(buf, " безопасно молиться");
 #endif
             if (wizard)
                 Sprintf(eos(buf), " (%d)", u.ublesscnt);
-            you_can(buf, "");
+            /* only shown while the game is in progress */
+            enlght_line(You_, can_pray(FALSE) ? "можете" : "не можете",
+                        buf, "");
         }
     }
 
@@ -2148,7 +2200,7 @@ show_conduct(int final)
     if (u.uroleplay.blind)
         you_have_been("слеп от рождения");
     if (u.uroleplay.deaf)
-        you_have_been("глух от рождения");
+        you_have_been("глухи от рождения");
     /* note: we don't report "you are without possessions" unless the
        game started with the pauper option set */
     if (u.uroleplay.pauper)
@@ -2166,10 +2218,10 @@ show_conduct(int final)
     else if (!u.uconduct.unvegan)
         you_have_X("придерживались строгой веганской диеты");
     else if (!u.uconduct.unvegetarian)
-        you_have_been("вегетарианцем");
+        you_have_been(flags.female ? "вегетарианкой" : "вегетарианцем");
 
     if (!u.uconduct.gnostic)
-        you_have_been("атеистом");
+        you_have_been(flags.female ? "атеисткой" : "атеистом");
 
     if (!u.uconduct.weaphit) {
         you_have_never("били оружием");
@@ -2179,10 +2231,10 @@ show_conduct(int final)
         you_have_X(buf);
     }
     if (!u.uconduct.killer)
-        you_have_been("пацифистом");
+        you_have_been(flags.female ? "пацифисткой" : "пацифистом");
 
     if (!u.uconduct.literate) {
-        you_have_been("неграмотным");
+        you_have_been(flags.female ? "неграмотной" : "неграмотным");
     } else if (wizard) {
         Sprintf(buf, "читали предметы и надписи %ld раз", u.uconduct.literate);
         you_have_X(buf);

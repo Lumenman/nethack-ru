@@ -95,7 +95,7 @@ formatkiller(
 {
     static NEARDATA const char *const killed_by_prefix[] = {
         /* DIED, CHOKING, POISONING, STARVING, */
-        "погиб от ", "задохнулся от ", "отравлен ядом ", "умер от ",
+        "погиб от ", "подавился ", "отравлен ядом ", "умер от ",
         /* DROWNING, BURNING, DISSOLVED, CRUSHING, */
         "утонул в ", "сгорел в ", "растворён в ", "раздавлен ",
         /* STONING, TURNED_SLIME, GENOCIDED, */
@@ -103,7 +103,7 @@ formatkiller(
         /* PANICKED, TRICKED, QUIT, ESCAPED, ASCENDED */
         "", "", "", "", ""
     }, *const killed_by_prefix_fem[] = {
-        "погибла от ", "задохнулась от ", "отравлена ядом ", "умерла от ",
+        "погибла от ", "подавилась ", "отравлена ядом ", "умерла от ",
         "утонула в ", "сгорела в ", "растворена в ", "раздавлена ",
         "окаменела от ", "превращена в слизь ", "погибла от ",
         "", "", "", "", ""
@@ -1013,7 +1013,7 @@ outentry(int rank, struct toptenentry *t1, boolean so)
                    || !strncmp(t1->death, "умерла от истощ", 15)) {
             Sprintf(eos(linebuf), "умер%s от голода", fem ? "ла" : "");
             second_line = FALSE;
-        } else if (!strncmp(t1->death, "задохнул", 8)) {
+        } else if (!strncmp(t1->death, "подавил", 7)) {
             Sprintf(eos(linebuf), "подавил%s едой", fem ? "ась" : "ся");
         } else if (!strncmp(t1->death, "отравлен", 8)) {
             Sprintf(eos(linebuf), "был%s отравлен%s", fem ? "а" : "",

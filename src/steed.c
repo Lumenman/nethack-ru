@@ -69,8 +69,7 @@ use_saddle(struct obj *otmp)
 
         You("касаетесь %s.", mon_nam_case(mtmp, BP_GEN));
         if (!(poly_when_stoned(gy.youmonst.data) && polymon(PM_STONE_GOLEM))) {
-            Sprintf(kbuf, "пытаясь оседлать %s",
-                    an(pmname(mtmp->data, Mgender(mtmp))));
+            Sprintf(kbuf, "попытки оседлать %s", mon_gen(mtmp, BP_ACC));
             instapetrify(kbuf);
         }
     }
@@ -289,8 +288,8 @@ mount_steed(
         char kbuf[BUFSZ];
 
         You("касаетесь %s.", mon_nam_case(mtmp, BP_GEN));
-        Sprintf(kbuf, "пытаясь сесть верхом на %s",
-                an(pmname(mtmp->data, Mgender(mtmp))));
+        Sprintf(kbuf, "попытки сесть верхом на %s",
+                mon_gen(mtmp, BP_ACC));
         instapetrify(kbuf);
     }
     if (!mtmp->mtame || mtmp->isminion) {

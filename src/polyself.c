@@ -1862,7 +1862,7 @@ dohide(void)
                turn into stone golems instead of becoming petrified */
             pline("Прятаться под %s%s — роковая ошибка...",
                   corpse_name, plur(ct));
-            Sprintf(kbuf, "прятался под %s%s", corpse_name, plur(ct));
+            Sprintf(kbuf, "попытки спрятаться под %s%s", corpse_name, plur(ct));
             instapetrify(kbuf);
             /* only reach here if life-saved */
             u.uundetected = 0;

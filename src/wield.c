@@ -147,7 +147,7 @@ cant_wield_corpse(struct obj *obj)
     You("владеете %s голыми %s.",
         corpse_xname(obj, (const char *) 0, CXN_PFX_THE),
         body_part_case(HAND, BP_INS | BP_PLURAL));
-    Sprintf(kbuf, "владеете %s голыми руками", killer_xname(obj));
+    Sprintf(kbuf, "попытки взять %s голыми руками", killer_xname(obj));
     instapetrify(kbuf);
     return TRUE;
 }
@@ -160,7 +160,7 @@ empty_handed(void)
     return uarmg ? "с пустыми руками" /* gloves imply hands */
            : humanoid(gy.youmonst.data)
              /* hands but no weapon and no gloves */
-             ? "голыми руками"
+             ? "с голыми руками"
                /* alternate phrasing for paws or lack of hands */
                : "не владеете ничем";
 }

@@ -2244,6 +2244,7 @@ extern const char *ru_self_word(struct obj *) NONNULLARG1;
 extern char *ru_count_xname(struct obj *, long) NONNULLARG1;
 extern char *ru_obj_with(struct obj *) NONNULLARG1;
 extern void ru_inan_acc(char *) NONNULLARG1;
+extern char *ru_name_gen(char *) NONNULLARG1;
 extern char *mshot_xname(struct obj *) NONNULLARG1;
 extern boolean the_unique_obj(struct obj *) NONNULLARG1;
 extern boolean the_unique_pm(struct permonst *) NONNULLARG1;

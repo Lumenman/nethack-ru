@@ -2584,7 +2584,13 @@ retouch_object(
                 tmp = rnd(10), dmg += Maybe_Half_Phys(tmp);
             if (bane)
                 dmg += rnd(10);
-            Sprintf(buf, "обращения с %s", what);
+            {
+                char wbuf[BUFSZ];
+
+                Strcpy(wbuf, what); /* RU: instrumental after "с" */
+                (void) ru_number_name(wbuf, sizeof wbuf, 'I');
+                Sprintf(buf, "обращения с %s", wbuf);
+            }
             losehp(dmg, buf, KILLED_BY);
             exercise(A_CON, FALSE);
         }
