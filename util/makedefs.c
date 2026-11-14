@@ -1658,7 +1658,8 @@ filter_nonascii(char *line)
             break;
         if (*p == '\t' && ascii_ctx.tabok)
             continue;
-        reason = (*p > 126) ? 3 : (*p == '\t') ? 2 : (*p < ' ');
+        /* RU: bytes above 127 are CP1251 text, keep them */
+        reason = (*p == 127) ? 3 : (*p == '\t') ? 2 : (*p < ' ');
         if (reason != 0) {
             if (!warned)
                 ascii_ctx.warncnt += 1; /* number of lines warned about */

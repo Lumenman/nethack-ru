@@ -1304,12 +1304,18 @@ dog_move(
             struct obj *o = (!Hallucination && svl.level.flags.hero_memory
                              && glyph_is_object(levl[nix][niy].glyph))
                                ? vobj_at(nix, niy) : 0;
-            const char *what = o ? distant_name(o, doname) : something;
+            boolean over = (is_flyer(mtmp->data) || is_floater(mtmp->data));
+            char what[BUFSZ];
 
-            pline_mon(mtmp, "%s неохотно %s %s.", noit_Monnam(mtmp),
-                  locomotion(mtmp->data, "шагает"),
-                  (is_flyer(mtmp->data) || is_floater(mtmp->data)) ? "над"
-                                                                   : "на",
+            /* RU: "шагает на проклятую булаву", "летит над чем-то" */
+            Strcpy(what, o ? distant_name(o, doname)
+                           : over ? "чем-то" : "что-то");
+            if (o && over)
+                (void) ru_number_name(what, sizeof what, 'I');
+            else if (o)
+                ru_inan_acc(what);
+            pline_mon(mtmp, "%s неохотно %s %s %s.", noit_Monnam(mtmp),
+                  locomotion(mtmp->data, "шагает"), over ? "над" : "на",
                   what);
         }
         mon_track_add(mtmp, omx, omy);

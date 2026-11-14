@@ -3060,11 +3060,12 @@ dotrap(struct trap *trap, unsigned trflags)
             && ttype != ANTI_MAGIC && !forcebungle && !plunged
             && !conj_pit && !adj_pit
             && (!rn2(5) || (is_pit(ttype) && is_clinger(gy.youmonst.data)))) {
-                You("избегаете %s %s.",
-                          (ttype == ARROW_TRAP && !trap->madeby_u)
-                          ? "этой"
-                          : a_your[trap->madeby_u],
-                trapname(ttype, FALSE));
+                char tbuf[BUFSZ];
+
+                /* RU: "обходите ловушку с кат€щимс€ валуном" */
+                Strcpy(tbuf, trapname(ttype, FALSE));
+                ru_inan_acc(tbuf);
+                You("обходите %s.", tbuf);
             return;
         }
     }
@@ -4214,7 +4215,8 @@ climb_pit(void)
     if (!u.utrap || u.utraptype != TT_PIT)
         return;
 
-    pitname = trapname(PIT, FALSE);
+    /* RU: every use below needs the genitive ("из €мы", "к краю €мы") */
+    pitname = trapname_ru(TT_PIT, trapname(PIT, FALSE));
     if (Passes_walls) {
         /* marked as trapped so they can pick things up */
         You("поднимаетесь из %s.", pitname);
