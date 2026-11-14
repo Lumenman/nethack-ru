@@ -4527,7 +4527,7 @@ zhitu(
             (void) destroy_items(&gy.youmonst, AD_ELEC, orig_dam);
         break;
     case ZT_POISON_GAS:
-        poisoned("взрыв", A_DEX, "ядовитый взрыв", 15, FALSE);
+        poisoned("взрыв", A_DEX, "ядовитого взрыва", 15, FALSE);
         break;
     case ZT_ACID:
         if (Acid_resistance) {

@@ -1576,7 +1576,7 @@ offer_real_amulet(struct obj *otmp, aligntyp altaralign)
         pline("%s пожимает плечами и сохраняет власть над %s,", Moloch,
               ru_god_case(u_gname(), BP_INS));
         pline("а затем безжалостно прерывает вашу жизнь.");
-        Sprintf(svk.killer.name, "равнодушие %s", god_gen(Moloch));
+        Sprintf(svk.killer.name, "равнодушия %s", god_gen(Moloch));
         svk.killer.format = KILLED_BY;
         done(DIED);
         /* life-saved (or declined to die in wizard/explore mode) */

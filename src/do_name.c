@@ -1892,6 +1892,13 @@ mon_nam_case(struct monst *mtmp, int cse)
     return ru_mnam_case(mon_nam(mtmp), mtmp, cse);
 }
 
+/* m_monnam() (no "невидимый", no hallucination) in case cse */
+char *
+m_monnam_case(struct monst *mtmp, int cse)
+{
+    return ru_mnam_case(m_monnam(mtmp), mtmp, cse);
+}
+
 /* y_monnam() ("ваш котёнок" for a pet) in case cse */
 char *
 y_monnam_case(struct monst *mtmp, int cse)

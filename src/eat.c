@@ -273,7 +273,7 @@ choke(struct obj *food)
         if (food) {
             You("давитесь своим %s.", foodword(food));
             if (food->oclass == COIN_CLASS) {
-                Strcpy(svk.killer.name, "очень богатая трапеза");
+                Strcpy(svk.killer.name, "очень богатой трапезы");
             } else {
                 svk.killer.format = KILLED_BY;
                 Strcpy(svk.killer.name, killer_xname(food));
@@ -668,7 +668,7 @@ eat_brains(
         } else if (is_rider(pd)) {
             pline("Проглатывание этого смертельно.");
             Sprintf(svk.killer.name, "неразумно съел мозг %s",
-                    pmname(pd, Mgender(mdef)));
+                    mon_gen(mdef, BP_GEN));
             svk.killer.format = NO_KILLER_PREFIX;
             done(DIED);
             /* life-saving needed to reach here */
@@ -798,8 +798,8 @@ cprefx(int pm)
             if (svc.context.tin.tin)
                 use_up_tin(svc.context.tin.tin);
 
-            Sprintf(svk.killer.name, "пробуя мясо %s",
-                    mons[pm].pmnames[NEUTRAL]);
+            Sprintf(svk.killer.name, "мяса %s",
+                    mon_gen_nom(mons[pm].pmnames[NEUTRAL], BP_GEN));
             svk.killer.format = KILLED_BY;
             You("превращаетесь в камень.");
             done(STONING);
@@ -832,7 +832,7 @@ cprefx(int pm)
     case PM_FAMINE: {
         pline("Это мгновенно смертельно.");
         Sprintf(svk.killer.name, "неразумно съел тело %s",
-                mons[pm].pmnames[NEUTRAL]);
+                mon_gen_nom(mons[pm].pmnames[NEUTRAL], BP_GEN));
         svk.killer.format = NO_KILLER_PREFIX;
         done(DIED);
         /* life-saving needed to reach here */
@@ -1937,14 +1937,14 @@ eatcorpse(struct obj *otmp)
     } else if (acidic(&mons[mnum]) && !Acid_resistance) {
         tp++;
         pline("У вас сильнейший приступ изжоги.");   /* not body_part() */
-        losehp(rnd(15), !glob ? "кислого трупа" : "кислая глоба",
+        losehp(rnd(15), !glob ? "кислого трупа" : "кислой глобы",
                KILLED_BY_AN); /* acid damage */
     } else if (poisonous(&mons[mnum]) && rn2(5)) {
         tp++;
         pline("Фух - это, наверное, было ядовито!");
         if (!Poison_resistance) {
             poison_strdmg(rnd(4), rnd(15),
-                          !glob ? "ядовитый труп" : "ядовитая глоба",
+                          !glob ? "ядовитого трупа" : "ядовитой глобы",
                           KILLED_BY_AN);
         } else
             You("не чувствуете действия яда.");
@@ -2579,8 +2579,9 @@ fpostfx(struct obj *otmp)
                 && !(poly_when_stoned(gy.youmonst.data)
                      && polymon(PM_STONE_GOLEM))) {
                 if (!Stoned) {
-                    Sprintf(svk.killer.name, "яйцо %s",
-                            mons[otmp->corpsenm].pmnames[NEUTRAL]);
+                    Sprintf(svk.killer.name, "яйца %s",
+                            mon_gen_nom(mons[otmp->corpsenm]
+                                        .pmnames[NEUTRAL], BP_GEN));
                     make_stoned(5L, (char *) 0, KILLED_BY_AN,
                                 svk.killer.name);
                 }

@@ -2815,7 +2815,7 @@ do_class_genocide(void)
         }
         if (gameover || u.uhp == -1) {
             svk.killer.format = KILLED_BY_AN;
-            Strcpy(svk.killer.name, "свиток геноцида");
+            Strcpy(svk.killer.name, "свитка геноцида");
             if (gameover)
                 done(GENOCIDED);
         }
@@ -2937,7 +2937,7 @@ do_genocide(
         mndx = monsndx(ptr); /* needed for the 'no free pass' cases */
     }
 
-    which = "all ";
+    which = "все ";
     Strcpy(realbuf, ptr->pmnames[NEUTRAL]); /* standard singular */
     if (Hallucination) {
         /* hallucinate hero's type */
@@ -2953,7 +2953,7 @@ do_genocide(
         /* use actual type */
         Strcpy(buf, realbuf);
         if ((ptr->geno & G_UNIQ) && ptr != &mons[PM_HIGH_CLERIC])
-            which = !type_is_pname(ptr) ? "the " : "";
+            which = "";
     }
 
     if (how & REALLY) {
@@ -2966,21 +2966,21 @@ do_genocide(
 
         /* setting no-corpse affects wishing and random tin generation */
         svm.mvitals[mndx].mvflags |= (G_GENOD | G_NOCORPSE);
-        pline("Уничтожено %s%s.", which,
-              (*which != 'a') ? buf : makeplural(buf));
+        pline(*which ? "Истреблены %s%s." : "Истреблён вид%s: %s.", which,
+              !*which ? buf : mon_gen_nom(buf, BP_NOM | BP_PLURAL));
 
         if (killplayer) {
             u.uhp = -1;
             if (how & PLAYER) {
                 svk.killer.format = KILLED_BY;
-                Strcpy(svk.killer.name, "геноцидное замешательство");
+                Strcpy(svk.killer.name, "геноцидного замешательства");
             } else if (how & ONTHRONE) {
                 /* player selected while on a throne */
                 svk.killer.format = KILLED_BY_AN;
-                Strcpy(svk.killer.name, "властный приказ");
+                Strcpy(svk.killer.name, "властного приказа");
             } else { /* selected player deliberately, not confused */
                 svk.killer.format = KILLED_BY_AN;
-                Strcpy(svk.killer.name, "свиток геноцида");
+                Strcpy(svk.killer.name, "свитка геноцида");
             }
 
             /* Polymorphed characters will die as soon as they're rehumanized.

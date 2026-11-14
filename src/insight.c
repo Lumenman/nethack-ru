@@ -108,7 +108,7 @@ static struct ll_achieve_msg achieve_msg [] = {
 #define you_have(attr, ps) enl_msg(You_, have, had, (attr), (ps))
 #define you_can(attr, ps) enl_msg(You_, can, could, (attr), (ps))
 #define you_have_been(goodthing) \
-    enl_msg(You_, have_been, were, (goodthing), "")
+    enl_msg(You_, have_been, have_been, (goodthing), "")
 #define you_have_never(badthing) \
     enl_msg(You_, have_never, never, (badthing), "")
 #define you_have_X(something) \
@@ -2172,7 +2172,7 @@ show_conduct(int final)
         you_have_been("атеистом");
 
     if (!u.uconduct.weaphit) {
-        you_have_never("билы с оружием в руках");
+        you_have_never("били оружием");
     } else if (wizard) {
         Sprintf(buf, "били оружием %ld раз",
                 u.uconduct.weaphit);
@@ -2216,7 +2216,7 @@ show_conduct(int final)
     if (!u.uconduct.wishes) {
         you_have_X("не использовали желаний");
     } else {
-        Sprintf(buf, "использовали %ld желание", u.uconduct.wishes);
+        Sprintf(buf, "использовали желаний: %ld", u.uconduct.wishes);
         if (u.uconduct.wisharti) {
             /* if wisharti == wishes
              *  1 wish (for an artifact)
@@ -3065,10 +3065,10 @@ list_genocided(char defquery, boolean ask)
 
     /* genocided or extinct species list */
     if (ngone > 0) {
-        Sprintf(buf, "Ќужен ли список %sвидов%s%s?",
-                (nextinct && !ngenocided) ? "вымерших " : "",
+        Sprintf(buf, "ѕоказать список %s%s%s видов?",
                 (ngenocided) ? "истреблЄнных" : "",
-                (nextinct && ngenocided) ? " и вымерших" : "");
+                (nextinct && ngenocided) ? " и " : "",
+                (nextinct) ? "вымерших" : "");
         c = ask ? yn_function(buf, (ngone > 1) ? "ynaq" : "ynq\033a",
                               defquery, TRUE)
                 : defquery;

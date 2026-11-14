@@ -737,6 +737,7 @@ extern const char *obj_pmname(struct obj *) NONNULLARG1;
 extern const char *mon_gen_nom(const char *, int);
 extern const char *mon_gen(struct monst *, int) NONNULLARG1;
 extern char *mon_nam_case(struct monst *, int) NONNULLARG1;
+extern char *m_monnam_case(struct monst *, int) NONNULLARG1;
 extern char *y_monnam_case(struct monst *, int) NONNULLARG1;
 extern const char *mon_case_to_nom(const char *) NONNULLARG1;
 extern char mon_name_gender(const char *) NONNULLARG1;

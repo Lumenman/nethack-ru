@@ -163,7 +163,7 @@ cursed_book(struct obj *bp)
         bp->in_use = FALSE;
         poison_strdmg(Poison_resistance ? rn1(2, 1) : rn1(4, 3),
                       rnd(Poison_resistance ? 6 : 10),
-                      "книга заклинаний с контактным ядом", KILLED_BY_AN);
+                      "книги заклинаний с контактным ядом", KILLED_BY_AN);
         bp->in_use = was_in_use;
         break;
     case 6:
