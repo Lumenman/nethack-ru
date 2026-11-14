@@ -2945,6 +2945,8 @@ ru_inan_acc(char *s)
     char *w, *p, *hd;
     size_t l;
 
+    if (digit(*s)) /* "2 пайка": the count form stays */
+        return;
     if (!(h = ru_head(s, &l)))
         return;
     hd = s + (h - s);

@@ -435,7 +435,9 @@ look_at_monster(
               ? coyotename(mtmp, monnambuf)
               : distant_monnam(mtmp, ARTICLE_NONE, monnambuf);
     {
-        boolean fem = (Mgender(mtmp) == FEMALE);
+        /* RU: by the gender of the word: "мирный оракул" */
+        boolean fem = accurate ? (mon_name_gender(mon_pmname(mtmp)) == 'f')
+                               : (Mgender(mtmp) == FEMALE);
 
         Sprintf(buf, "%s%s%s%s",
                 (mtmp->mx != x || mtmp->my != y)

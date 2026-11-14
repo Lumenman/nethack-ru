@@ -895,9 +895,11 @@ mon_wield_item(struct monst *mon)
         if (canseemon(mon)) {
             boolean newly_welded;
             const struct throw_and_return_weapon *arw;
+            char *dn = doname(obj);
 
+            ru_inan_acc(dn); /* RU: "применяет кирку" */
             pline_mon(mon, "%s применяет %s%c",
-                      Monnam(mon), doname(obj),
+                      Monnam(mon), dn,
                       exclaim ? '!' : '.');
             if ((arw = autoreturn_weapon(obj)) != 0 && arw->tethered != 0)
                 pline_mon(mon, "%s закрепляет поводок на %s.", Monnam(mon),

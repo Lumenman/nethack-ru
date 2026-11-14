@@ -554,7 +554,7 @@ outrumor(
     switch (mechanism) {
     case BY_ORACLE:
         /* Oracle delivers the rumor */
-        pline("Верная своему слову, Оракул %sговорит: ",
+        pline("Верный своему слову, Оракул %sговорит: ",
               (!rn2(4) ? "между делом "
                        : (!rn2(3) ? "невозмутимо "
                                   : (rn2(2) ? "бесстрастно " : ""))));

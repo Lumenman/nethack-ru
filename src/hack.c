@@ -443,8 +443,8 @@ moverock_core(coordxy sx, coordxy sy)
             if (Sokoban && u.dx && u.dy) {
                 if (Blind)
                     feel_location(sx, sy);
-                pline("%s не покатится по диагонали по этому %s.",
-                      The(xname(otmp)), surface(sx, sy));
+                pline("%s здесь не покатится по диагонали.",
+                      The(xname(otmp)));
                 return cannot_push(otmp, sx, sy);
             }
 
@@ -464,7 +464,13 @@ moverock_core(coordxy sx, coordxy sy)
                     deliver_part1 = TRUE;
                 } else {
                     Soundeffect(se_monster_behind_boulder, 50);
-                    You_hear("монстр за %s.", the(xname(otmp)));
+                    {
+                        char bbuf[BUFSZ];
+
+                        Strcpy(bbuf, xname(otmp)); /* RU: "за валуном" */
+                        (void) ru_number_name(bbuf, sizeof bbuf, 'I');
+                        You_hear("монстра за %s.", bbuf);
+                    }
                     if (!Deaf)
                         deliver_part1 = TRUE;
                     map_invisible(rx, ry);
@@ -473,11 +479,12 @@ moverock_core(coordxy sx, coordxy sy)
                     char you_or_steed[BUFSZ];
 
                     Strcpy(you_or_steed,
-                           u.usteed ? y_monnam(u.usteed) : "you");
-                    pline("%s%s не может сдвинуть %s.",
+                           u.usteed ? y_monnam(u.usteed) : "вы");
+                    pline("%s%s %s сдвинуть %s.",
                           deliver_part1 ? "Возможно, поэтому " : "",
                           deliver_part1 ? you_or_steed
                                         : upstart(you_or_steed),
+                          u.usteed ? "не может" : "не можете",
                           deliver_part1 ? "его" : the(xname(otmp)));
                 }
                 return cannot_push(otmp, sx, sy);
@@ -2182,14 +2189,14 @@ domove_swap_with_pet(
                && !(verysmall(mtmp->data)
                     && (!mtmp->minvent || curr_mon_load(mtmp) <= 600))) {
         /* can't swap places when pet won't fit there with the boulder */
-        You("стоп. %s не поместится в то же место, где находитесь вы.",
+        You("останавливаетесь. %s не поместится туда же, где вы.",
             YMonnam(mtmp));
         didnt_move = TRUE;
     } else if (u.ux0 != x && u.uy0 != y && bad_rock(mtmp->data, x, u.uy0)
                && bad_rock(mtmp->data, u.ux0, y)
                && (bigmonst(mtmp->data) || (curr_mon_load(mtmp) > 600))) {
         /* can't swap places when pet won't fit thru the opening */
-        You("стоп. %s не пролезет.", YMonnam(mtmp));
+        You("останавливаетесь. %s не пролезет.", YMonnam(mtmp));
         didnt_move = TRUE;
     } else if (mtmp->mpeaceful && mtmp->mtrapped) {
         /* all mtame are also mpeaceful, so this affects pets too */
@@ -2201,7 +2208,9 @@ domove_swap_with_pet(
             feeltrap(trap); /* show on map once mtmp is out of the way */
             which = just_an(anbuf, what); /* "a " или "an " */
         }
-        You("стоп. %s не может выбраться из %s%s.", YMonnam(mtmp), which, what);
+        nhUse(which);
+        You("останавливаетесь. %s не может выбраться (%s).", YMonnam(mtmp),
+            what);
         (void) handle_tip(TIP_UNTRAP_MON);
         didnt_move = TRUE;
     } else if (mtmp->mpeaceful
@@ -2210,7 +2219,7 @@ domove_swap_with_pet(
                    || mundisplaceable(mtmp))) {
         /* displacing peaceful into unsafe or trapped space, or trying to
            displace quest leader, Oracle, shk, priest, or vault guard */
-        You("стоп. %s не желает меняться местами.", YMonnam(mtmp));
+        You("останавливаетесь. %s не желает меняться местами.", YMonnam(mtmp));
         didnt_move = TRUE;
     } else {
         mtmp->mtrapped = 0;
@@ -2220,13 +2229,8 @@ domove_swap_with_pet(
         newsym(u.ux0, u.uy0);
 
         You("%s %s.", mtmp->mpeaceful ? "меняетесь местами с" : "пугаете",
-            x_monnam(mtmp,
-                     mtmp->mtame ? ARTICLE_YOUR
-                     : (!has_mgivenname(mtmp)
-                        && !type_is_pname(mtmp->data)) ? ARTICLE_THE
-                     : ARTICLE_NONE,
-                     (mtmp->mpeaceful && !mtmp->mtame) ? "peaceful" : 0,
-                     has_mgivenname(mtmp) ? SUPPRESS_SADDLE : 0, FALSE));
+            /* RU: "с вашим котёнком" / "пугаете гнома" */
+            y_monnam_case(mtmp, mtmp->mpeaceful ? BP_INS : BP_ACC));
 
         /* check for displacing it into pools and traps */
         switch (minliquid(mtmp) ? Trap_Killed_Mon
