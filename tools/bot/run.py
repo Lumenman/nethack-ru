@@ -73,7 +73,7 @@ def boot(maxwait=25):
         elif is_more(s):
             msgs.append(s.split('\n')[0])
             b.send(CR)
-        elif 'Восстановить?' in s or 'Get bones?' in s:
+        elif 'Восстановить?' in s or 'Get bones?' in s or 'останки?' in s:
             b.send('n', 1.0)
         elif 'Ур.:' in s or 'Dlvl' in s:
             return S('boot done')

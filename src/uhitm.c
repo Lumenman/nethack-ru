@@ -2176,7 +2176,8 @@ theft_petrifies(struct obj *otmp)
 #endif
 
     /* stealing this corpse is fatal... */
-    instapetrify(corpse_xname(otmp, "украденный", CXN_ARTICLE));
+    instapetrify(ru_name_gen(corpse_xname(otmp, "украденный",
+                                         CXN_ARTICLE)));
     /* apparently wasn't fatal after all... */
     return TRUE;
 }
@@ -5044,10 +5045,10 @@ gulpum(struct monst *mdef, struct attack *mattk)
                 mnam = an(mnam);
             You("%s %s.", u_digest ? "заглатываете" : "поглощаете", mon_nam_case(mdef, BP_ACC));
             Sprintf(kbuf, "%s %s%s",
-                    u_digest ? "заглатывание"
-                    : u_enfold ? "окутывание"
-                      : "поглощение",
-                    mnam, u_digest ? " целиком" : "");
+                    u_digest ? "заглатывания"
+                    : u_enfold ? "окутывания"
+                      : "поглощения",
+                    mon_gen(mdef, BP_GEN), u_digest ? " целиком" : "");
             instapetrify(kbuf);
         } else {
             start_engulf(mdef);

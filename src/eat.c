@@ -273,14 +273,17 @@ choke(struct obj *food)
         if (food) {
             You("давитесь своим %s.", foodword(food));
             if (food->oclass == COIN_CLASS) {
-                Strcpy(svk.killer.name, "очень богатой трапезы");
+                Strcpy(svk.killer.name, "очень богатой трапезой");
             } else {
                 svk.killer.format = KILLED_BY;
                 Strcpy(svk.killer.name, killer_xname(food));
+                /* RU: instrumental after "подавился" */
+                (void) ru_number_name(svk.killer.name,
+                                      sizeof svk.killer.name, 'I');
             }
         } else {
             You("давитесь этим.");
-            Strcpy(svk.killer.name, "быстрый перекус");
+            Strcpy(svk.killer.name, "быстрым перекусом");
         }
         You("умираете...");
         done(CHOKING);
@@ -2811,7 +2814,8 @@ doeat_nonfood(struct obj *otmp)
     if (otmp->oclass == WEAPON_CLASS && otmp->opoisoned) {
         pline("Фух - это, наверное, было ядовито!");
         if (!Poison_resistance) {
-            poison_strdmg(rnd(4), rnd(15), xname(otmp), KILLED_BY_AN);
+            poison_strdmg(rnd(4), rnd(15), ru_name_gen(xname(otmp)),
+                          KILLED_BY_AN);
         } else
             You("не чувствуете действия яда.");
     } else if (!nodelicious) {

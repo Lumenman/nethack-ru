@@ -550,8 +550,8 @@ really_kick_object(coordxy x, coordxy y)
             ; /* hero has been transformed but kick continues */
         } else {
             /* normalize body shape here; foot, not body_part(FOOT) */
-            Sprintf(svk.killer.name, "пиная %s босиком",
-                    killer_xname(gk.kickedobj));
+            Sprintf(svk.killer.name, "%s (пинок босой ногой)",
+                    ru_name_gen(killer_xname(gk.kickedobj)));
             instapetrify(svk.killer.name);
         }
     }

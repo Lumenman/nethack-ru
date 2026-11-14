@@ -138,13 +138,13 @@ throw_obj(struct obj *obj, int shotlimit)
     u_wipe_engr(2);
     if (!uarmg && obj->otyp == CORPSE && touch_petrifies(&mons[obj->corpsenm])
         && !Stone_resistance) {
-        You("бросьте %s голыми %s.",
+        You("бросаете %s голыми %s.",
             corpse_xname(obj, (const char *) 0, CXN_PFX_THE),
             /* throwing with one hand, but pluralize since the
                expression "with your bare hands" sounds better */
-            body_part_case(HAND, BP_NOM | BP_PLURAL));
-        Sprintf(svk.killer.name, "бросая %s голыми руками",
-                killer_xname(obj));
+            body_part_case(HAND, BP_INS | BP_PLURAL));
+        Sprintf(svk.killer.name, "%s (бросок голыми руками)",
+                ru_name_gen(killer_xname(obj)));
         instapetrify(svk.killer.name);
     }
     if (welded(obj)) {
@@ -871,8 +871,8 @@ hurtle_step(genericptr_t arg, coordxy x, coordxy y)
         if (touch_petrifies(mon->data)
             /* this is a bodily collision, so check for body armor */
             && !uarmu && !uarm && !uarmc) {
-            Sprintf(svk.killer.name, "удар о %s",
-                    an(pmname(mon->data, NEUTRAL)));
+            Sprintf(svk.killer.name, "удара о %s",
+                    mon_gen_nom(pmname(mon->data, NEUTRAL), BP_ACC));
             instapetrify(svk.killer.name);
         }
         if (touch_petrifies(gy.youmonst.data)
@@ -1055,11 +1055,7 @@ mhurtle_step(genericptr_t arg, coordxy x, coordxy y)
         /* and whether hero is turned to stone by being touched by 'mon' */
         if (touch_petrifies(mon->data) && !(uarmu || uarm || uarmc)) {
             Snprintf(svk.killer.name, sizeof svk.killer.name,
-                     "будучи поражённым %s",
-                     /* combine m_monnam() and noname_monnam():
-                        "{your,a} hurtling cockatrice" w/o assigned name */
-                     x_monnam(mon, mon->mtame ? ARTICLE_YOUR : ARTICLE_A,
-                              "несётся", EXACT_NAME | SUPPRESS_NAME, FALSE));
+                     "столкновения с %s", mon_gen(mon, BP_INS));
             instapetrify(svk.killer.name);
             newsym(u.ux, u.uy);
         }
@@ -1744,8 +1740,8 @@ throwit(
                         if (obj->oartifact)
                             (void) artifact_hit((struct monst *) 0,
                                                 &gy.youmonst, obj, &dmg, 0);
-                        losehp(Maybe_Half_Phys(dmg), killer_xname(obj),
-                               KILLED_BY);
+                        losehp(Maybe_Half_Phys(dmg),
+                               ru_name_gen(killer_xname(obj)), KILLED_BY);
                     }
 
                     if (u.uswallow) {

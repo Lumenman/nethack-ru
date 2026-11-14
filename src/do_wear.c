@@ -632,8 +632,8 @@ wielding_corpse(
                     : strsubst(simpleonames(how), "набор ", ""));
         else
             Strcpy(hbuf, "сопротивление истекло");
-        Snprintf(kbuf, sizeof kbuf, "%s при держании %s",
-                 hbuf, killer_xname(obj));
+        Snprintf(kbuf, sizeof kbuf, "%s (%s)",
+                 ru_name_gen(killer_xname(obj)), hbuf);
         instapetrify(kbuf);
         /* life-saved or got poly'd into a stone golem; can't continue
            wielding cockatrice corpse unless have now become resistant */

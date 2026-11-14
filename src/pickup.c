@@ -292,9 +292,10 @@ fatal_corpse_mistake(struct obj *obj, boolean remotely)
         return FALSE;
     }
 
-    pline("Прикосновение к %s смертельно.",
-          corpse_xname(obj, (const char *) 0, CXN_SINGULAR | CXN_ARTICLE));
-    instapetrify(killer_xname(obj));
+    pline("Касаться %s смертельно.",
+          ru_name_gen(corpse_xname(obj, (const char *) 0,
+                                   CXN_SINGULAR | CXN_ARTICLE)));
+    instapetrify(ru_name_gen(killer_xname(obj)));
     return TRUE;
 }
 

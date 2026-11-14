@@ -89,7 +89,7 @@ thitu(
             panic("thitu: name & obj both null?");
         name = strcpy(onmbuf,
                       (obj->quan > 1L) ? doname(obj) : mshot_xname(obj));
-        knm = strcpy(knmbuf, killer_xname(obj));
+        knm = strcpy(knmbuf, ru_name_gen(killer_xname(obj)));
         kprefix = KILLED_BY; /* killer_name supplies "an" if warranted */
     } else {
         knm = name;
@@ -758,7 +758,7 @@ m_throw(
                 char onmbuf[BUFSZ], knmbuf[BUFSZ];
 
                 Strcpy(onmbuf, xname(singleobj));
-                Strcpy(knmbuf, killer_xname(singleobj));
+                Strcpy(knmbuf, ru_name_gen(killer_xname(singleobj)));
                 poisoned(onmbuf, A_STR, knmbuf,
                          /* if damage triggered life-saving,
                             poison is limited to attrib loss */

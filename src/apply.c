@@ -2200,7 +2200,8 @@ use_tinning_kit(struct obj *obj)
         } else {
             pline("Консервировать %s без перчаток — роковая ошибка...",
                   corpse_name);
-            Sprintf(kbuf, "пытаясь законсервировать %s без перчаток", corpse_name);
+            Sprintf(kbuf, "попытки законсервировать %s без перчаток",
+                    corpse_name);
         }
         instapetrify(kbuf);
     }
@@ -3220,7 +3221,7 @@ use_whip(struct obj *obj)
                            be missing from bones, so put it on the floor */
                         place_object(otmp, u.ux, u.uy); /* but don't stack */
 
-                        instapetrify(kbuf);
+                        instapetrify(ru_name_gen(kbuf));
                         /* life-saved; free the corpse again */
                         obj_extract_self(otmp);
                     }

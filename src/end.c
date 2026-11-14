@@ -46,7 +46,7 @@ static NEARDATA const char *deaths[] = {
     /* RU: fallback killer names, appended to killed_by_prefix[] in
        topten.c; "quit", "escaped", "ascended" stay English: topten.c and
        xlogfile readers match them */
-    "неизвестной причины", "еды", "неизвестного происхождения", "голода", "воде", "огне",
+    "неизвестной причины", "едой", "неизвестного происхождения", "голода", "воде", "огне",
     "лаве", "насмерть", "чего-то", "чем-то", "уничтожен геноцидом", "паника",
     "обман", "quit",
     "escaped", "ascended"
@@ -1104,7 +1104,8 @@ done(int how)
         } else {
             char killbuf[BUFSZ];
             formatkiller(killbuf, BUFSZ, how, FALSE);
-            livelog_printf(LL_LIFESAVE, "избежал смерти (%s)", killbuf);
+            livelog_printf(LL_LIFESAVE, "избежал%s смерти (%s)",
+                           flags.female ? "а" : "", killbuf);
             survive = TRUE;
         }
     }

@@ -913,9 +913,13 @@ welcome(boolean new_game) /* false => restoring an old game */
             ? (gu.urole.allow & ROLE_GENDMASK) == (ROLE_MALE | ROLE_FEMALE)
             : currentgend != flags.initgend))
         Sprintf(eos(buf), " %s", genders[currentgend].adj);
-    Sprintf(eos(buf), " %s %s", gu.urace.adj,
-            (currentgend && gu.urole.name.f) ? gu.urole.name.f
-                                             : gu.urole.name.m);
+    {   /* RU: "нейтральная Валькирия (человек)" */
+        const char *rolenm = (currentgend && gu.urole.name.f)
+                             ? gu.urole.name.f : gu.urole.name.m;
+
+        ru_agree_phrase(buf, ru_name_gender(rolenm));
+        Sprintf(eos(buf), " %s (%s)", rolenm, gu.urace.noun);
+    }
 
     pline(new_game ? "%s, %s, добро пожаловать в NetHack! Вы —%s."
                    : "%s, %s, %s, с возвращением в NetHack!",

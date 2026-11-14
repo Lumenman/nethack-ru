@@ -5758,7 +5758,8 @@ help_monster_out(
         } else {
             char kbuf[BUFSZ];
 
-            Sprintf(kbuf, "пытаясь помочь %s выбраться из ямы", an(mtmp_pmname));
+            Sprintf(kbuf, "попытки помочь %s выбраться из ямы",
+                    mon_gen(mtmp, BP_DAT));
             instapetrify(kbuf);
             return 1;
         }

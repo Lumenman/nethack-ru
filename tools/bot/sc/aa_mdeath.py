@@ -4,7 +4,9 @@ exec(open(os.path.join(os.path.dirname(__file__), 'common.py'), encoding='utf-8'
 # NHMON=<monster> picks the killer (default minotaur); NHMON=geno reads a
 # scroll of genocide against the hero's own race instead.
 MON = os.environ.get('NHMON', 'минотавр')
-if MON == 'geno':
+if MON == 'trice':  # pick up a cockatrice corpse bare-handed
+    W('труп василиска'); K(',', 'pickup', quiet=1.0)
+elif MON == 'geno':
     L = W('uncursed scroll of genocide'); K('r'); K(L, quiet=1.0); M(); S('prompt'); K('человек' + CR, 'geno', quiet=1.0)
 else:
     for _ in range(3):
@@ -12,7 +14,7 @@ else:
 for n in range(40):
     if not b.alive():
         break
-    if MON != 'geno':
+    if MON not in ('geno', 'trice'):
         K('ms', quiet=0.5)
     for _ in range(80):
         if not b.alive():
